@@ -24,15 +24,15 @@ import com.alibaba.rocketmq.remoting.exception.RemotingCommandException;
 
 
 /**
- * @author shijia.wxr
- */
+ * @author shijia.wxr  一般从header data中解析出相关信息: "extFields":{"topic":"yyztest2","queueId":"3","consumerGroup":"yyzGroup2","commitOffset":"28"}
+ */ //CONSUMER_SEND_MSG_BACK消息的extFields部分携带相关成员内容
 public class ConsumerSendMsgBackRequestHeader implements CommandCustomHeader {
     @CFNotNull
-    private Long offset;
+    private Long offset; //offset一般在通信报文中的 extFields 携带到对端
     @CFNotNull
     private String group;
-    @CFNotNull
-    private Integer delayLevel;
+    @CFNotNull //小于0会放入死信队列，见consumerSendMsgBack
+    private Integer delayLevel; //延迟消息等级，0不消息不延迟   1：延迟1s  2:延迟5s 3:延迟10s ...... 50:延迟30天
     private String originMsgId;
     private String originTopic;
     @CFNullable

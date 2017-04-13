@@ -25,7 +25,8 @@ import com.alibaba.rocketmq.common.ServiceThread;
 
 /**
  * Rebalance Service
- * 
+ * //selectOneMessageQueue  messageQueueList 是投递消息的时候对应的topic队列，每次投递的时候乱序选择队列投递，见ROCKET开发手册7.8节
+ //rebalance相关的是针对消费，例如有多个消费者消费同一个topic，该topic有10个队列，则消费者1消费1-5队列，消费者2消费6-10对了，见ROCKETMQ开发手册7-5
  * @author shijia.wxr
  */
 public class RebalanceService extends ServiceThread {
@@ -37,15 +38,17 @@ public class RebalanceService extends ServiceThread {
         this.mqClientFactory = mqClientFactory;
     }
 
-    private static long WaitInterval = 1000 * 10;
+    private static long WaitInterval = 1000 * 10; //多久做一次rebalance
 
-
-    @Override
+    @Override //MQClientInstance.start(this.rebalanceService.start();)中执行
     public void run() {
         log.info(this.getServiceName() + " service started");
 
-        while (!this.isStoped()) {
-            this.waitForRunning(WaitInterval);
+        //rebalance线程循环处理
+        while (!this.isStoped()) { //每10秒钟做一次rebalance服务: 这个rebalance服务按照topic做rebalance ,
+            //当client在指定的消费分组中需要新增对topic的队列的消费时，则提交一个 pull request给PullMessageService
+
+            this.waitForRunning(WaitInterval); //延时
             this.mqClientFactory.doRebalance();
         }
 

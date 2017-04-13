@@ -25,19 +25,28 @@ import java.io.File;
 /**
  * 
  * @author shijia.wxr
- * @author vongosling
+ * @author vongosling   该类中的相关成员从配置文件 /opt/rocketmq/alibaba-rocketmq/conf/broker.properties 中获取
  */
 public class MessageStoreConfig {
     //The root directory in which the log data is kept
-    @ImportantField
+    @ImportantField //存储跟路径为/root/store  File.separator为`/`
     private String storePathRootDir = System.getProperty("user.home") + File.separator + "store";
     //The directory in which the commitlog is kept
-    @ImportantField
+    @ImportantField //commitlog路径/root/store/commitlog
+    //commitlog路径/root/store/commitlog 这里面存的是消费记录，记录消息是否被消费等信息
     private String storePathCommitLog = System.getProperty("user.home") + File.separator + "store"
             + File.separator + "commitlog";
     // CommitLog file size,default is 1G
     private int mapedFileSizeCommitLog = 1024 * 1024 * 1024;
-    // ConsumeQueue file size, default is 30W
+    /*
+    * [root@s10-2-X-5 0]# ls
+00000000000048000000  00000000000096000000  00000000000102000000
+[root@s10-2-X-5 0]# du -sh *
+5.8M    00000000000048000000
+5.8M    00000000000096000000
+3.6M    00000000000102000000
+    * */ //从这里也可以看出，如果某个queue对应的ConsumeQueue 对应的30w条commitlog元数据空间用完了，则从新用新的一个ConsumeQueue来存
+    // ConsumeQueue file size, default is 30W  一个consumequeue下面的每个queue对应的文件大小为30w*20，刚好5.8M
     private int mapedFileSizeConsumeQueue = 300000 * ConsumeQueue.CQStoreUnitSize;
     // CommitLog flush interval
     @ImportantField
@@ -72,10 +81,14 @@ public class MessageStoreConfig {
     private boolean checkCRCOnRecover = true;
     // How many pages are to be flushed when flush CommitLog
     private int flushCommitLogLeastPages = 4;
-    // Flush page size when the disk in warming state
+    // Flush page size when the disk in warming state  ,  warm操作的page 数量。 .
+
     private int flushLeastPagesWhenWarmMapedFile = 1024 / 4 * 16;
     // How many pages are to be flushed when flush ConsumeQueue
     private int flushConsumeQueueLeastPages = 2;
+    /**
+     * 每10s 做一次完全刷盘处理，并checkpoint.
+     */
     private int flushCommitLogThoroughInterval = 1000 * 10;
     private int flushConsumeQueueThoroughInterval = 1000 * 60;
     @ImportantField
@@ -95,7 +108,7 @@ public class MessageStoreConfig {
     private int maxMsgsNumBatch = 64;
     @ImportantField
     private boolean messageIndexSafe = false;
-    private int haListenPort = 10912;
+    private int haListenPort = 10912; //slave监听端口号，默认为MASTER监听端口号加1，见//BrokerStartup.createBrokerController->setHaListenPort
     private int haSendHeartbeatInterval = 1000 * 5;
     private int haHousekeepingInterval = 1000 * 20;
     private int haTransferBatchSize = 1024 * 32;
@@ -142,7 +155,7 @@ public class MessageStoreConfig {
         this.mapedFileSizeCommitLog = mapedFileSizeCommitLog;
     }
 
-
+    //
     public int getMapedFileSizeConsumeQueue() {
         int factor = (int) Math.ceil(this.mapedFileSizeConsumeQueue / (ConsumeQueue.CQStoreUnitSize * 1.0));
         return factor * ConsumeQueue.CQStoreUnitSize;

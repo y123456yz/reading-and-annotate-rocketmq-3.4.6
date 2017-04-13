@@ -163,7 +163,8 @@ public class MQAdminStartup {
                         System.setProperty(MixAll.NAMESRV_ADDR_PROPERTY, namesrvAddr);
                     }
 
-                    cmd.execute(commandLine, options, rpcHook);
+                    //见 MQAdminStartup.initCommand  例如 UpdateTopicSubCommand 对应的是updateTopic 命令
+                    cmd.execute(commandLine, options, rpcHook); //SubCommand.execute
                 }
                 else {
                     System.out.println("The sub command \'" + args[0] + "\' not exist.");

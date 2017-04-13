@@ -216,6 +216,15 @@ public class DefaultMQAdminExt extends ClientConfig implements MQAdminExt {
     }
 
 
+    /**
+     * 获取消费者分组订阅的client信息以及topic订阅信息。
+     * @param consumerGroup
+     * @return
+     * @throws InterruptedException
+     * @throws MQBrokerException
+     * @throws RemotingException
+     * @throws MQClientException
+     */
     @Override
     public ConsumerConnection examineConsumerConnectionInfo(String consumerGroup) throws InterruptedException, MQBrokerException,
             RemotingException, MQClientException {

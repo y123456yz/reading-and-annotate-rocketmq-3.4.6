@@ -91,7 +91,7 @@ public class UpdateSubGroupSubCommand implements SubCommand {
         return options;
     }
 
-
+    //broker配置文件相关配置项
     @Override
     public void execute(final CommandLine commandLine, final Options options, RPCHook rpcHook) {
         DefaultMQAdminExt defaultMQAdminExt = new DefaultMQAdminExt(rpcHook);

@@ -72,6 +72,7 @@ public class NamesrvController {
 
         this.registerProcessor();
 
+        /* 检查本地 brokerLiveTable 中的broker信息是否过期，过期则从brokerLiveTable中剔除 */
         this.scheduledExecutorService.scheduleAtFixedRate(new Runnable() {
 
             @Override
@@ -99,13 +100,15 @@ public class NamesrvController {
         return true;
     }
 
-
+    //注册读消息回调处理
     private void registerProcessor() {
         if (namesrvConfig.isClusterTest()) {
             this.remotingServer.registerDefaultProcessor(new ClusterTestRequestProcessor(this, namesrvConfig.getProductEnvName()),
                 this.remotingExecutor);
         }
         else {
+            //NettyRemotingServer.registerDefaultProcessor
+            //最终接收到消息会执行//DefaultRequestProcessor.processRequest
             this.remotingServer.registerDefaultProcessor(new DefaultRequestProcessor(this), this.remotingExecutor);
         }
     }

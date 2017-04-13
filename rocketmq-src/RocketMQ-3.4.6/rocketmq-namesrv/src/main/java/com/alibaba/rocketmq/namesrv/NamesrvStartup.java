@@ -92,10 +92,21 @@ public class NamesrvStartup {
 
             final NamesrvConfig namesrvConfig = new NamesrvConfig();
             final NettyServerConfig nettyServerConfig = new NettyServerConfig();
+            /*
+            *
+            [xxx.yang@s10-2-x-x logs]$ ps -ef | grep names
+root     122828      1  0  2016 ?        00:00:00 sh /opt/rocketmq/alibaba-rocketmq/bin/mqnamesrv -c /opt/rocketmq/alibaba-rocketmq/conf/nameserver-config.properties
+root     122839 122828  0  2016 ?        00:00:00 sh /opt/rocketmq/alibaba-rocketmq/bin/runserver.sh com.alibaba.rocketmq.namesrv.NamesrvStartup -c /opt/rocketmq/alibaba-rocketmq/conf/nameserver-config.properties
+root     122841 122839  0  2016 ?        02:27:23 /opt/jdk/jdk1.7.0_71/bin/java -server -Xms8g -Xmx8g -Xmn4g -XX:PermSize=1g -XX:MaxPermSize=1g -XX:+UseConcMarkSweepGC -XX:+UseCMSCompactAtFullCollection -XX:CMSInitiatingOccupancyFraction=70 -XX:+CMSParallelRemarkEnabled -XX:SoftRefLRUPolicyMSPerMB=0 -XX:+CMSClassUnloadingEnabled -XX:SurvivorRatio=8 -XX:+DisableExplicitGC -verbose:gc -Xloggc:/rmq_srv_gc.log -XX:+PrintGCDetails -XX:-OmitStackTraceInFastThrow -Djava.ext.dirs=/opt/rocketmq/alibaba-rocketmq/bin/../lib -Duser.home=/data -cp .:/opt/rocketmq/alibaba-rocketmq/bin/../conf: com.alibaba.rocketmq.namesrv.NamesrvStartup -c /opt/rocketmq/alibaba-rocketmq/conf/nameserver-config.properties
+            [yazhou.yang@s10-2-x-x logs]$
+            [yazhou.yang@s10-2-x-x logs]$
+            [yazhou.yang@s10-2-x-x logs]$ cat /opt/rocketmq/alibaba-rocketmq/conf/nameserver-config.properties
+            listenPort=9998
+            * */ /* 默认是9876端口，但是可以通过启动 mqnamesrv 的时候加上-c参数指定配置文件，指定端口 */
             nettyServerConfig.setListenPort(9876);
-            if (commandLine.hasOption('c')) {
+            if (commandLine.hasOption('c')) { //启动的时候带有-c参数
                 String file = commandLine.getOptionValue('c');
-                if (file != null) {
+                if (file != null) { //获取对应的配置文件信息
                     InputStream in = new BufferedInputStream(new FileInputStream(file));
                     properties = new Properties();
                     properties.load(in);
@@ -157,7 +168,7 @@ public class NamesrvStartup {
                 }
             }, "ShutdownHook"));
 
-            controller.start();
+            controller.start(); //NamesrvController.start
 
             String tip = "The Name Server boot success. serializeType=" + RemotingCommand.getSerializeTypeConfigInThisServer();
             log.info(tip);

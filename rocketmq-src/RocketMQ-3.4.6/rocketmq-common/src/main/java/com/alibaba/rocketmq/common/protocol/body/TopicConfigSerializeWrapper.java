@@ -24,6 +24,9 @@ import com.alibaba.rocketmq.common.TopicConfig;
 import com.alibaba.rocketmq.remoting.protocol.RemotingSerializable;
 
 
+/**
+ * 通过继承{@link RemotingSerializable} 实现topic配置的json 序列化。
+ */
 public class TopicConfigSerializeWrapper extends RemotingSerializable {
     private ConcurrentHashMap<String, TopicConfig> topicConfigTable =
             new ConcurrentHashMap<String, TopicConfig>();

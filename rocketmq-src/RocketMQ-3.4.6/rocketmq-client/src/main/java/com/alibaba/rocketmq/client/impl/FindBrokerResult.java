@@ -17,7 +17,7 @@
 package com.alibaba.rocketmq.client.impl;
 
 /**
- * @author shijia.wxr
+ * @author shijia.wxr  findBrokerAddressInSubscribeÓÃì¶«@È¡Ò»‚€FindBrokerResultî
  */
 public class FindBrokerResult {
     private final String brokerAddr;

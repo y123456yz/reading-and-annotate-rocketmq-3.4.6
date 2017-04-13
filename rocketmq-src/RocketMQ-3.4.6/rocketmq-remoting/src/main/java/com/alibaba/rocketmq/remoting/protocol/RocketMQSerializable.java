@@ -49,7 +49,12 @@ public class RocketMQSerializable {
         return length;
     }
 
-
+    /*
+    * 抓包数据内容:
+...5...%{"code":310,"extFields":{"f":"0","g":"1491880549836","d":"4","e":"0","b":"yyztest2","c":"TBW102","a":"yyzGroup2",
+"j":"0","k":"false","h":"0","i":"TAGS\u0001TAG\u0002WAIT\u0001true\u0002KEYS\u0001ffff\u0002"},"flag":0,"language":"JAVA",
+"opaque":3,"serializeTypeCurrentRPC":"JSON","version":115}yang ya zhou
+    * */
     public static byte[] rocketMQProtocolEncode(RemotingCommand cmd) {
         // String remark
         byte[] remarkBytes = null;
@@ -72,12 +77,12 @@ public class RocketMQSerializable {
 
         // ################### content
         ByteBuffer headerBuffer = ByteBuffer.allocate(totalLen);
-        // int code(~32767)
+        // int code(~32767) //RequestCode.CONSUMER_SEND_MSG_BACK 等
         headerBuffer.putShort((short) cmd.getCode());
         // LanguageCode language
-        headerBuffer.put(cmd.getLanguage().getCode());
+        headerBuffer.put(cmd.getLanguage().getCode()); //LanguageCode.JAVA;
         // int version(~32767)
-        headerBuffer.putShort((short) cmd.getVersion());
+        headerBuffer.putShort((short) cmd.getVersion()); //"version":115
         // int opaque
         headerBuffer.putInt(cmd.getOpaque());
         // int flag
@@ -100,8 +105,14 @@ public class RocketMQSerializable {
         return headerBuffer.array();
     }
 
-
-    public static RemotingCommand rocketMQProtocolDecode(final byte[] headerArray) {
+    /*
+* 抓包数据内容:
+...5...%{"code":310,"extFields":{"f":"0","g":"1491880549836","d":"4","e":"0","b":"yyztest2","c":"TBW102","a":"yyzGroup2",
+"j":"0","k":"false","h":"0","i":"TAGS\u0001TAG\u0002WAIT\u0001true\u0002KEYS\u0001ffff\u0002"},"flag":0,"language":"JAVA",
+"opaque":3,"serializeTypeCurrentRPC":"JSON","version":115}yang ya zhou
+*/
+    //rocketMQProtocolDecode 和 rocketMQProtocolEncode 对应
+    public static RemotingCommand rocketMQProtocolDecode(final byte[] headerArray) { //如果header data不是JSON通信方式，非json格式的解析
         RemotingCommand cmd = new RemotingCommand();
         ByteBuffer headerBuffer = ByteBuffer.wrap(headerArray);
         // int code(~32767)

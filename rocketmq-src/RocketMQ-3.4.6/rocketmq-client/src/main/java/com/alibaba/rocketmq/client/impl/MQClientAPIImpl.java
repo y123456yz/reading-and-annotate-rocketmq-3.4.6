@@ -64,7 +64,11 @@ import java.util.*;
 
 
 /**
- * @author shijia.wxr
+ * BrokerOuterAPI:是broker和别的模块通信的类，封装了NettyRemotingClient。
+ * MQClientImpl:是客户端和broker与nameserver通信的类，也封装了NettyRemotingClient。
+ *
+ * 负责client对外发送command .
+ * @author shijia.wxr     MQClientInstance类中包含该类对象
  */
 public class MQClientAPIImpl {
 
@@ -73,9 +77,11 @@ public class MQClientAPIImpl {
     }
 
     private final static Logger log = ClientLogger.getLog();
-    private final RemotingClient remotingClient;
+    /* this.remotingClient = new NettyRemotingClient */
+    private final RemotingClient remotingClient;//this.remotingClient = new NettyRemotingClient()
     private final TopAddressing topAddressing;
     private final ClientRemotingProcessor clientRemotingProcessor;
+    //fetchNameServerAddr中对本地nameSrvAddr进行更新
     private String nameSrvAddr = null;
 
 
@@ -86,6 +92,9 @@ public class MQClientAPIImpl {
         this.clientRemotingProcessor = clientRemotingProcessor;
 
         this.remotingClient.registerRPCHook(rpcHook);
+        /**
+         * 这些RequestCode是Client要处理的， 也就是调用方向是broker-》 client
+         */
         this.remotingClient.registerProcessor(RequestCode.CHECK_TRANSACTION_STATE, this.clientRemotingProcessor, null);
 
         this.remotingClient.registerProcessor(RequestCode.NOTIFY_CONSUMER_IDS_CHANGED, this.clientRemotingProcessor, null);
@@ -112,11 +121,12 @@ public class MQClientAPIImpl {
 
     public String fetchNameServerAddr() {
         try {
+            //通过http协议获取nameserver地址列表
             String addrs = this.topAddressing.fetchNSAddr();
             if (addrs != null) {
                 if (!addrs.equals(this.nameSrvAddr)) {
                     log.info("name server address changed, old: " + this.nameSrvAddr + " new: " + addrs);
-                    this.updateNameServerAddressList(addrs);
+                    this.updateNameServerAddressList(addrs); //跟新本地nameserver地址列表
                     this.nameSrvAddr = addrs;
                     return nameSrvAddr;
                 }
@@ -142,8 +152,8 @@ public class MQClientAPIImpl {
     }
 
 
-    public void start() {
-        this.remotingClient.start();
+    public void start() { //MQClientInstance.start->MQClientAPIImpl.start->NettyRemotingClient.start
+        this.remotingClient.start(); //NettyRemotingClient.start
     }
 
 
@@ -219,11 +229,11 @@ public class MQClientAPIImpl {
             SendMessageRequestHeaderV2 requestHeaderV2 = SendMessageRequestHeaderV2.createSendMessageRequestHeaderV2(requestHeader);
             request = RemotingCommand.createRequestCommand(RequestCode.SEND_MESSAGE_V2, requestHeaderV2);
         }
-        else {
+        else { //组装头部信息
             request = RemotingCommand.createRequestCommand(RequestCode.SEND_MESSAGE, requestHeader);
         }
 
-        request.setBody(msg.getBody());
+        request.setBody(msg.getBody()); //包体body信息赋值
 
         switch (communicationMode) {
         case ONEWAY:
@@ -345,7 +355,7 @@ public class MQClientAPIImpl {
         throw new MQBrokerException(response.getCode(), response.getRemark());
     }
 
-
+    //pullMessage如果采用同步方式拉取消息则调用pullMessageSync，如果采用异步拉取消息则通过pullMessageAsync
     public PullResult pullMessage(//
             final String addr,//
             final PullMessageRequestHeader requestHeader,//
@@ -372,21 +382,24 @@ public class MQClientAPIImpl {
         return null;
     }
 
-
+    //pullMessage如果采用同步方式拉取消息则调用pullMessageSync，如果采用异步拉取消息则通过pullMessageAsync
     private void pullMessageAsync(//
-            final String addr,// 1
-            final RemotingCommand request,//
-            final long timeoutMillis,//
-            final PullCallback pullCallback//
+                                  final String addr,// 1
+                                  final RemotingCommand request,//
+                                  final long timeoutMillis,//
+                                  final PullCallback pullCallback//
     ) throws RemotingException, InterruptedException {
+        //this.remotingClient = new NettyRemotingClient()，这里实际执行 NettyRemotingClient.invokeAsync
         this.remotingClient.invokeAsync(addr, request, timeoutMillis, new InvokeCallback() {
             @Override
             public void operationComplete(ResponseFuture responseFuture) {
+
                 RemotingCommand response = responseFuture.getResponseCommand();
                 if (response != null) {
                     try {
                         PullResult pullResult = MQClientAPIImpl.this.processPullResponse(response);
                         assert pullResult != null;
+                        //DefaultMQPushConsumerImpl.pullMessage(pullCallback.onSuccess)中的回调执行
                         pullCallback.onSuccess(pullResult);
                     }
                     catch (Exception e) {
@@ -437,7 +450,7 @@ public class MQClientAPIImpl {
             responseHeader.getMaxOffset(), null, responseHeader.getSuggestWhichBrokerId(), response.getBody());
     }
 
-
+    //pullMessage如果采用同步方式拉取消息则调用pullMessageSync，如果采用异步拉取消息则通过pullMessageAsync
     private PullResult pullMessageSync(//
             final String addr,// 1
             final RemotingCommand request,// 2
@@ -518,7 +531,7 @@ public class MQClientAPIImpl {
         throw new MQBrokerException(response.getCode(), response.getRemark());
     }
 
-
+    //获取消费该topic的所有consumer消费分组,findConsumerIdList中调用
     public List<String> getConsumerIdListByGroup(//
             final String addr, //
             final String consumerGroup, //
@@ -734,7 +747,8 @@ public class MQClientAPIImpl {
         return response.getCode() == ResponseCode.SUCCESS;
     }
 
-
+    //SendMessageProcessor.consumerSendMsgBack(服务端broker收) 和 MQClientAPIImpl.consumerSendMessageBack(客户端发) 对应
+    //消费失败，重新把消息打回broker 执行见DefaultMQPushConsumerImpl.sendMessageBack
     public void consumerSendMessageBack(//
             final String addr, //
             final MessageExt msg,//
@@ -743,6 +757,7 @@ public class MQClientAPIImpl {
             final long timeoutMillis//
     ) throws RemotingException, MQBrokerException, InterruptedException {
         ConsumerSendMsgBackRequestHeader requestHeader = new ConsumerSendMsgBackRequestHeader();
+        //消息类型为CONSUMER_SEND_MSG_BACK
         RemotingCommand request = RemotingCommand.createRequestCommand(RequestCode.CONSUMER_SEND_MSG_BACK, requestHeader);
 
         requestHeader.setGroup(consumerGroup);

@@ -22,7 +22,7 @@ import io.netty.channel.Channel;
 import java.util.List;
 
 
-/**
+/**  和客户端消费的rebalance操作有关。消费者分组中有消费者增加和退出，或者topic有删除和增加时， 通知client做rebalance .
  * @author shijia.wxr
  */
 public class DefaultConsumerIdsChangeListener implements ConsumerIdsChangeListener {

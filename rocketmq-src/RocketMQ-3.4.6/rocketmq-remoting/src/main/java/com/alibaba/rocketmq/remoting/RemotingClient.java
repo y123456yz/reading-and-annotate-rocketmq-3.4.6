@@ -28,21 +28,19 @@ import java.util.concurrent.ExecutorService;
 
 
 /**
- * @author shijia.wxr
+ * @author shijia.wxr   NettyRemotingClient 中实现该接口
  */
 public interface RemotingClient extends RemotingService {
 
     void updateNameServerAddressList(final List<String> addrs);
 
-
     List<String> getNameServerAddressList();
-
 
     RemotingCommand invokeSync(final String addr, final RemotingCommand request,
                                final long timeoutMillis) throws InterruptedException, RemotingConnectException,
             RemotingSendRequestException, RemotingTimeoutException;
 
-
+    //异步方式从指定的addr获取信息，最终执行的是 NettyRemotingClient.invokeAsync
     void invokeAsync(final String addr, final RemotingCommand request, final long timeoutMillis,
                      final InvokeCallback invokeCallback) throws InterruptedException, RemotingConnectException,
             RemotingTooMuchRequestException, RemotingTimeoutException, RemotingSendRequestException;

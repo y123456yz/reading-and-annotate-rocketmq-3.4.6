@@ -29,7 +29,7 @@ public class Message implements Serializable {
     private static final long serialVersionUID = 8445773977080406428L;
 
     private String topic;
-    private int flag;
+    private int flag; //也就是通信报文中的flag字段，标识是否需要
     private Map<String, String> properties;
     private byte[] body;
 
@@ -158,6 +158,10 @@ public class Message implements Serializable {
     }
 
 
+    /**
+     * 设置延迟投递的时间level .
+     * @param level
+     */
     public void setDelayTimeLevel(int level) {
         this.putProperty(MessageConst.PROPERTY_DELAY_TIME_LEVEL, String.valueOf(level));
     }
@@ -186,7 +190,7 @@ public class Message implements Serializable {
         this.flag = flag;
     }
 
-
+    //使用方法byte[] prevBody = msg.getBody();
     public byte[] getBody() {
         return body;
     }

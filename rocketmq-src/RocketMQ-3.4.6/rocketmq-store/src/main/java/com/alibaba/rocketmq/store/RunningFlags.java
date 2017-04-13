@@ -117,6 +117,10 @@ public class RunningFlags {
         return false;
     }
 
+    /**
+     * 返回diskFull标志位是否已经被设置上 , 并设置磁盘已经满的标识位。
+     * @return
+     */
     public boolean getAndMakeDiskFull() {
         boolean result = !((this.flagBits & DiskFullBit) == DiskFullBit);
         this.flagBits |= DiskFullBit;

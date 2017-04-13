@@ -257,11 +257,19 @@ public class ClientManageProcessor implements NettyRequestProcessor {
     }
 
 
+    /**
+     * broker接收client发送过来的心跳信息。
+     * @param ctx
+     * @param request
+     * @return
+     */
     public RemotingCommand heartBeat(ChannelHandlerContext ctx, RemotingCommand request) {
         RemotingCommand response = RemotingCommand.createResponseCommand(null);
 
+        //解析心跳包。
         HeartbeatData heartbeatData = HeartbeatData.decode(request.getBody(), HeartbeatData.class);
 
+        //客户端通道信息。
         ClientChannelInfo clientChannelInfo = new ClientChannelInfo(//
             ctx.channel(),//
             heartbeatData.getClientID(),//
@@ -269,15 +277,20 @@ public class ClientManageProcessor implements NettyRequestProcessor {
             request.getVersion()//
                 );
 
+        //一次循环， 对应的是一个消费者分组的订阅元数据。
+        //也就是说， 如果一个clientid(默认是clientip@processid) 同时发送了多个consumerdata
+        // 这个for循环处理的就是多个消费者分组的订阅元数据。
         for (ConsumerData data : heartbeatData.getConsumerDataSet()) {
             SubscriptionGroupConfig subscriptionGroupConfig =
                     this.brokerController.getSubscriptionGroupManager().findSubscriptionGroupConfig(
                         data.getGroupName());
             if (null != subscriptionGroupConfig) {
                 int topicSysFlag = 0;
-                if (data.isUnitMode()) {
+                if (data.isUnitMode()) { // 单元模式？
                     topicSysFlag = TopicSysFlag.buildSysFlag(false, true);
                 }
+                //为消费者分组创建重试topic .用于消费失败时打回broker重新消费。
+                //重试topic的命名规则是： %RETRY% + 消费者分组名。
                 String newTopic = MixAll.getRetryTopic(data.getGroupName());
                 this.brokerController.getTopicConfigManager().createTopicInSendMessageBackMethod(//
                     newTopic,//
@@ -302,6 +315,7 @@ public class ClientManageProcessor implements NettyRequestProcessor {
             }
         }
 
+        //生产者的注册相对简单，就是把消息生产者（用所谓的客户端通道clientChannelInfo来抽象）注册到对应的生产者分组即可。
         for (ProducerData data : heartbeatData.getProducerDataSet()) {
             this.brokerController.getProducerManager().registerProducer(data.getGroupName(),
                 clientChannelInfo);

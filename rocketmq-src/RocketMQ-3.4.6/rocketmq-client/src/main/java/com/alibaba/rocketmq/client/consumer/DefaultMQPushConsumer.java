@@ -46,10 +46,10 @@ import java.util.Set;
  * @author shijia.wxr
  */
 public class DefaultMQPushConsumer extends ClientConfig implements MQPushConsumer {
-    protected final transient DefaultMQPushConsumerImpl defaultMQPushConsumerImpl;
+    protected final transient DefaultMQPushConsumerImpl defaultMQPushConsumerImpl; /* DefaultMQPushConsumer中赋值 */
     /**
      * Do the same thing for the same Group, the application must be set,and
-     * guarantee Globally unique
+     * guarantee Globally unique //DefaultMQPushConsumer中赋值
      */
     private String consumerGroup;
     /**
@@ -68,28 +68,31 @@ public class DefaultMQPushConsumer extends ClientConfig implements MQPushConsume
      */
     private String consumeTimestamp = UtilAll.timeMillisToHumanString3(System.currentTimeMillis() - (1000 * 60 * 30));
     /**
-     * Queue allocation algorithm
+     * Queue allocation algorithm  //DefaultMQPushConsumer中赋值
+     * Rebalance 算法实现策略
      */
     private AllocateMessageQueueStrategy allocateMessageQueueStrategy;
 
     /**
-     * Subscription relationship
+     * Subscription relationship  订阅关系
      */
     private Map<String /* topic */, String /* sub expression */> subscription = new HashMap<String, String>();
     /**
      * Message listener
+     * 就是PushConsumer main函数中的consumer.registerMessageListener(new MessageListenerConcurrently()，这里的
+     * new MessageListenerConcurrently()  消息监听器
      */
-    private MessageListener messageListener;
+    private MessageListener messageListener; //赋值见registerMessageListener  MessageListenerConcurrently
     /**
-     * Offset Storage
+     * Offset Storage 消费进度存储
      */
     private OffsetStore offsetStore;
     /**
-     * Minimum consumer thread number
+     * Minimum consumer thread number  消费线程池数量
      */
     private int consumeThreadMin = 20;
     /**
-     * Max consumer thread number
+     * Max consumer thread number 消费线程池数量
      */
     private int consumeThreadMax = 64;
 
@@ -100,22 +103,27 @@ public class DefaultMQPushConsumer extends ClientConfig implements MQPushConsume
 
     /**
      * Concurrently max span offset.it has no effect on sequential consumption
+     *单队列并行消费允许的最大跨度
+     * 非顺序消费时，消息的消费位点的最大差值。
      */
     private int consumeConcurrentlyMaxSpan = 2000;
     /**
-     * Flow control threshold
+     * Flow control threshold 拉消息本地队列缓存消息最大数
      */
     private int pullThresholdForQueue = 1000;
     /**
      * Message pull Interval
+     * 拉消息间隔，由于是长轮询，所以
+     为 0，但是如果应用为了流控，也
+     可以设置大于 0 的值，单位毫秒
      */
     private long pullInterval = 0;
     /**
-     * Batch consumption size
+     * Batch consumption size 批量消费，一次消费多少条消息
      */
     private int consumeMessageBatchMaxSize = 1;
     /**
-     * Batch pull size
+     * Batch pull size 批量拉消息，一次最多拉多少条
      */
     private int pullBatchSize = 32;
 
@@ -144,7 +152,12 @@ public class DefaultMQPushConsumer extends ClientConfig implements MQPushConsume
         this(consumerGroup, null, new AllocateMessageQueueAveragely());
     }
 
-
+    /**
+     *
+     * @param consumerGroup 消费者分组
+     * @param rpcHook 给broker发送请求的钩子，可以在请求前后植入拦截处理。
+     * @param allocateMessageQueueStrategy 消费者分担topic下队列的策略，默认是均摊消费(大致）
+     */
     public DefaultMQPushConsumer(final String consumerGroup, RPCHook rpcHook, AllocateMessageQueueStrategy allocateMessageQueueStrategy) {
         this.consumerGroup = consumerGroup;
         this.allocateMessageQueueStrategy = allocateMessageQueueStrategy;
@@ -226,6 +239,10 @@ public class DefaultMQPushConsumer extends ClientConfig implements MQPushConsume
     }
 
 
+    /**
+     * 指定位点从哪儿开始。
+     * @param consumeFromWhere
+     */
     public void setConsumeFromWhere(ConsumeFromWhere consumeFromWhere) {
         this.consumeFromWhere = consumeFromWhere;
     }
@@ -291,6 +308,10 @@ public class DefaultMQPushConsumer extends ClientConfig implements MQPushConsume
     }
 
 
+    /**
+     * 指定消费模式是集群还是广播消费。
+     * @param messageModel
+     */
     public void setMessageModel(MessageModel messageModel) {
         this.messageModel = messageModel;
     }
@@ -390,6 +411,16 @@ public class DefaultMQPushConsumer extends ClientConfig implements MQPushConsume
     }
 
 
+    /**
+     * 订阅topic .
+     * @param topic 消息主题
+     * @param subExpression 只支持有限的过滤表达式，  比如： * 或者 null 意味着所有topic的消息都被订阅。
+     *                          tagA || tagB 用竖线分割，标识订阅某几个tags .
+     *            subscription expression.it only support or operation such as
+     *            "tag1 || tag2 || tag3" <br>
+     *            if null or * expression,meaning subscribe all
+     * @throws MQClientException
+     */
     @Override
     public void subscribe(String topic, String subExpression) throws MQClientException {
         this.defaultMQPushConsumerImpl.subscribe(topic, subExpression);

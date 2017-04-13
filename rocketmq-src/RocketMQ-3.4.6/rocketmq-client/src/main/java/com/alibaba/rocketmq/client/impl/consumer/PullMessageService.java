@@ -25,10 +25,14 @@ import java.util.concurrent.*;
 
 
 /**
- * @author shijia.wxr
+ * @author shijia.wxr   从rocket nameserver或者broke获取消息
  */
 public class PullMessageService extends ServiceThread {
     private final Logger log = ClientLogger.getLog();
+    /*  拉取消息的请求全部放入该队列中,在
+    updateProcessQueueTableInRebalance-> RebalancePushImpl.dispatchPullRequest->PullMessageService.executePullRequestImmediately 中更新,
+    PullMessageService.run 中通过该 pullRequestQueue 中的PullRequest来拉取消息 */
+    ////MQClientInstance.start(this.rebalanceService.start();)中进行队列rebalance处理的时候会更新该 queue
     private final LinkedBlockingQueue<PullRequest> pullRequestQueue = new LinkedBlockingQueue<PullRequest>();
     private final MQClientInstance mQClientFactory;
     private final ScheduledExecutorService scheduledExecutorService = Executors
@@ -59,7 +63,7 @@ public class PullMessageService extends ServiceThread {
         this.scheduledExecutorService.schedule(r, timeDelay, TimeUnit.MILLISECONDS);
     }
 
-
+    // updateProcessQueueTableInRebalance-> RebalancePushImpl.dispatchPullRequest->PullMessageService.executePullRequestImmediately
     public void executePullRequestImmediately(final PullRequest pullRequest) {
         try {
             this.pullRequestQueue.put(pullRequest);
@@ -70,7 +74,11 @@ public class PullMessageService extends ServiceThread {
     }
 
 
-    private void pullMessage(final PullRequest pullRequest) {
+    /**
+     * 获取pullrequest的消费者分组对应的MQConsumerInner进行消费。
+     * @param pullRequest
+     */
+    private void pullMessage(final PullRequest pullRequest) { /* run中执行，就是根据拉取消息的pullRequest请求来从从服务端获取消息 */
         final MQConsumerInner consumer = this.mQClientFactory.selectConsumer(pullRequest.getConsumerGroup());
         if (consumer != null) {
             DefaultMQPushConsumerImpl impl = (DefaultMQPushConsumerImpl) consumer;
@@ -81,14 +89,13 @@ public class PullMessageService extends ServiceThread {
         }
     }
 
-
-    @Override
-    public void run() {
+    @Override  //ProxyServer.doSubscribe->consumer.start->mQClientFactory.start->this.pullMessageService.start()
+    public void run() { /* 執行start就會運行run */
         log.info(this.getServiceName() + " service started");
 
         while (!this.isStoped()) {
             try {
-                PullRequest pullRequest = this.pullRequestQueue.take();
+                PullRequest pullRequest = this.pullRequestQueue.take(); //拉取队列pullRequestQueue中指定的消息请求
                 if (pullRequest != null) {
                     this.pullMessage(pullRequest);
                 }

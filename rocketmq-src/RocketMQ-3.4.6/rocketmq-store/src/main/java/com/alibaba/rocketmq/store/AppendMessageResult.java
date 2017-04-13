@@ -24,15 +24,15 @@ package com.alibaba.rocketmq.store;
 public class AppendMessageResult {
     // Return code
     private AppendMessageStatus status;
-    // Where to start writing
+    // Where to start writing   , 从commitlog的哪个物理位点开始写。
     private long wroteOffset;
-    // Write Bytes
+    // Write Bytes 写了多少字节。
     private int wroteBytes;
-    // Message ID
+    // Message ID 消息唯一标识。
     private String msgId;
-    // Message storage timestamp
+    // Message storage timestamp 写入时间。
     private long storeTimestamp;
-    // Consume queue's offset(step by one)
+    // Consume queue's offset(step by one) 消费队列的逻辑位点。
     private long logicsOffset;
 
 

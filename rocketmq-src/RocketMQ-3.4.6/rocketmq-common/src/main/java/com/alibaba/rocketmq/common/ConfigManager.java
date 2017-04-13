@@ -41,17 +41,28 @@ public abstract class ConfigManager {
 
     public abstract String configFilePath();
 
-
+    /*
+    * topicConfigManager.load();
+      consumerOffsetManager.load();
+      subscriptionGroupManager.load();
+      ScheduleMessageService.load()
+    * */ //加载consumerOffset.json  delayOffset.json  subscriptionGroup.json  topics.json 到相应的地方
     public boolean load() {
         String fileName = null;
         try {
+            /* topicConfigManager.configFilePath(); consumerOffsetManager.configFilePath(); subscriptionGroupManager.configFilePath();
+            * ScheduleMessageService.configFilePath()
+            * */
             fileName = this.configFilePath();
-            String jsonString = MixAll.file2String(fileName);
+            String jsonString = MixAll.file2String(fileName); //获取文件内容存入jsonString
             if (null == jsonString || jsonString.length() == 0) {
                 return this.loadBak();
             }
             else {
-                this.decode(jsonString);
+                /* topicConfigManager.decode(); consumerOffsetManager.decode(); subscriptionGroupManager.decode();
+                * ScheduleMessageService.decode()
+                * */
+                this.decode(jsonString); //解析上面从配置文件中读取的配置信息，然后把这些配置文件中的配置序列化到响应的地方存储
                 plog.info("load {} OK", fileName);
                 return true;
             }
@@ -84,11 +95,12 @@ public abstract class ConfigManager {
 
 
     public synchronized void persist() {
+        //例如创建topic对应的this就是TopicConfigManager, TopicConfigManager.encode就是 topicConfigTable 进行序列化后的string,见 ConfigManager.createTopicInSendMessageBackMethod
         String jsonString = this.encode(true);
         if (jsonString != null) {
             String fileName = this.configFilePath();
             try {
-                MixAll.string2File(jsonString, fileName);
+                MixAll.string2File(jsonString, fileName); //存入对应的文件
             }
             catch (IOException e) {
                 plog.error("persist file Exception, " + fileName, e);

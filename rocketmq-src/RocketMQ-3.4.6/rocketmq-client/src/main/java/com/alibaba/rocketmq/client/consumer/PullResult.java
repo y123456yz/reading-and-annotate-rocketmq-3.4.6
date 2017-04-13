@@ -22,16 +22,19 @@ import java.util.List;
 
 
 /**
- * @author shijia.wxr
+ * @author shijia.wxr   PullResultExt类继承该类
  */
 public class PullResult {
     private final PullStatus pullStatus;
     private final long nextBeginOffset;
     private final long minOffset;
     private final long maxOffset;
+    //客户端拉取到消息后在通过 PullAPIWrapper.processPullResult 中把接收到的消息赋值给msgFoundList
+    //拉取到的消息，匹配tag后存入msgFoundList   赋值见PullAPIWrapper.processPullResult
+    //拉取到消息后首先存入PullResult.msgFoundList，在DefaultMQPushConsumerImpl.pullMessage然后进行规则匹配，匹配的msg会进一步存入ProcessQueue.msgTreeMap
     private List<MessageExt> msgFoundList;
 
-
+    //MQClientAPIImpl.processPullResponse中调用该接口，并赋值相关成员变量
     public PullResult(PullStatus pullStatus, long nextBeginOffset, long minOffset, long maxOffset,
                       List<MessageExt> msgFoundList) {
         super();
@@ -67,7 +70,8 @@ public class PullResult {
         return msgFoundList;
     }
 
-
+    //客户端拉取到消息后在通过 PullAPIWrapper.processPullResult 中把接收到的消息赋值给msgFoundList
+    //然后在 DefaultMQPushConsumerImpl.pullMessage 中取出消息进行 GroovyScript 匹配
     public void setMsgFoundList(List<MessageExt> msgFoundList) {
         this.msgFoundList = msgFoundList;
     }

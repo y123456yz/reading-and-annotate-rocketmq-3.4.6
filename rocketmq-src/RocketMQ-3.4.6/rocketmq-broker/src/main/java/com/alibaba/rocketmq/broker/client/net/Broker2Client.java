@@ -55,7 +55,7 @@ import java.util.Map.Entry;
 import java.util.concurrent.ConcurrentHashMap;
 
 
-/**
+/** 负责服务器给client发送请求。
  * @author shijia.wxr
  */
 public class Broker2Client {

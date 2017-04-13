@@ -156,6 +156,7 @@ public class RemotingUtil {
         }
     }
 
+    //Ω‚ŒˆIP:PORT£¨¥Ê»Î¿‡InetSocketAddress
     public static SocketAddress string2SocketAddress(final String addr) {
         String[] s = addr.split(":");
         InetSocketAddress isa = new InetSocketAddress(s[0], Integer.valueOf(s[1]));

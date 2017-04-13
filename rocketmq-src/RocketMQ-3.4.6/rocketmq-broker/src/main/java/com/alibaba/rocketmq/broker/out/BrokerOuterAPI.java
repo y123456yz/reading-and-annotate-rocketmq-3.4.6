@@ -41,6 +41,9 @@ import java.util.List;
 
 
 /**
+ * broker调用外部的接口。
+ * BrokerOuterAPI:是broker和别的模块通信的类，封装了NettyRemotingClient。
+ * MQClientImpl:是客户端和broker与nameserver通信的类，也封装了NettyRemotingClient。
  * @author shijia.wxr
  * @author manhong.yqd
  */
@@ -104,6 +107,25 @@ public class BrokerOuterAPI {
     }
 
 
+    /**
+     * 把broker注册到nameserver.  同时把broker管理的topic配置信息提交给nameserver进行维护。
+     * @param namesrvAddr
+     * @param clusterName
+     * @param brokerAddr
+     * @param brokerName
+     * @param brokerId
+     * @param haServerAddr
+     * @param topicConfigWrapper
+     * @param filterServerList
+     * @param oneway
+     * @return
+     * @throws RemotingCommandException
+     * @throws MQBrokerException
+     * @throws RemotingConnectException
+     * @throws RemotingSendRequestException
+     * @throws RemotingTimeoutException
+     * @throws InterruptedException
+     */
     private RegisterBrokerResult registerBroker(//
             final String namesrvAddr,//
             final String clusterName,// 1
@@ -163,6 +185,18 @@ public class BrokerOuterAPI {
     }
 
 
+    /**
+     * 有topic配置信息发生变化的时候 ，推送到nameserver .
+     * @param clusterName broker归属的集群
+     * @param brokerAddr broker的地址。
+     * @param brokerName broker名称，理解为一主多备组合而成的broker单元。
+     * @param brokerId broker编号， 大于0则为slave  ，为0则为master .
+     * @param haServerAddr 用于主备复制的ha 地址。
+     * @param topicConfigWrapper topic配置的包装器。
+     * @param filterServerList 过滤服务器列表（一个broker可以有多个过滤服务器 ？）
+     * @param oneway 单向调用。
+     * @return
+     */
     public RegisterBrokerResult registerBrokerAll(//
             final String clusterName,// 1
             final String brokerAddr,// 2
@@ -177,7 +211,7 @@ public class BrokerOuterAPI {
 
         List<String> nameServerAddressList = this.remotingClient.getNameServerAddressList();
         if (nameServerAddressList != null) {
-            for (String namesrvAddr : nameServerAddressList) {
+            for (String namesrvAddr : nameServerAddressList) { //把信息写到多个nameserver如何保证数据的一致性。
                 try {
                     RegisterBrokerResult result =
                             this.registerBroker(namesrvAddr, clusterName, brokerAddr, brokerName, brokerId,

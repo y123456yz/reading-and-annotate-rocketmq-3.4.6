@@ -25,15 +25,22 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 
 /**
- * @author shijia.wxr
+ * @author shijia.wxr   该类主要是通过getAndCreateMQClientInstance生成MQClientInstance，
+ * 同时把clientid和这个QClientInstance进行hashmap存入factoryTable
  */
 public class MQClientManager {
     private static MQClientManager instance = new MQClientManager();
+    /**
+     * 实例唯一id  生成器。
+     */
     private AtomicInteger factoryIndexGenerator = new AtomicInteger();
+    /* clientid和MQClientInstance实例的hashmap存入MQClientManager.factoryTable */
     private ConcurrentHashMap<String/* clientId */, MQClientInstance> factoryTable =
             new ConcurrentHashMap<String, MQClientInstance>();
 
-
+    /**
+     * 构造函数私有化，静态实例变量做单例。
+     */
     private MQClientManager() {
 
     }
@@ -43,10 +50,13 @@ public class MQClientManager {
         return instance;
     }
 
-
+    /*
+    * 通过getAndCreateMQClientInstance生成MQClientInstance，
+    * 同时把clientid和这个QClientInstance进行hashmap存入this.factoryTable
+    * */
     public MQClientInstance getAndCreateMQClientInstance(final ClientConfig clientConfig, RPCHook rpcHook) {
         String clientId = clientConfig.buildMQClientId();
-        MQClientInstance instance = this.factoryTable.get(clientId);
+        MQClientInstance instance = this.factoryTable.get(clientId); // 默认一个进程一个 MQClientInstance
         if (null == instance) {
             instance =
                     new MQClientInstance(clientConfig.cloneClientConfig(),

@@ -33,9 +33,15 @@ import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 
 
-/**
- * @author shijia.wxr
- */
+/**  协议格式:<length> <header length> <header data> <bodydata>
+ *所有的通信协议列表见 RequestCode，通过 createRequestCommand 来构建通信内容，然后通过 NettyEncoder.encode 进行序列化，然后发送
+ *服务端收到后通过 NettyDecoder.decode反序列号，然后NettyServerHandler读取反序列号后的报文，
+ * 数据收发 请求 应答对应的分支在 RemotingCommandType（NettyRemotingAbstract.processMessageReceived）
+ * 接收到 RemotingCommand 在 NettyDecoder.decode 中生成
+ *
+ * @author shijia.wxr  RocketMq服务器与客户端通过传递RemotingCommand来交互，通过 NettyDecoder，对RemotingCommand进行协议的编码与解码
+ *
+ */ //该类的encode和decode完成通信报文的序列化和反序列化
 public class RemotingCommand {
     private static final Logger log = LoggerFactory.getLogger(RemotingHelper.RemotingLogName);
     public static String RemotingVersionKey = "rocketmq.remoting.version";
@@ -50,15 +56,22 @@ public class RemotingCommand {
     private static final int RPC_ONEWAY = 1; // 0, RPC
     // 1, Oneway
 
-    private int code;
+    //在rocketMQProtocolEncode中进行encode，然后传输给对方
+    private int code; //RequestCode.CONSUMER_SEND_MSG_BACK 等
     private LanguageCode language = LanguageCode.JAVA;
     private int version = 0;
+    //做tcp连接上的线程复用。
     private int opaque = RequestId.getAndIncrement();
-    private int flag = 0;
+    //该报文请求还是应答  接收分支见processMessageReceived  判断见 isResponseType
+    private int flag = 0; //header data的flag:x 指定  在 getType 转换为 RemotingCommandType.RESPONSE_COMMAND 或者  REQUEST_COMMAND
     private String remark;
+    //把下面customHeader中的信息填充到这里，见 makeCustomHeaderToNet
+    //"extFields":{"topic":"yyztest2","queueId":"3","consumerGroup":"yyzGroup2","commitOffset":"28"}
     private HashMap<String, String> extFields;
 
-    private transient CommandCustomHeader customHeader;
+    //例如CONSUMER_SEND_MSG_BACK消息，customHeader为ConsumerSendMsgBackRequestHeader 填充见consumerSendMessageBack
+    //header data
+    private transient CommandCustomHeader customHeader; //例如CONSUMER_SEND_MSG_BACK消息，customHeader 填充见 MQClientAPIImpl.consumerSendMessageBack
 
     private static final Map<Class<? extends CommandCustomHeader>, Field[]> clazzFieldsCache =
             new HashMap<Class<? extends CommandCustomHeader>, Field[]>();
@@ -132,7 +145,7 @@ public class RemotingCommand {
         return cmd;
     }
 
-
+    //Class<? extends CommandCustomHeader> 泛型，表示classHeader参数可以是继承 CommandCustomHeader 类的所有子类
     public static RemotingCommand createResponseCommand(Class<? extends CommandCustomHeader> classHeader) {
         RemotingCommand cmd = createResponseCommand(RemotingSysResponseCode.SYSTEM_ERROR, "not set any response code", classHeader);
 
@@ -185,18 +198,20 @@ public class RemotingCommand {
 
     public void makeCustomHeaderToNet() {
         if (this.customHeader != null) {
+            //从header中取出这个Key class对应的所有filed
             Field[] fields = getClazzFields(customHeader.getClass());
             if (null == this.extFields) {
                 this.extFields = new HashMap<String, String>();
             }
 
-            for (Field field : fields) {
+            for (Field field : fields) { //遍历fileds数组
                 if (!Modifier.isStatic(field.getModifiers())) {
-                    String name = field.getName();
+                    String name = field.getName(); //拿到filed的name
                     if (!name.startsWith("this")) {
                         Object value = null;
                         try {
                             field.setAccessible(true);
+                            //拿到filed的value
                             value = field.get(this.customHeader);
                         }
                         catch (IllegalArgumentException e) {
@@ -204,7 +219,7 @@ public class RemotingCommand {
                         catch (IllegalAccessException e) {
                         }
 
-                        if (value != null) {
+                        if (value != null) { //写入当前RPC的extFields MAp中
                             this.extFields.put(name, value.toString());
                         }
                     }
@@ -238,9 +253,14 @@ public class RemotingCommand {
     private static final String BooleanCanonicalName2 = boolean.class.getCanonicalName();//
 
 
+    // header data 内容:{"code":15,"extFields":{"topic":"yyztest2","queueId":"3","consumerGroup":"yyzGroup2","commitOffset":"28"},"flag":2,
+    // "language":"JAVA","opaque":726,"serializeTypeCurrentRPC":"JSON","version":115}
+
+    //解析header data中extFields信息到extFields
     public CommandCustomHeader decodeCommandCustomHeader(Class<? extends CommandCustomHeader> classHeader) throws RemotingCommandException {
         CommandCustomHeader objectHeader;
         try {
+            //例如如果传进来的参数是 ConsumerSendMsgBackRequestHeader.class ，则这里new一个 ConsumerSendMsgBackRequestHeader 对象
             objectHeader = classHeader.newInstance();
         }
         catch (InstantiationException e) {
@@ -307,23 +327,26 @@ public class RemotingCommand {
 
 
     private byte[] headerEncode() {
+        //length + header length + header data  + body data中的header data写入extFields MAp中
         this.makeCustomHeaderToNet();
         if (SerializeType.ROCKETMQ == serializeTypeCurrentRPC) {
+            //接着把
             return RocketMQSerializable.rocketMQProtocolEncode(this);
         }
         else {
-            return RemotingSerializable.encode(this);
+            return RemotingSerializable.encode(this); //
         }
     }
 
-
+    //header data序列化解析
     private static RemotingCommand headerDecode(byte[] headerData, SerializeType type) {
         switch (type) {
-        case JSON:
+        case JSON: //JSON序列化方式
+            //反序列化 header data 和 类RemotingCommand
             RemotingCommand resultJson = RemotingSerializable.decode(headerData, RemotingCommand.class);
             resultJson.setSerializeTypeCurrentRPC(type);
             return resultJson;
-        case ROCKETMQ:
+        case ROCKETMQ: //飞JSON格式，则一个
             RemotingCommand resultRMQ = RocketMQSerializable.rocketMQProtocolDecode(headerData);
             resultRMQ.setSerializeTypeCurrentRPC(type);
             return resultRMQ;
@@ -334,7 +357,12 @@ public class RemotingCommand {
         return null;
     }
 
-
+    /*
+1、length(总长度，用4个字节存储)
+2、header length （包头长度） //header length一共四字节，其中的第1字节用来存储code标识(SerializeType.JSON 或者 SerializeType.ROCKETMQ)，见 markProtocolType
+3、header data(包头数据)
+4、body data(数据包数据)
+    * */
     public ByteBuffer encode() {
         // 1> header length size
         int length = 4;
@@ -353,7 +381,7 @@ public class RemotingCommand {
         // length
         result.putInt(length);
 
-        // header length
+        // header length //header length一共四字节，其中的第1字节用来存储code标识(SerializeType.JSON 或者 SerializeType.ROCKETMQ)，见markProtocolType
         result.put(markProtocolType(headerData.length, serializeTypeCurrentRPC));
 
         // header data
@@ -369,25 +397,27 @@ public class RemotingCommand {
         return result;
     }
 
-
     public ByteBuffer encodeHeader() {
         return encodeHeader(this.body != null ? this.body.length : 0);
     }
 
+    //header length一共四字节，其中的第1字节用来存储code标识(SerializeType.JSON 或者 SerializeType.ROCKETMQ)，见markProtocolType
+    //length + header length + header data  + body data
+    //解析包头 length + header length + header data
     public ByteBuffer encodeHeader(final int bodyLength) {
         // 1> header length size
         int length = 4;
 
         // 2> header data length
         byte[] headerData;
-        headerData = this.headerEncode();
+        headerData = this.headerEncode(); //header data转换为网络字节序
 
         length += headerData.length;
 
         // 3> body data length
         length += bodyLength;
 
-        ByteBuffer result = ByteBuffer.allocate(4 + length - bodyLength);
+        ByteBuffer result = ByteBuffer.allocate(4 + length - bodyLength); //length + header length + header data 不包括body
 
         // length
         result.putInt(length);
@@ -403,13 +433,23 @@ public class RemotingCommand {
         return result;
     }
 
-
+    /*
+1、length(总长度，用4个字节存储)
+2、header length （包头长度） //header length一共四字节，其中的第1字节用来存储code标识(SerializeType.JSON 或者 SerializeType.ROCKETMQ)，见markProtocolType
+3、header data(包头数据)
+4、body data(数据包数据)
+    * */
     public static RemotingCommand decode(final byte[] array) {
         ByteBuffer byteBuffer = ByteBuffer.wrap(array);
         return decode(byteBuffer);
     }
 
-
+    /*
+1、length(总长度，用4个字节存储)
+2、header length （包头长度）//header length一共四字节，其中的第1字节用来存储code标识(SerializeType.JSON 或者 SerializeType.ROCKETMQ)，见 markProtocolType
+3、header data(包头数据)
+4、body data(数据包数据)
+    * */
     public static RemotingCommand decode(final ByteBuffer byteBuffer) {
         int length = byteBuffer.limit();
         int oriHeaderLen = byteBuffer.getInt();
@@ -418,6 +458,7 @@ public class RemotingCommand {
         byte[] headerData = new byte[headerLength];
         byteBuffer.get(headerData);
 
+        //反序列化解析header data和RemotingCommand类
         RemotingCommand cmd = headerDecode(headerData, getProtocolType(oriHeaderLen));
 
         int bodyLength = length - 4 - headerLength;
@@ -426,12 +467,12 @@ public class RemotingCommand {
             bodyData = new byte[bodyLength];
             byteBuffer.get(bodyData);
         }
-        cmd.body = bodyData;
+        cmd.body = bodyData; //把body部分还原出来，也就是把消息内容
 
         return cmd;
     }
 
-
+    //header length一共四字节，其中的第1字节用来存储code标识(SerializeType.JSON 或者 SerializeType.ROCKETMQ)，见markProtocolType
     public static byte[] markProtocolType(int source, SerializeType type) {
         byte[] result = new byte[4];
         result[0] = type.getCode();

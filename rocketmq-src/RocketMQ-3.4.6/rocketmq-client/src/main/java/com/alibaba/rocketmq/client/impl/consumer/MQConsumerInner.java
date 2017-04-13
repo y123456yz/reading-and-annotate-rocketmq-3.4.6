@@ -29,7 +29,8 @@ import java.util.Set;
 /**
  * Consumer inner interface
  *
- * @author shijia.wxr
+ * @author shijia.wxr  DefaultMQPushConsumerImpl 或者 DefaultMQPullConsumerImpl 中实现该类
+ * 一个消费分组对应一个MQConsumerInner，存储在MQClientInstance.consumerTable
  */
 public interface MQConsumerInner {
     String groupName();
@@ -49,7 +50,9 @@ public interface MQConsumerInner {
 
     void doRebalance();
 
-
+    //MQClientInstance.startScheduledTask->persistConsumerOffset->MQClientInstance.startScheduledTask->persistConsumerOffset中执行
+    //当客户端消费成功后，需要把该信息推送给broker，这样broker才能更新offset中执行  当客户端消费成功后，需要把该信息推送给broker，这样broker才能更新offset
+    //MQClientInstance.startScheduledTask->persistConsumerOffset中执行  当客户端消费成功后，需要把该信息推送给broker，这样broker才能更新offset
     void persistConsumerOffset();
 
 

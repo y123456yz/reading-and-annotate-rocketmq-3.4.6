@@ -36,6 +36,9 @@ import java.util.List;
  */
 public class DefaultMQProducer extends ClientConfig implements MQProducer {
     protected final transient DefaultMQProducerImpl defaultMQProducerImpl;
+    /**
+     * 投递者分组。
+     */
     private String producerGroup;
     /**
      * Just for testing or demo program
@@ -43,9 +46,21 @@ public class DefaultMQProducer extends ClientConfig implements MQProducer {
     private String createTopicKey = MixAll.DEFAULT_TOPIC;
     private volatile int defaultTopicQueueNums = 4;
     private int sendMsgTimeout = 3000;
+    /**
+     * 消息体超过4k 则启动压缩。
+     */
     private int compressMsgBodyOverHowmuch = 1024 * 4;
+    /**
+     * 发送失败时重试次数 。
+     */
     private int retryTimesWhenSendFailed = 2;
+    /**
+     * 未存储成功消息时是否重试其他的broker .
+     */
     private boolean retryAnotherBrokerWhenNotStoreOK = false;
+    /**
+     * 最大消息体大小 ，128k .
+     */
     private int maxMessageSize = 1024 * 128;
 
     /**
@@ -78,7 +93,7 @@ public class DefaultMQProducer extends ClientConfig implements MQProducer {
     }
 
 
-    @Override
+    @Override //例如Producer.main中调用
     public void start() throws MQClientException {
         this.defaultMQProducerImpl.start();
     }

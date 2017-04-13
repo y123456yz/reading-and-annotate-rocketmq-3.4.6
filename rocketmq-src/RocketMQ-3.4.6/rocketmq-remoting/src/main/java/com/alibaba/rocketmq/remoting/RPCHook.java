@@ -20,9 +20,23 @@ package com.alibaba.rocketmq.remoting;
 import com.alibaba.rocketmq.remoting.protocol.RemotingCommand;
 
 
+/**
+ * rpc请求的钩子
+ */
 public interface RPCHook {
+    /**
+     * 发送请求前。
+     * @param remoteAddr
+     * @param request
+     */
     void doBeforeRequest(final String remoteAddr, final RemotingCommand request);
 
+    /**
+     * 接受响应后。
+     * @param remoteAddr
+     * @param request
+     * @param response
+     */
     void doAfterResponse(final String remoteAddr, final RemotingCommand request,
                          final RemotingCommand response);
 }

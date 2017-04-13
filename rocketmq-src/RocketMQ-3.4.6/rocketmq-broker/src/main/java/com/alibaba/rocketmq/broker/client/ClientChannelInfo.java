@@ -22,6 +22,11 @@ import com.alibaba.rocketmq.remoting.protocol.LanguageCode;
 
 
 /**
+ * 标识一个clientid对应的一个通道 。
+ * 而这个clientid 的默认值是clientip@processid .
+ * 也就是说同一台物理服务器上一个rocketmq client进程对应一个通道。
+ *
+ *
  * @author shijia.wxr
  */
 public class ClientChannelInfo {

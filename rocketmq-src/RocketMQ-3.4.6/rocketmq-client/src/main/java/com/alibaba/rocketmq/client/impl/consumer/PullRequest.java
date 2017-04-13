@@ -19,14 +19,14 @@ package com.alibaba.rocketmq.client.impl.consumer;
 import com.alibaba.rocketmq.common.message.MessageQueue;
 
 
-/**
- * @author shijia.wxr
+/** 一个消费队列的拉取请求。  一般有多少个队列就有多少个PullRequest   在 PullMessageService.run 中通过该PullRequest来拉取消息
+ * @author shijia.wxr  //RebalancePushImpl.dispatchPullRequest
  */
 public class PullRequest {
     private String consumerGroup;
     private MessageQueue messageQueue;
     private ProcessQueue processQueue;
-    private long nextOffset;
+    private long nextOffset; //消费队列的逻辑位点。
 
 
     public String getConsumerGroup() {
@@ -53,7 +53,7 @@ public class PullRequest {
         return nextOffset;
     }
 
-
+    //DefaultMQPushConsumerImpl.pullMessage->PullCallback.onSuccess中赋值
     public void setNextOffset(long nextOffset) {
         this.nextOffset = nextOffset;
     }

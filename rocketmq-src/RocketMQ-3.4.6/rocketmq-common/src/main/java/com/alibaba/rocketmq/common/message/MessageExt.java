@@ -25,15 +25,22 @@ import java.nio.ByteBuffer;
 
 
 /**
- * @author shijia.wxr
+ * msg信息
+ * @author shijia.wxr  http://blog.csdn.net/xxxxxx91116/article/details/50333161 记录了消息存储格式
+ * @author shijia.wxr  http://blog.csdn.net/xxxxxx91116/article/details/50333161 记录了消息存储格式
+ * 或者参考http://blog.csdn.net/chunlongyu/article/details/54576649
+ * 存储中用到的消息内容信息
  */
 public class MessageExt extends Message {
     private static final long serialVersionUID = 5720810158625748049L;
 
+    //以下成员几乎在MessageDecoder.decode()中调用赋值
+
     private int queueId;
     private int storeSize;
-    private long queueOffset;
-    private int sysFlag;
+    //该条smg对应在队列中的offset 从ProcessQueue.putMessage接口也可以看出
+    private long queueOffset; //MessageDecoder.decode()中调用赋值
+    private int sysFlag;//标明是否事务处理等
     private long bornTimestamp;
     private SocketAddress bornHost;
     private long storeTimestamp;
@@ -41,7 +48,7 @@ public class MessageExt extends Message {
     private String msgId;
     private long commitLogOffset;
     private int bodyCRC;
-    private int reconsumeTimes;
+    private int reconsumeTimes; //该条消息重复消费的次数，
 
     private long preparedTransactionOffset;
 
@@ -182,7 +189,7 @@ public class MessageExt extends Message {
         return queueOffset;
     }
 
-
+    //MessageDecoder.decode()中调用赋值
     public void setQueueOffset(long queueOffset) {
         this.queueOffset = queueOffset;
     }
@@ -216,12 +223,12 @@ public class MessageExt extends Message {
         return TopicFilterType.SINGLE_TAG;
     }
 
-
+    //在sendMessageBack接口使用 DefaultMQPushConsumerImpl.sendMessageBack
     public int getReconsumeTimes() {
         return reconsumeTimes;
     }
 
-
+    //processConsumeResult会调用赋值
     public void setReconsumeTimes(int reconsumeTimes) {
         this.reconsumeTimes = reconsumeTimes;
     }

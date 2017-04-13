@@ -23,11 +23,13 @@ import java.util.List;
 
 /**
  * Strategy Algorithm for message allocating between consumers
- *
+ * Rebalance 算法实现策略
  * @author shijia.wxr
  * @author vongosling
+ * AllocateMessageQueueStrategy实现在类 AllocateMessageQueueAveragely  AllocateMessageQueueByMachineRoom  AllocateMessageQueueByConfig
+ * AllocateMessageQueueAveragelyByCircle  Rebalance 算法实现策略
  */
-public interface AllocateMessageQueueStrategy {
+public interface AllocateMessageQueueStrategy { //属于同一消费分组的消费者按照什么方法消费，例如3个消费者消费topic上的消息，该topic一共10个队列，该如何消费
 
     /**
      * Allocating by consumer id

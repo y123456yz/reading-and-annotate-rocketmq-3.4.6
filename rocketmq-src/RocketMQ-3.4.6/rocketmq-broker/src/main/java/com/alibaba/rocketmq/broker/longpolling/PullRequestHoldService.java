@@ -35,6 +35,9 @@ public class PullRequestHoldService extends ServiceThread {
     private static final Logger log = LoggerFactory.getLogger(LoggerName.BrokerLoggerName);
     private static final String TOPIC_QUEUEID_SEPARATOR = "@";
 
+    /**
+     * 聚集了一组对topic@queueid指定的队列的拉消息请求。
+     */
     private ConcurrentHashMap<String/* topic@queueid */, ManyPullRequest> pullRequestTable =
             new ConcurrentHashMap<String, ManyPullRequest>(1024);
 
@@ -132,7 +135,7 @@ public class PullRequestHoldService extends ServiceThread {
                     replayList.add(request);
                 }
 
-                if (!replayList.isEmpty()) {
+                if (!replayList.isEmpty()) { //有新消息写入， 但是消费队列的最大逻辑位点仍然比请求的位点要小，则重新加入到消费队列的pullRequest列表中去 ，等待下一轮处理。
                     mpr.addPullRequest(replayList);
                 }
             }

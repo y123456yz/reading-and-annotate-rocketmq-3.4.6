@@ -68,10 +68,23 @@ public class MixAll {
     public static final String DEFAULT_CHARSET = "UTF-8";
     public static final long MASTER_ID = 0L;
     public static final long CURRENT_JVM_PID = getPID();
+    /*
+    * 按照消费端的GroupName来分组重试队列，如果消费端消费失败，消息将被发往重试队列中，比如图中的%RETRY%ConsumerGroupA。
+按照消费端的GroupName来分组死信队列，如果消费端消费失败，并重试指定次数后，仍然失败，则发往死信队列，比如图中的%DLQ%ConsumerGroupA。
+死信队列（Dead Letter Queue）一般用于存放由于某种原因无法传递的消息，比如处理失败或者已经过期的消息。
+每个消费者分组分别对应一个%RETRY% 重试队列和一个%DLQ%死信队列
+    * */
+    //某个消费分组xxxx对应的重试队列，如果一个消费则分组消费多个topic，其重试队列也只有一个，即%RETRY%xxxx，表示该消费者分组消费失败的消息全部存到该重试队列中
     public static final String RETRY_GROUP_TOPIC_PREFIX = "%RETRY%";
+    //SendMessageProcessor.consumerSendMsgBack 中默认创建死信队列是可写，但是不可读
     public static final String DLQ_GROUP_TOPIC_PREFIX = "%DLQ%";
+
+
     public static final String SYSTEM_TOPIC_PREFIX = "rmq_sys_";
 
+    /*
+    *在consumerGroup前面加上该前缀RETRY_GROUP_TOPIC_PREFIX
+    **/
     public static String getRetryTopic(final String consumerGroup) {
         return RETRY_GROUP_TOPIC_PREFIX + consumerGroup;
     }
@@ -81,7 +94,7 @@ public class MixAll {
         return consumerGroup.startsWith(CID_RMQ_SYS_PREFIX);
     }
 
-
+    //SendMessageProcessor.consumerSendMsgBack 中默认创建死信队列是可写，但是不可读
     public static String getDLQTopic(final String consumerGroup) {
         return DLQ_GROUP_TOPIC_PREFIX + consumerGroup;
     }
@@ -118,6 +131,7 @@ public class MixAll {
         return Math.abs(value);
     }
 
+    //把str写入filename文件
     public static final void string2File(final String str, final String fileName) throws IOException {
         String tmpFile = fileName + ".tmp";
         string2FileNotSafe(str, tmpFile);
@@ -164,6 +178,7 @@ public class MixAll {
     }
 
 
+    //获取文件内容并返回
     public static final String file2String(final String fileName) {
         File file = new File(fileName);
         return file2String(file);
@@ -196,7 +211,7 @@ public class MixAll {
         return null;
     }
 
-
+    //获取文件内容并返回
     public static final String file2String(final File file) {
         if (file.exists()) {
             char[] data = new char[(int) file.length()];

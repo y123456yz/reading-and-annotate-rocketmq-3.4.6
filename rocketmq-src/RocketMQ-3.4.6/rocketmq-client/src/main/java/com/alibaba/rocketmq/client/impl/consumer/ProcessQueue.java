@@ -34,8 +34,9 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 
 /**
+ * 队列消费快照， 用于client处理消费队列。
  * Queue consumption snapshot
- * 
+ * //每一个消息队列，对应一个处理队列。 RebalanceImpl.processQueueTable(MessageQueue----ProcessQueue)
  * @author shijia.wxr
  */
 public class ProcessQueue {
@@ -46,10 +47,17 @@ public class ProcessQueue {
 
     private final Logger log = ClientLogger.getLog();
     private final ReadWriteLock lockTreeMap = new ReentrantReadWriteLock();
+    //DefaultMQPushConsumerImpl.pullMessage->PullCallback.onSuccess->ProcessQueue.putMessage中把获取到的msg存入到msgTreeMap中
+    //queueOffset<-->MessageExt  从broker拉取的消息存到本地，也就是存入msgTreeMap   接收到的消息做规则匹配满足后，会加入到ProcessQueue.msgTreeMap
+    //拉取到消息后首先存入PullResult.msgFoundList，然后进行规则匹配，匹配的msg会进一步存入ProcessQueue.msgTreeMap,
+    // 当业务消费msg结果打回broker后，都会移除该msg，见removeMessage，如果消费msg结果打回broker失败，则这些msg还是会留在本地msgTreeMap,进行重新发送，见processConsumeResult.submitConsumeRequestLater
     private final TreeMap<Long, MessageExt> msgTreeMap = new TreeMap<Long, MessageExt>();
+    /* 每从broker获取到消息，就要移动该offset，也就是从broker拉取到消息的最大位点 */
     private volatile long queueOffsetMax = 0L;
+    /* 该ProcessQueue中有效的msg数,见本类的 putMessage 接口 */
     private final AtomicLong msgCount = new AtomicLong();
-
+    //例如之前某个某个topicxx在broker-A和broker-B上面都有创建topicxx，现在把broker-A下线或者配置为只消费模式，则broker-A上面的topicxx对应的queue队列会被标记为dropped
+    //RebalanceImpl.updateProcessQueueTableInRebalance 中更新该标记
     private volatile boolean dropped = false;
     private volatile long lastPullTimestamp = System.currentTimeMillis();
     private final static long PullMaxIdleTime = Long.parseLong(System.getProperty(
@@ -64,7 +72,7 @@ public class ProcessQueue {
     private volatile boolean consuming = false;
     private final TreeMap<Long, MessageExt> msgTreeMapTemp = new TreeMap<Long, MessageExt>();
     private final AtomicLong tryUnlockTimes = new AtomicLong(0);
-
+    /* broker队列积压的消息数，赋值见ProcessQueue.putMessage */
     private volatile long msgAccCnt = 0;
 
 
@@ -79,6 +87,8 @@ public class ProcessQueue {
         return result;
     }
 
+    //DefaultMQPushConsumerImpl.pullMessage->PullCallback.onSuccess->ProcessQueue.putMessage中把获取到的msg存入到msgTreeMap中
+    //匹配的msg会存入到 ProcessQueue.msgTreeMap队列
     public boolean putMessage(final List<MessageExt> msgs) {
         boolean dispatchToConsume = false;
         try {
@@ -86,12 +96,15 @@ public class ProcessQueue {
             try {
                 int validMsgCnt = 0;
                 for (MessageExt msg : msgs) {
+                    //把拉取到的消息存入msgTreeMap中
                     MessageExt old = msgTreeMap.put(msg.getQueueOffset(), msg);
                     if (null == old) {
                         validMsgCnt++;
+                        /* 更新队列queueoffset */
                         this.queueOffsetMax = msg.getQueueOffset();
                     }
                 }
+                //msg数增加validMsgCnt
                 msgCount.addAndGet(validMsgCnt);
 
                 if (!msgTreeMap.isEmpty() && !this.consuming) {
@@ -100,9 +113,12 @@ public class ProcessQueue {
                 }
 
                 if (!msgs.isEmpty()) {
-                    MessageExt messageExt = msgs.get(msgs.size() - 1);
+                    MessageExt messageExt = msgs.get(msgs.size() - 1); //获取最后一条消息
                     String property = messageExt.getProperty(MessageConst.PROPERTY_MAX_OFFSET);
                     if (property != null) {
+                        //在消息属性PROPERTY_MAX_OFFSET中记录了队列的最大位点， 和当前拉取到的最后一条消息
+                        //的位点做差值，就是broker这个队列还堆积了多少消息未消费。。  messageExt.getQueueOffset()表示从队列中取到的最后一条消息
+                        //该getQueueOffset对应的就是从队列中拉取到的最后一条消息的offset，也就是该消费分组消费到队列中的那条offset最大的消息
                         long accTotal = Long.parseLong(property) - messageExt.getQueueOffset();
                         if (accTotal > 0) {
                             this.msgAccCnt = accTotal;
@@ -122,6 +138,10 @@ public class ProcessQueue {
     }
 
 
+    /**
+     * 本地消息处理队列中最大和最小位点的差值 。也就是积压在本地的msg数
+     * @return
+     */
     public long getMaxSpan() {
         try {
             this.lockTreeMap.readLock().lockInterruptibly();
@@ -141,6 +161,9 @@ public class ProcessQueue {
         return 0;
     }
 
+    //如果消费失败的消息重新打回broker 仍然失败， 即前面的msgBackFailed 非空，那么removeMessage 这个函数
+    //得到的位点offset就是一批消息中最小的那个位点，而如果msgBackFailed 为空，则这里offset 就是这批消息的最大位点+1
+    //当业务消费msg成功或者消费失败重新打回broker重试队列，都会移除该msg，在ConsumeMessageConcurrentlyService.processConsumeResult
     public long removeMessage(final List<MessageExt> msgs) {
         long result = -1;
         final long now = System.currentTimeMillis();
@@ -148,18 +171,19 @@ public class ProcessQueue {
             this.lockTreeMap.writeLock().lockInterruptibly();
             this.lastConsumeTimestamp = now;
             try {
+                /* 这里的msgTreeMap是从broker中拉取到的所有消息，这里移除的msg是消费后通知broker成功的消息，则移除这些msg后就是通知broker失败的消息 */
                 if (!msgTreeMap.isEmpty()) {
-                    result = this.queueOffsetMax + 1;
+                    result = this.queueOffsetMax + 1; //默认是从broker拉取到的这批消息中最大位点+1
                     int removedCnt = 0;
                     for (MessageExt msg : msgs) {
                         MessageExt prev = msgTreeMap.remove(msg.getQueueOffset());
-                        if (prev != null) {
+                        if (prev != null) { //每移除一个msg，则removedCnt减1，removedCnt默认值为0，每取出一个就-1成为负数
                             removedCnt--;
                         }
                     }
-                    msgCount.addAndGet(removedCnt);
+                    msgCount.addAndGet(removedCnt); //减去移除的msg
 
-                    if (!msgTreeMap.isEmpty()) {
+                    if (!msgTreeMap.isEmpty()) { //获取第一个msg的offset，也就是这批msg数据的最小offset
                         result = msgTreeMap.firstKey();
                     }
                 }
@@ -185,12 +209,12 @@ public class ProcessQueue {
         return msgCount;
     }
 
-
+    //例如之前某个某个topicxx在broker-A和broker-B上面都有创建topicxx，现在把broker-A下线或者配置为只消费模式，则broker-A上面的topicxx对应的queue队列会被标记为dropped
     public boolean isDropped() {
         return dropped;
     }
 
-
+    //RebalanceImpl.updateProcessQueueTableInRebalance 中调用
     public void setDropped(boolean dropped) {
         this.dropped = dropped;
     }

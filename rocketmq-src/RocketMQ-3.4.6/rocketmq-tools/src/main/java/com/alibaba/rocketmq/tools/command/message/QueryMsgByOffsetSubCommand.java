@@ -67,7 +67,7 @@ public class QueryMsgByOffsetSubCommand implements SubCommand {
         return options;
     }
 
-
+    //sh mqadmin  queryMsgByOffset 命令执行到这里
     @Override
     public void execute(CommandLine commandLine, Options options, RPCHook rpcHook) {
         DefaultMQAdminExt defaultMQAdminExt = new DefaultMQAdminExt(rpcHook);
@@ -77,6 +77,7 @@ public class QueryMsgByOffsetSubCommand implements SubCommand {
         defaultMQPullConsumer.setInstanceName(Long.toString(System.currentTimeMillis()));
 
         try {
+            //解析 sh mqadmin  queryMsgByOffset 命令携带的各种参数信息
             String topic = commandLine.getOptionValue('t').trim();
             String brokerName = commandLine.getOptionValue('b').trim();
             String queueId = commandLine.getOptionValue('i').trim();

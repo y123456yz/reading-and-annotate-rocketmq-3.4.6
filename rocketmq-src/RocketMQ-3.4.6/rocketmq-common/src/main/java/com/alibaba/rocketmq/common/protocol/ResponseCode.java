@@ -27,7 +27,7 @@ public class ResponseCode extends RemotingSysResponseCode {
     public static final int MESSAGE_ILLEGAL = 13;
     public static final int SERVICE_NOT_AVAILABLE = 14;
     public static final int VERSION_NOT_SUPPORTED = 15;
-    public static final int NO_PERMISSION = 16;
+    public static final int NO_PERMISSION = 16; //例如投递消息到该broker，但是改broker却配置为不可写
     public static final int TOPIC_NOT_EXIST = 17;
     public static final int TOPIC_EXIST_ALREADY = 18;
     public static final int PULL_NOT_FOUND = 19;

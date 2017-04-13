@@ -76,7 +76,7 @@ public class MessageAccessor {
         return msg.getProperty(MessageConst.PROPERTY_MQ2_FLAG);
     }
 
-
+    //sendMessageBackµ÷ÓÃ
     public static void setReconsumeTime(final Message msg, String reconsumeTimes) {
         putProperty(msg, MessageConst.PROPERTY_RECONSUME_TIME, reconsumeTimes);
     }

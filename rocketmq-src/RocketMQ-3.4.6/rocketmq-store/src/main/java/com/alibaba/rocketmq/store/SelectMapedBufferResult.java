@@ -20,14 +20,19 @@ import java.nio.ByteBuffer;
 
 
 /**
- * @author shijia.wxr
+ * @author shijia.wxr  SelectMapedBufferResult类获取到的是mapedFile中从startOffset开始的size字节数据，这size字节数据存入byteBuffer，见MapedFile.selectMapedBuffer
  */
 public class SelectMapedBufferResult {
+    //mapfile的物理起始位点
     private final long startOffset;
+    //读取到的bytebuffer.
     private final ByteBuffer byteBuffer;
+    //字节数组的长度。
     private int size;
+    //从哪个mapfile文件
     private MapedFile mapedFile;
 
+    //返回mapedFile中从startOffset开始的size字节数据，并存入byteBuffer
     public SelectMapedBufferResult(long startOffset, ByteBuffer byteBuffer, int size, MapedFile mapedFile) {
         this.startOffset = startOffset;
         this.byteBuffer = byteBuffer;

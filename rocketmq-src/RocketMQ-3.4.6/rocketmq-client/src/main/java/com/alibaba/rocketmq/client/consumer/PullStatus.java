@@ -21,11 +21,11 @@ package com.alibaba.rocketmq.client.consumer;
  */
 public enum PullStatus {
     /**
-     * Founded
+     * Founded   拉取到消息
      */
     FOUND,
     /**
-     * No new message can be pull
+     * No new message can be pull  没拉取到消息
      */
     NO_NEW_MSG,
     /**

@@ -86,6 +86,7 @@ public class ConsumeMessageOrderlyService implements ConsumeMessageService {
     public void start() {
         if (MessageModel.CLUSTERING.equals(ConsumeMessageOrderlyService.this.defaultMQPushConsumerImpl
             .messageModel())) {
+            //集群消费模式，每20s 锁队列。
             this.scheduledExecutorService.scheduleAtFixedRate(new Runnable() {
                 @Override
                 public void run() {
@@ -148,6 +149,9 @@ public class ConsumeMessageOrderlyService implements ConsumeMessageService {
         return this.defaultMQPushConsumerImpl.getConsumerStatsManager();
     }
 
+    /**
+     * 本地实际消费消息的线程
+     */
     class ConsumeRequest implements Runnable {
         private final ProcessQueue processQueue;
         private final MessageQueue messageQueue;
@@ -159,6 +163,8 @@ public class ConsumeMessageOrderlyService implements ConsumeMessageService {
         }
 
 
+        /**
+         */
         @Override
         public void run() {
             if (this.processQueue.isDropped()) {
@@ -167,8 +173,14 @@ public class ConsumeMessageOrderlyService implements ConsumeMessageService {
                 return;
             }
 
+            /**
+
+             */
             final Object objLock = messageQueueLock.fetchLockObject(this.messageQueue);
             synchronized (objLock) {
+                //集群消费 ，并且是顺序消费消息，必须在broker上加上队列锁才能消费消息。
+                //从RebalanceService来看， 这里对新挂接队列的处理方式是先把队列的消息从broker Pull下来，
+                //然后再看消费者有没有在broker上持有这个消费队列的锁, 有锁才继续消费 。
                 if (MessageModel.BROADCASTING
                     .equals(ConsumeMessageOrderlyService.this.defaultMQPushConsumerImpl.messageModel())
                         || (this.processQueue.isLocked() && !this.processQueue.isLockExpired())) {
@@ -208,6 +220,7 @@ public class ConsumeMessageOrderlyService implements ConsumeMessageService {
                             break;
                         }
 
+                        //一次批量消费的消息个数。
                         final int consumeBatchSize =
                                 ConsumeMessageOrderlyService.this.defaultMQPushConsumer
                                     .getConsumeMessageBatchMaxSize();

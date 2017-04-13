@@ -26,20 +26,53 @@ import java.util.List;
 
 
 /**
+ *ConsumeQueue 是commitlog的索引，也是以Mapfile为存储。
+ * 每一个元素包含了
+ * 8字节commitlog offset + 4字节commitlog大小 + 4字节msgtag hashcode .
+ *
+ * 逻辑上，一个队列是和某一个Topic相关的，有自己的队列id .
+ *
+ *Consume Queue存储消息在Commit Log中的位置信息
+ *
+ [root@s10-2-s-5 topic-prod-xxxxxservice-xxxxx]# pwd
+ /data/store/consumequeue/topic-prod-xxxxxservice-xxxxx
+ [root@s10-2-s-5 topic-prod-xxxxxservice-xxxxx]# ls
+ 0  1  2  3  4  5  6  7  8  9
+ [root@s10-2-s-5 topic-prod-xxxxxservice-xxxxx]# ls 0/
+ 00000000000048000000  00000000000054000000  00000000000060000000  00000000000066000000  00000000000072000000  00000000000078000000  00000000000084000000  00000000000090000000  00000000000096000000  00000000000102000000
+ [root@s10-2-s-5 topic-prod-xxxxxservice-xxxxx]#
+ *
+ * ConsumeQueue中并不需要存储消息的内容，而存储的是消息在CommitLog中的offset。也就是说，ConsumeQuue其实是CommitLog的一个索引文件。
+ *ConsumeQueue是定长的结构，每1条记录固定的20个字节。很显然，Consumer消费消息的时候，要读2次：先读ConsumeQueue得到offset，再读CommitLog得到消息内容。
+ * 参考:http://blog.csdn.net/chunlongyu/article/details/54576649
+ * http://blog.csdn.net/chunlongyu/article/details/54576649
+ *
+ *
+ *DefaultMessageStore.loadConsumeQueue broker起来后，从/data/store/consumequeue路径读取对应topic中各个队列的commit log索引信息
+ * 遍历${user.home} \store\consumequeue\${topic}\${queueId}下所有文件，根据topic， queueId， 文件来构建ConsueQueue对象
  * @author shijia.wxr
  */
 public class ConsumeQueue {
-    public static final int CQStoreUnitSize = 20;
+    //8字节commitlog offset + 4字节commit log item size + 8字节message tag hashcode.
+    public static final int CQStoreUnitSize = 20; //见ROCKETMQ开发手册表7-1
     private static final Logger log = LoggerFactory.getLogger(LoggerName.StoreLoggerName);
     private static final Logger logError = LoggerFactory.getLogger(LoggerName.StoreErrorLoggerName);
     private final DefaultMessageStore defaultMessageStore;
+    //每个消费队列最终也是通过Mapfile来操作的。 ConsumeQueue.ConsumeQueue 中赋值
+    //无论CommitLog，还是ConsumeQueue，都有一个对应的MappedFileQueue，也就是对应的内存映射文件的链表
     private final MapedFileQueue mapedFileQueue;
     private final String topic;
     private final int queueId;
     private final ByteBuffer byteBufferIndex;
     private final String storePath;
-    private final int mapedFileSize;
+    private final int mapedFileSize; //通过 MessageStoreConfig.getMapedFileSizeConsumeQueue 计算，默认为30W个 CQStoreUnitSize大小
+    /**
+     * 最大commitlog的位点。
+     */
     private long maxPhysicOffset = -1;
+    /**
+     * 消费队列的mapfile的最小物理位点, ,比如： 如果这个值是40 ，则队列的逻辑位点实际上是40/20=2
+     */
     private volatile long minLogicOffset = 0;
 
 
@@ -56,6 +89,7 @@ public class ConsumeQueue {
         this.topic = topic;
         this.queueId = queueId;
 
+        ///data/store/consumequeue/topic-prod-xxxxxservice-xxxxx/0
         String queueDir = this.storePath//
                 + File.separator + topic//
                 + File.separator + queueId;//
@@ -65,18 +99,17 @@ public class ConsumeQueue {
         this.byteBufferIndex = ByteBuffer.allocate(CQStoreUnitSize);
     }
 
-
+    //DefaultMessageStore.loadConsumeQueue 中加载
     public boolean load() {
         boolean result = this.mapedFileQueue.load();
         log.info("load consume queue " + this.topic + "-" + this.queueId + " " + (result ? "OK" : "Failed"));
         return result;
     }
 
-
     public void recover() {
         final List<MapedFile> mapedFiles = this.mapedFileQueue.getMapedFiles();
         if (!mapedFiles.isEmpty()) {
-            int index = mapedFiles.size() - 3;
+            int index = mapedFiles.size() - 3; //最后三个文件不可靠？
             if (index < 0)
                 index = 0;
 
@@ -146,7 +179,7 @@ public class ConsumeQueue {
                 ByteBuffer byteBuffer = sbr.getByteBuffer();
                 high = byteBuffer.limit() - CQStoreUnitSize;
                 try {
-                    while (high >= low) {
+                    while (high >= low) { //二分查找
                         midOffset = (low + high) / (2 * CQStoreUnitSize) * CQStoreUnitSize;
                         byteBuffer.position(midOffset);
                         long phyOffset = byteBuffer.getLong();
@@ -157,7 +190,7 @@ public class ConsumeQueue {
                         if (storeTime < 0) {
                             return 0;
                         }
-                        else if (storeTime == timestamp) {
+                        else if (storeTime == timestamp) { //消息的存储时间戳正好和查询时间戳吻合。
                             targetOffset = midOffset;
                             break;
                         }
@@ -305,11 +338,12 @@ public class ConsumeQueue {
             if (result != null) {
                 try {
                     for (int i = 0; i < result.getSize(); i += ConsumeQueue.CQStoreUnitSize) {
-                        long offsetPy = result.getByteBuffer().getLong();
-                        result.getByteBuffer().getInt();
-                        result.getByteBuffer().getLong();
+                        long offsetPy = result.getByteBuffer().getLong();//commitlog offset
+                        result.getByteBuffer().getInt(); //commitlog item size .
+                        result.getByteBuffer().getLong(); //commitlog msgtag hashcode;
 
-                        if (offsetPy >= phyMinOffset) {
+                        if (offsetPy >= phyMinOffset) { //找到消费队列中的一个item ,这个item引用的commitlog 日志项的位点比phyMinOffset
+                            //标识的位点要大。
                             this.minLogicOffset = result.getMapedFile().getFileFromOffset() + i;
                             log.info("compute logics min offset: " + this.getMinOffsetInQuque() + ", topic: "
                                     + this.topic + ", queueId: " + this.queueId);
@@ -333,6 +367,14 @@ public class ConsumeQueue {
     }
 
 
+    /**
+     * 往消费队列(CQ)中写入索引项。
+     * @param offset commitlog offset
+     * @param size commitlog中消息item的长度。
+     * @param tagsCode 过滤tag的hashcode.
+     * @param storeTimestamp 消息存储时间
+     * @param logicOffset  CQ的逻辑位点。
+     */
     public void putMessagePostionInfoWrapper(long offset, int size, long tagsCode, long storeTimestamp,
             long logicOffset) {
         final int MaxRetries = 30;
@@ -373,8 +415,10 @@ public class ConsumeQueue {
         this.byteBufferIndex.putInt(size);
         this.byteBufferIndex.putLong(tagsCode);
 
+        //CQ item 在mapfile中的物理位点 (逻辑位点 乘以 CQ中item的长度。)
         final long expectLogicOffset = cqOffset * CQStoreUnitSize;
 
+        //
         MapedFile mapedFile = this.mapedFileQueue.getLastMapedFile(expectLogicOffset);
         if (mapedFile != null) {
             if (mapedFile.isFirstCreateInQueue() && cqOffset != 0 && mapedFile.getWrotePostion() == 0) {
@@ -385,6 +429,7 @@ public class ConsumeQueue {
             }
 
             if (cqOffset != 0) {
+                //currentLogicOffset是CQ item 在mapfile中的物理位点。
                 long currentLogicOffset = mapedFile.getWrotePostion() + mapedFile.getFileFromOffset();
                 if (expectLogicOffset != currentLogicOffset) {
                     logError
@@ -419,6 +464,10 @@ public class ConsumeQueue {
         }
     }
 
+    /**
+     * @param startIndex 消费队列的逻辑位点。
+     * @return
+     */
     public SelectMapedBufferResult getIndexBuffer(final long startIndex) {
         int mapedFileSize = this.mapedFileSize;
         long offset = startIndex * CQStoreUnitSize;

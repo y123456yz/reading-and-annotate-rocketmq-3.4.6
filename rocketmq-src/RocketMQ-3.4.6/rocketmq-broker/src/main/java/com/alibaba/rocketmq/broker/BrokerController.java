@@ -61,6 +61,16 @@ import java.util.concurrent.*;
 
 
 /**
+ * 每一个broker默认会启动三个端口。
+ * 10909 broker的所谓netty fast server的地址， 和10911端口一样，用于处理跟nameserver和client的通信。
+ * 10911 broker的netty server的地址， 用于和namserver 以及client的通信。
+ * 10912   master broker 用于主备数据同步的端口。
+ *
+ *BrokerController的556行会启动一个定时服务，每间隔30s由Broker向NameServer发送注册请求,
+ * NameServer会在RouteInfoManager的199行向 brokerLiveTable 写入broker的live 信息.
+ * NameServer会在RouteInfoManager的523行，每10s做一次过期扫描， 并以2分钟作为broker过期时间, 一旦过期，则把
+ *
+ *
  * @author shijia.wxr
  */
 public class BrokerController {
@@ -70,7 +80,7 @@ public class BrokerController {
     private final NettyClientConfig nettyClientConfig;
     private final MessageStoreConfig messageStoreConfig;
     private final DataVersion configDataVersion = new DataVersion();
-    private final ConsumerOffsetManager consumerOffsetManager;
+    private final ConsumerOffsetManager consumerOffsetManager; //消费进度consumer offset
     private final ConsumerManager consumerManager;
     private final ProducerManager producerManager;
     private final ClientHousekeepingService clientHousekeepingService;
@@ -78,21 +88,26 @@ public class BrokerController {
     private final PullRequestHoldService pullRequestHoldService;
     private final MessageArrivingListener messageArrivingListener;
     private final Broker2Client broker2Client;
-    private final SubscriptionGroupManager subscriptionGroupManager;
+    private final SubscriptionGroupManager subscriptionGroupManager; //消费者订阅关系consumer subscription
     private final ConsumerIdsChangeListener consumerIdsChangeListener;
     private final RebalanceLockManager rebalanceLockManager = new RebalanceLockManager();
     private final BrokerOuterAPI brokerOuterAPI;
     private final ScheduledExecutorService scheduledExecutorService = Executors.newSingleThreadScheduledExecutor(new ThreadFactoryImpl(
         "BrokerControllerScheduledThread"));
     private final SlaveSynchronize slaveSynchronize;
+    //this.messageStore = new DefaultMessageStore() ，见 initialize 接口
     private MessageStore messageStore;
     private RemotingServer remotingServer;
     private RemotingServer fastRemotingServer;
 
-    private TopicConfigManager topicConfigManager;
+    private TopicConfigManager topicConfigManager; //topic配置
+    ////消息发送线程池 。 赋值见 BrokerController.initialize
     private ExecutorService sendMessageExecutor;
+    ////消息拉取线程池。 赋值见 BrokerController.initialize
     private ExecutorService pullMessageExecutor;
+    //admin管理 线程池。赋值见 BrokerController.initialize
     private ExecutorService adminBrokerExecutor;
+    ////client管理线程池。赋值见 BrokerController.initialize
     private ExecutorService clientManageExecutor;
     private boolean updateMasterHAServerAddrPeriodically = false;
 
@@ -150,10 +165,10 @@ public class BrokerController {
     public boolean initialize() throws CloneNotSupportedException {
         boolean result = true;
 
-        result = result && this.topicConfigManager.load();
-
-        result = result && this.consumerOffsetManager.load();
-        result = result && this.subscriptionGroupManager.load();
+        /* 加载/root/store/config中的各个配置文件到响应的类中 */
+        result = result && this.topicConfigManager.load(); //加载topic配置
+        result = result && this.consumerOffsetManager.load(); // 加载消费进度consumer offset
+        result = result && this.subscriptionGroupManager.load(); //加载消费者订阅关系consumer subscription
 
         if (result) {
             try {
@@ -167,13 +182,16 @@ public class BrokerController {
             }
         }
 
-        result = result && this.messageStore.load();
+        //加载本地消息 DefaultMessageStore.load()  delayOffset.json  consumerOffset.json  commitlog  consumequeue加载
+        result = result && this.messageStore.load(); //DefaultMessageStore.load
 
         if (result) {
+            //对生产者和消费者进行网络数据收发的 10911端口 的网络事件处理
             this.remotingServer = new NettyRemotingServer(this.nettyServerConfig, this.clientHousekeepingService);
             NettyServerConfig fastConfig=(NettyServerConfig) this.nettyServerConfig.clone();
             fastConfig.setListenPort(nettyServerConfig.getListenPort()-2);
             this.fastRemotingServer = new NettyRemotingServer(fastConfig, this.clientHousekeepingService);
+            //消息发送线程池 。
             this.sendMessageExecutor = new ThreadPoolExecutor(//
                 this.brokerConfig.getSendMessageThreadPoolNums(),//
                 this.brokerConfig.getSendMessageThreadPoolNums(),//
@@ -182,6 +200,7 @@ public class BrokerController {
                 this.sendThreadPoolQueue,//
                 new ThreadFactoryImpl("SendMessageThread_"));
 
+            //消息拉取线程池。
             this.pullMessageExecutor = new ThreadPoolExecutor(//
                 this.brokerConfig.getPullMessageThreadPoolNums(),//
                 this.brokerConfig.getPullMessageThreadPoolNums(),//
@@ -190,10 +209,12 @@ public class BrokerController {
                 this.pullThreadPoolQueue,//
                 new ThreadFactoryImpl("PullMessageThread_"));
 
+            //admin管理 线程池。
             this.adminBrokerExecutor =
                     Executors.newFixedThreadPool(this.brokerConfig.getAdminBrokerThreadPoolNums(), new ThreadFactoryImpl(
                         "AdminBrokerThread_"));
 
+            //client管理线程池。
             this.clientManageExecutor =
                     Executors.newFixedThreadPool(this.brokerConfig.getClientManageThreadPoolNums(), new ThreadFactoryImpl(
                         "ClientManageThread_"));
@@ -205,6 +226,7 @@ public class BrokerController {
             // TODO remove in future
             final long initialDelay = UtilAll.computNextMorningTimeMillis() - System.currentTimeMillis();
             final long period = 1000 * 60 * 60 * 24;
+            //scheduleAtFixedRate方法：“fixed-rate”；如果第一次执行时间被delay了，随后的执行时间按照 上一次开始的 时间点 进行计算
             this.scheduledExecutorService.scheduleAtFixedRate(new Runnable() {
                 @Override
                 public void run() {
@@ -215,7 +237,7 @@ public class BrokerController {
                         log.error("schedule record error.", e);
                     }
                 }
-            }, initialDelay, period, TimeUnit.MILLISECONDS);
+            }, initialDelay, period, TimeUnit.MILLISECONDS); //每24小时记录一次broker stats
 
             this.scheduledExecutorService.scheduleAtFixedRate(new Runnable() {
                 @Override
@@ -227,7 +249,7 @@ public class BrokerController {
                         log.error("schedule persist consumerOffset error.", e);
                     }
                 }
-            }, 1000 * 10, this.brokerConfig.getFlushConsumerOffsetInterval(), TimeUnit.MILLISECONDS);
+            }, 1000 * 10, this.brokerConfig.getFlushConsumerOffsetInterval(), TimeUnit.MILLISECONDS); //每5秒flush一次消费位点。
 
             this.scheduledExecutorService.scheduleAtFixedRate(new Runnable() {
 
@@ -240,7 +262,7 @@ public class BrokerController {
                         log.error("schedule dispatchBehindBytes error.", e);
                     }
                 }
-            }, 1000 * 10, 1000 * 60, TimeUnit.MILLISECONDS);
+            }, 1000 * 10, 1000 * 60, TimeUnit.MILLISECONDS); //  每1分钟记录一次分发到cq和索引文件中的commitlog的位点和已经commit的位点差异。。
 
             if (this.brokerConfig.getNamesrvAddr() != null) {
                 this.brokerOuterAPI.updateNameServerAddressList(this.brokerConfig.getNamesrvAddr());
@@ -251,7 +273,7 @@ public class BrokerController {
                     @Override
                     public void run() {
                         try {
-                            BrokerController.this.brokerOuterAPI.fetchNameServerAddr();
+                            BrokerController.this.brokerOuterAPI.fetchNameServerAddr(); //定时从http rest api 获取NS地址
                         }
                         catch (Exception e) {
                             log.error("ScheduledTask fetchNameServerAddr exception", e);
@@ -260,7 +282,7 @@ public class BrokerController {
                 }, 1000 * 10, 1000 * 60 * 2, TimeUnit.MILLISECONDS);
             }
 
-            if (BrokerRole.SLAVE == this.messageStoreConfig.getBrokerRole()) {
+            if (BrokerRole.SLAVE == this.messageStoreConfig.getBrokerRole()) { //本broker是从broker
                 if (this.messageStoreConfig.getHaMasterAddress() != null && this.messageStoreConfig.getHaMasterAddress().length() >= 6) {
                     this.messageStore.updateHaMasterAddress(this.messageStoreConfig.getHaMasterAddress());
                     this.updateMasterHAServerAddrPeriodically = false;
@@ -282,12 +304,13 @@ public class BrokerController {
                     }
                 }, 1000 * 10, 1000 * 60, TimeUnit.MILLISECONDS);
             }
-            else {
+            else { //本broker是主broker
                 this.scheduledExecutorService.scheduleAtFixedRate(new Runnable() {
 
                     @Override
                     public void run() {
                         try {
+                            //打印主备之间commitlog同步位点差异。
                             BrokerController.this.printMasterAndSlaveDiff();
                         }
                         catch (Exception e) {
@@ -302,7 +325,12 @@ public class BrokerController {
     }
 
 
-    public void registerProcessor() {
+    /**
+     * 每一个请求码都在remoting 和 fast remoting两个server上同时有处理。
+     * 通信协议注册  赋值见 BrokerController.initialize
+     */
+    public void registerProcessor() { ////NettyRemotingClient 和 NettyRemotingServer 中的initChannel执行各种命令回调
+        //processor 可能是SendMessageProcessor ClientManageProcessor SendMessageProcessor QueryMessageProcessor ClientManageProcessor
         SendMessageProcessor sendProcessor = new SendMessageProcessor(this);
         sendProcessor.registerSendMessageHook(sendMessageHookList);
         
@@ -458,6 +486,7 @@ public class BrokerController {
         catch (InterruptedException e) {
         }
 
+        //把broker从NS注销掉。
         this.unregisterBrokerAll();
 
         if (this.sendMessageExecutor != null) {
@@ -552,6 +581,11 @@ public class BrokerController {
     public synchronized void registerBrokerAll(final boolean checkOrderConfig, boolean oneway) {
         TopicConfigSerializeWrapper topicConfigWrapper = this.getTopicConfigManager().buildTopicConfigSerializeWrapper();
 
+        /**
+         * broker本身不可读或者不可写，则用 broker 本身的权限配置覆盖topic的读写权限。
+         * 或者简单说 ，broker的读写权限比topic的读写权限具有更高的优先级。
+         *
+         */
         if (!PermName.isWriteable(this.getBrokerConfig().getBrokerPermission())
                 || !PermName.isReadable(this.getBrokerConfig().getBrokerPermission())) {
             ConcurrentHashMap<String, TopicConfig> topicConfigTable = new ConcurrentHashMap<String, TopicConfig>();
@@ -564,6 +598,7 @@ public class BrokerController {
             topicConfigWrapper.setTopicConfigTable(topicConfigTable);
         }
 
+//        把broker维护的topic配置推送给namserver, 同时把broker注册到Nameserver
         RegisterBrokerResult registerBrokerResult = this.brokerOuterAPI.registerBrokerAll(//
             this.brokerConfig.getBrokerClusterName(), //
             this.getBrokerAddr(), //
@@ -575,6 +610,8 @@ public class BrokerController {
             oneway);
 
         if (registerBrokerResult != null) {
+            //registerBrokerResult.getHaServerAddr() != null 标识当前broker是slave，则需要把ha server的地址更新掉。
+            //所谓ha是 master broker用于主从数据同步的IP + 端口。
             if (this.updateMasterHAServerAddrPeriodically && registerBrokerResult.getHaServerAddr() != null) {
                 this.messageStore.updateHaMasterAddress(registerBrokerResult.getHaServerAddr());
             }

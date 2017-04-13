@@ -54,13 +54,15 @@ import java.util.concurrent.ConcurrentHashMap;
 
 
 /**
- * @author shijia.wxr
+ * @author shijia.wxr  一个消费分组对应一个MQConsumerInner，存储在MQClientInstance.consumerTable
  */
 public class DefaultMQPullConsumerImpl implements MQConsumerInner {
     private final Logger log = ClientLogger.getLog();
     private final DefaultMQPullConsumer defaultMQPullConsumer;
     private ServiceState serviceState = ServiceState.CREATE_JUST;
-    private MQClientInstance mQClientFactory;
+
+    /* start方法中调用this.mQClientFactory = MQClientManager.getInstance().getAndCreateMQClientInstance(this.defaultMQPullConsumer, this.rpcHook);*/
+    private MQClientInstance mQClientFactory; //该客户端clientid对应的MQClientInstance
     private PullAPIWrapper pullAPIWrapper;
     private OffsetStore offsetStore;
     private RebalanceImpl rebalanceImpl = new RebalancePullImpl(this);
@@ -488,6 +490,20 @@ public class DefaultMQPullConsumerImpl implements MQConsumerInner {
                 break;
             case RUNNING:
                 this.persistConsumerOffset();
+                /* 如果是生产者，断开连接后会注销producer，抓包如下:
+                 *客户端向broker发送注销 yyzGroup2 消费分组请求
+                 * ........{"code":35,"extFields":{"clientID":"192.168.56.1@7644","producerGroup":"yyzGroup2"},"flag":0,
+                 * "language":"JAVA","opaque":12,"serializeTypeCurrentRPC":"JSON","version":115}
+                 * broker会有注销成功
+                 * ...s...o{"code":0,"extFields":{},"flag":1,"language":"JAVA","opaque":12,"serializeTypeCurrentRPC":"JSON","version":115}
+                 *
+                 *客户端向broker发送注销 CLIENT_INNER_PRODUCER 消费分组请求
+                 * ........{"code":35,"extFields":{"clientID":"192.168.56.1@7644","producerGroup":"CLIENT_INNER_PRODUCER"},"flag":0,"
+                 * language":"JAVA","opaque":20,"serializeTypeCurrentRPC":"JSON","version":115}
+                 *
+                 * broker会有注销成功
+                 * ...s...o{"code":0,"extFields":{},"flag":1,"language":"JAVA","opaque":20,"serializeTypeCurrentRPC":"JSON","version":115}
+                  * */
                 this.mQClientFactory.unregisterConsumer(this.defaultMQPullConsumer.getConsumerGroup());
                 this.mQClientFactory.shutdown();
                 log.info("the consumer [{}] shutdown OK", this.defaultMQPullConsumer.getConsumerGroup());

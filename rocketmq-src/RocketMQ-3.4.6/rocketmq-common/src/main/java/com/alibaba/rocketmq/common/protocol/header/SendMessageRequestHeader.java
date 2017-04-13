@@ -29,6 +29,8 @@ import com.alibaba.rocketmq.remoting.exception.RemotingCommandException;
 /**
  * @author shijia.wxr
  */
+//MSG头部内容在sendKernelImpl组包发送, body内容赋值在mQClientFactory.getMQClientAPIImpl().sendMessage
+//解包在parseRequestHeader
 public class SendMessageRequestHeader implements CommandCustomHeader {
     @CFNotNull
     private String producerGroup;
@@ -43,6 +45,7 @@ public class SendMessageRequestHeader implements CommandCustomHeader {
     @CFNotNull
     private Integer sysFlag;
     @CFNotNull
+    //消息在投递者的生成时间。
     private Long bornTimestamp;
     @CFNotNull
     private Integer flag;

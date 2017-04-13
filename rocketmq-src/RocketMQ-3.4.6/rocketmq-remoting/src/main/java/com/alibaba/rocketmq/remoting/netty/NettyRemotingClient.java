@@ -49,8 +49,8 @@ import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
 
-/**
- * @author shijia.wxr
+/** NettyRemotingClient 和 NettyRemotingServer 对应
+ * @author shijia.wxr  NettyRemotingClient中实现RemotingClient接口  都是对应网络事件处理
  */
 public class NettyRemotingClient extends NettyRemotingAbstract implements RemotingClient {
     private static final Logger log = LoggerFactory.getLogger(RemotingHelper.RemotingLogName);
@@ -242,13 +242,12 @@ public class NettyRemotingClient extends NettyRemotingAbstract implements Remoti
 
 
     @Override
-    public void start() {
+    public void start() { //MQClientAPIImpl.start中执行   //MQClientInstance.start->MQClientAPIImpl.start->NettyRemotingClient.start
         this.defaultEventExecutorGroup = new DefaultEventExecutorGroup(//
             nettyClientConfig.getClientWorkerThreads(), //
             new ThreadFactory() {
 
                 private AtomicInteger threadIndex = new AtomicInteger(0);
-
 
                 @Override
                 public Thread newThread(Runnable r) {
@@ -265,6 +264,7 @@ public class NettyRemotingClient extends NettyRemotingAbstract implements Remoti
             .option(ChannelOption.SO_SNDBUF, nettyClientConfig.getClientSocketSndBufSize())
             //
             .option(ChannelOption.SO_RCVBUF, nettyClientConfig.getClientSocketRcvBufSize())
+
             //
             .handler(new ChannelInitializer<SocketChannel>() {
                 @Override
@@ -278,12 +278,13 @@ public class NettyRemotingClient extends NettyRemotingAbstract implements Remoti
                         new NettyClientHandler());
                 }
             });
-
+        //延迟3秒， 一秒扫一次resposneTable, 通过回调函数处理response. client 异步拉取消息的处理也是在这里完成。
         this.timer.scheduleAtFixedRate(new TimerTask() {
 
             @Override
             public void run() {
                 try {
+                    //定时扫描
                     NettyRemotingClient.this.scanResponseTable();
                 }
                 catch (Exception e) {
@@ -292,6 +293,7 @@ public class NettyRemotingClient extends NettyRemotingAbstract implements Remoti
             }
         }, 1000 * 3, 1000);
 
+        //用于处理nettyEvent.
         if (this.channelEventListener != null) {
             this.nettyEventExecuter.start();
         }
@@ -615,8 +617,7 @@ public class NettyRemotingClient extends NettyRemotingAbstract implements Remoti
         }
     }
 
-
-    @Override
+    @Override //异步从addr地址获取报文信息.
     public void invokeAsync(String addr, RemotingCommand request, long timeoutMillis,
             InvokeCallback invokeCallback) throws InterruptedException, RemotingConnectException,
             RemotingTooMuchRequestException, RemotingTimeoutException, RemotingSendRequestException {

@@ -74,7 +74,7 @@ public class TopAddressing {
         return fetchNSAddr(true, 3000);
     }
 
-
+    //通过http协议获取nameserver地址列表
     public final String fetchNSAddr(boolean verbose, long timeoutMills) {
         String url = this.wsAddr;
         try {

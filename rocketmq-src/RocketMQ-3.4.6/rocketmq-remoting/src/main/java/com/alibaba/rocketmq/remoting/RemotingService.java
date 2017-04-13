@@ -16,9 +16,11 @@
  */
 
 package com.alibaba.rocketmq.remoting;
-
+/*
+* RemotingServer 或者 RemotingClient中继承该接口，在NettyRemotingClient类实现该接口
+* */
 public interface RemotingService {
-     void start();
+     void start(); //MQClientAPIImpl.start中执行
 
      void shutdown();
 

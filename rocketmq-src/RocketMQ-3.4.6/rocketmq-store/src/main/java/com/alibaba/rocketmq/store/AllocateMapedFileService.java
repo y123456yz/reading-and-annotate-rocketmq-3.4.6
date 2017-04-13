@@ -46,6 +46,13 @@ public class AllocateMapedFileService extends ServiceThread {
     }
 
 
+    /**
+     * 提交mapfile的创建请求 。 包含下一个 和下下个mapfile .
+     * @param nextFilePath 下一个文件的路径
+     * @param nextNextFilePath 下下个文件的路径。
+     * @param fileSize 文件大小。
+     * @return
+     */
     public MapedFile putRequestAndReturnMapedFile(String nextFilePath, String nextNextFilePath, int fileSize) {
         AllocateRequest nextReq = new AllocateRequest(nextFilePath, fileSize);
         AllocateRequest nextNextReq = new AllocateRequest(nextNextFilePath, fileSize);
@@ -74,6 +81,7 @@ public class AllocateMapedFileService extends ServiceThread {
         AllocateRequest result = this.requestTable.get(nextFilePath);
         try {
             if (result != null) {
+                //通过countdownlatch阻塞等待mapfile创建请求结果。
                 boolean waitOK = result.getCountDownLatch().await(WaitTimeOut, TimeUnit.MILLISECONDS);
                 if (!waitOK) {
                     log.warn("create mmap timeout " + result.getFilePath() + " " + result.getFileSize());
@@ -133,6 +141,7 @@ public class AllocateMapedFileService extends ServiceThread {
 
 
     /**
+     * 异步的从队列中取出mapfile的创建请求 ，做文件内存映射。
      * Only interrupted by the external thread, will return false
      */
     private boolean mmapOperation() {
@@ -146,7 +155,7 @@ public class AllocateMapedFileService extends ServiceThread {
                         + req.getFileSize());
                 return true;
             }
-            if (expectedRequest != req) {
+            if (expectedRequest != req) { // 取出来的一定要是req
                 log.warn("never expected here,  maybe cause timeout " + req.getFilePath() + " "
                         + req.getFileSize() + ", req:" + req + ", expectedRequest:" + expectedRequest);
                 return true;
@@ -156,7 +165,7 @@ public class AllocateMapedFileService extends ServiceThread {
                 long beginTime = System.currentTimeMillis();
                 MapedFile mapedFile = new MapedFile(req.getFilePath(), req.getFileSize());
                 long eclipseTime = UtilAll.computeEclipseTimeMilliseconds(beginTime);
-                if (eclipseTime > 10) {
+                if (eclipseTime > 10) { //map文件时间超过10毫秒。
                     int queueSize = this.requestQueue.size();
                     log.warn("create mapedFile spent time(ms) " + eclipseTime + " queue size " + queueSize
                             + " " + req.getFilePath() + " " + req.getFileSize());
@@ -167,6 +176,7 @@ public class AllocateMapedFileService extends ServiceThread {
                     .getMapedFileSizeCommitLog() //
                         && //
                         this.messageStore.getMessageStoreConfig().isWarmMapedFileEnable()) {
+                    //请求创建的mapfile超过1G 。
                     mapedFile.warmMappedFile(this.messageStore.getMessageStoreConfig().getFlushDiskType(),
                         this.messageStore.getMessageStoreConfig().getFlushLeastPagesWhenWarmMapedFile());
                 }
@@ -184,7 +194,7 @@ public class AllocateMapedFileService extends ServiceThread {
         catch (IOException e) {
             log.warn(this.getServiceName() + " service has exception. ", e);
             this.hasException = true;
-            if (null != req) {
+            if (null != req) { //如果是iO 异常重新再做一次。
                 requestQueue.offer(req);
                 try {
                     Thread.sleep(1);
@@ -195,7 +205,7 @@ public class AllocateMapedFileService extends ServiceThread {
         }
         finally {
             if (req != null && isSuccess)
-                req.getCountDownLatch().countDown();
+                req.getCountDownLatch().countDown(); //通过这个coutdown . 告知84行的await可以被唤醒获取异步处理结果。
         }
         return true;
     }

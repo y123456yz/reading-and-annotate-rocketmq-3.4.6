@@ -33,7 +33,7 @@ import java.util.Map;
 
 
 /**
- * @author shijia.wxr
+ * @author shijia.wxr  commitlog文件中映射到MapedFile中的具体消息就是通过该类的encode decode接口进行操作
  */
 public class MessageDecoder {
     public final static int MSG_ID_LENGTH = 8 + 8;
@@ -94,6 +94,8 @@ public class MessageDecoder {
     public static MessageExt decode(java.nio.ByteBuffer byteBuffer, final boolean readBody) {
         return decode(byteBuffer, readBody, true);
     }
+
+    //MessageDecoder.encode和MessageDecoder.decode对应，都是操作commitlog文件中的某条消息内容
     public static byte[] encode(MessageExt messageExt) throws Exception {
         byte[] body = messageExt.getBody();
         byte[] topics = messageExt.getTopic().getBytes(CHARSET_UTF8);
@@ -202,8 +204,9 @@ public class MessageDecoder {
 
         return byteBuffer.array();
     }
-
-
+    //MessageDecoder.encode和MessageDecoder.decode对应，都是操作commitlog文件中的某条消息内容
+    //MessageDecoder.decode解析byteBuffer数据到MessageExt的各个成员(这里的byteBuffer中的数据实际上是存储在commitlog文件中的一条消息
+    // 该消息内容byteBuffer就是通过offset位点从commitlog对应的MapedFile中读取的)
     public static MessageExt decode(java.nio.ByteBuffer byteBuffer, final boolean readBody, final boolean deCompressBody) {
         try {
             MessageExt msgExt = new MessageExt();

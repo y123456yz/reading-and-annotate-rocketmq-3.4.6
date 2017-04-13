@@ -21,6 +21,8 @@ import com.alibaba.rocketmq.common.MixAll;
 
 
 /**
+ * 某一个消费者分组的订阅配置。
+ *， 重试队列 重试消费都在这里
  * @author shijia.wxr
  */
 public class SubscriptionGroupConfig {
@@ -28,8 +30,9 @@ public class SubscriptionGroupConfig {
     private boolean consumeEnable = true;
     private boolean consumeFromMinEnable = true;
     private boolean consumeBroadcastEnable = true;
-    private int retryQueueNums = 1;
-    private int retryMaxTimes = 16;
+    //某个消费分组xxxx对应的重试队列，如果一个消费则分组消费多个topic，其重试队列也只有一个，即%RETRY%xxxx，表示该消费者分组消费失败的消息全部存到该重试队列中
+    private int retryQueueNums = 1; //通过broker.properties 中的retryMaxTimes进行配置，如果配置为0，表示不允许有重试队列，消费失败打过来后，直接返回OK
+    private int retryMaxTimes = 16; //消费失败重试消费最大次数 broker.properties参数可配置
     private long brokerId = MixAll.MASTER_ID;
     private long whichBrokerWhenConsumeSlowly = 1;
 

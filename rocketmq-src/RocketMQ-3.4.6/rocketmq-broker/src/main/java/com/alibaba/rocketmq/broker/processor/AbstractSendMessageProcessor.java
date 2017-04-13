@@ -97,6 +97,7 @@ public abstract class AbstractSendMessageProcessor implements NettyRequestProces
             requestHeaderV2 =
                     (SendMessageRequestHeaderV2) request
                         .decodeCommandCustomHeader(SendMessageRequestHeaderV2.class);
+            //注意这里没有break;
         case RequestCode.SEND_MESSAGE:
             if (null == requestHeaderV2) {
                 requestHeader =
@@ -173,6 +174,7 @@ public abstract class AbstractSendMessageProcessor implements NettyRequestProces
 
     protected RemotingCommand msgCheck(final ChannelHandlerContext ctx,
             final SendMessageRequestHeader requestHeader, final RemotingCommand response) {
+        //检查broker的写权限。
         if (!PermName.isWriteable(this.brokerController.getBrokerConfig().getBrokerPermission())
                 && this.brokerController.getTopicConfigManager().isOrderTopic(requestHeader.getTopic())) {
             response.setCode(ResponseCode.NO_PERMISSION);
@@ -180,6 +182,7 @@ public abstract class AbstractSendMessageProcessor implements NettyRequestProces
                     + "] sending message is forbidden");
             return response;
         }
+        //检查topic和系统保留的topic名字是否冲突。
         if (!this.brokerController.getTopicConfigManager().isTopicCanSendMessage(requestHeader.getTopic())) {
             String errorMsg =
                     "the topic[" + requestHeader.getTopic() + "] is conflict with system reserved words.";
@@ -204,6 +207,7 @@ public abstract class AbstractSendMessageProcessor implements NettyRequestProces
 
             log.warn("the topic " + requestHeader.getTopic() + " not exist, producer: "
                     + ctx.channel().remoteAddress());
+            //未找到topic ，则用默认的topic:TBW102  的配置来创建一个topic.
             topicConfig = this.brokerController.getTopicConfigManager().createTopicInSendMessageMethod(//
                 requestHeader.getTopic(), //
                 requestHeader.getDefaultTopic(), //
@@ -229,7 +233,7 @@ public abstract class AbstractSendMessageProcessor implements NettyRequestProces
 
         int queueIdInt = requestHeader.getQueueId();
         int idValid = Math.max(topicConfig.getWriteQueueNums(), topicConfig.getReadQueueNums());
-        if (queueIdInt >= idValid) {
+        if (queueIdInt >= idValid) { //队列id 超过了读写队列的最大ID。
             String errorInfo = String.format("request queueId[%d] is illagal, %s Producer: %s",//
                 queueIdInt,//
                 topicConfig.toString(),//

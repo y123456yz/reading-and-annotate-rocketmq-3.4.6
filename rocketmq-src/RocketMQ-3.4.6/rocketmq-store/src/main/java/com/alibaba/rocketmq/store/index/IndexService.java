@@ -36,14 +36,35 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 
 /**
- * @author shijia.wxr
+ * [root@s10-2-X-5 index]# ls
+ 20170227205337348  20170303181716054  20170309172222236  20170315084023929  20170321101102147  20170326130945963  20170331124017050  20170405125237370
+ 20170228170936582  20170307071446472  20170312100610618  20170317214604854  20170323200605634  20170329060659180  20170402182834879  20170407110209375
+ [root@s10-2-30-5 index]# du -sh *
+ 401M    20170227205337348
+ 401M    20170228170936582
+ 401M    20170303181716054
+ 401M    20170307071446472
+ 401M    20170309172222236
+ 401M    20170312100610618
+ 401M    20170315084023929
+ 401M    20170317214604854
+ 401M    20170321101102147
+ 401M    20170323200605634
+ 401M    20170326130945963
+ 401M    20170329060659180
+ 401M    20170331124017050
+ 401M    20170402182834879
+ 401M    20170405125237370
+ 117M    20170407110209375
+ [root@s10-2-X-5 index]#
+ * @author shijia.wxr   IndexService用于创建索引文件集合，当用户想要查询某个topic下某个key的消息时，能够快速响应  主要用于查询消息用的，例如更加msgid或者topic+key获取消息
  */
 public class IndexService {
     private static final Logger log = LoggerFactory.getLogger(LoggerName.StoreLoggerName);
     private final DefaultMessageStore defaultMessageStore;
     private final int hashSlotNum;
     private final int indexNum;
-    private final String storePath;
+    private final String storePath; // /root/store/index
     private final ArrayList<IndexFile> indexFileList = new ArrayList<IndexFile>();
     private final ReadWriteLock readWriteLock = new ReentrantReadWriteLock();
 
@@ -56,7 +77,30 @@ public class IndexService {
                 StorePathConfigHelper.getStorePathIndex(store.getMessageStoreConfig().getStorePathRootDir());
     }
 
-
+    /*
+    * [root@s10-2-30-5 index]# ls
+20170227205337348  20170303181716054  20170309172222236  20170315084023929  20170321101102147  20170326130945963  20170331124017050  20170405125237370
+20170228170936582  20170307071446472  20170312100610618  20170317214604854  20170323200605634  20170329060659180  20170402182834879  20170407110209375
+[root@s10-2-30-5 index]# du -sh *
+401M    20170227205337348
+401M    20170228170936582
+401M    20170303181716054
+401M    20170307071446472
+401M    20170309172222236
+401M    20170312100610618
+401M    20170315084023929
+401M    20170317214604854
+401M    20170321101102147
+401M    20170323200605634
+401M    20170326130945963
+401M    20170329060659180
+401M    20170331124017050
+401M    20170402182834879
+401M    20170405125237370
+117M    20170407110209375
+[root@s10-2-30-5 index]#
+    * */
+    //加载 /root/store/index目录下面的文件到
     public boolean load(final boolean lastExitOK) {
         File dir = new File(this.storePath);
         File[] files = dir.listFiles();

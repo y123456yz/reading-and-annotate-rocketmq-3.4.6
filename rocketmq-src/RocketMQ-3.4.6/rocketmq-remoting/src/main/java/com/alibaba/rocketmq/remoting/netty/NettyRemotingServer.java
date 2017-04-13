@@ -51,7 +51,9 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 
 /**
- * @author shijia.wxr
+ * @author shijia.wxr  NettyRemotingClient 和 NettyRemotingServer 对应  都是对应网络事件处理
+ *  数据收发 请求 应答对应的分支在 RemotingCommandType（NettyRemotingAbstract.processMessageReceived）
+//NettyRemotingClient 和 NettyRemotingServer 中的initChannel执行各种命令回调
  */
 public class NettyRemotingServer extends NettyRemotingAbstract implements RemotingServer {
     private static final Logger log = LoggerFactory.getLogger(RemotingHelper.RemotingLogName);
@@ -106,7 +108,7 @@ public class NettyRemotingServer extends NettyRemotingAbstract implements Remoti
         });
 
         if (RemotingUtil.isLinuxPlatform() //
-                && nettyServerConfig.isUseEpollNativeSelector()) {
+                && nettyServerConfig.isUseEpollNativeSelector()) { //使用epoll 进行Nio就绪事件轮询。
             this.eventLoopGroupSelector = new EpollEventLoopGroup(nettyServerConfig.getServerSelectorThreads(), new ThreadFactory() {
                 private AtomicInteger threadIndex = new AtomicInteger(0);
                 private int threadTotal = nettyServerConfig.getServerSelectorThreads();
@@ -210,6 +212,12 @@ public class NettyRemotingServer extends NettyRemotingAbstract implements Remoti
     }
 
 
+    /**
+     * 注册请求码的请求处理器。
+     * @param requestCode 请求吗。
+     * @param processor 请求处理器
+     * @param executor 任务执行器。
+     */
     @Override
     public void registerProcessor(int requestCode, NettyRequestProcessor processor, ExecutorService executor) {
         ExecutorService executorThis = executor;
@@ -234,7 +242,9 @@ public class NettyRemotingServer extends NettyRemotingAbstract implements Remoti
         return this.invokeSyncImpl(channel, request, timeoutMillis);
     }
 
-
+    /*
+    * MQClientAPIImpl.invokeAsync
+    * */
     @Override
     public void invokeAsync(Channel channel, RemotingCommand request, long timeoutMillis, InvokeCallback invokeCallback)
             throws InterruptedException, RemotingTooMuchRequestException, RemotingTimeoutException, RemotingSendRequestException {
@@ -294,6 +304,7 @@ public class NettyRemotingServer extends NettyRemotingAbstract implements Remoti
         return this.publicExecutor;
     }
 
+    //RemotingCommand 在 NettyDecoder.decode 中生成
     class NettyServerHandler extends SimpleChannelInboundHandler<RemotingCommand> {
 
         @Override

@@ -33,6 +33,7 @@ import java.util.concurrent.locks.ReentrantLock;
 
 
 /**
+ * 管理生产者分组。
  * @author shijia.wxr
  */
 public class ProducerManager {
@@ -40,6 +41,7 @@ public class ProducerManager {
     private static final long LockTimeoutMillis = 3000;
     private static final long ChannelExpiredTimeout = 1000 * 120;
     private final Lock groupChannelLock = new ReentrantLock();
+    //按生产者分组对生产者进行管理。
     private final HashMap<String /* group name */, HashMap<Channel, ClientChannelInfo>> groupChannelTable =
             new HashMap<String, HashMap<Channel, ClientChannelInfo>>();
 

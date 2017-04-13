@@ -24,7 +24,8 @@ import java.util.List;
 /**
  * A MessageListenerConcurrently object is used to receive asynchronously delivered messages concurrently
  *
- * @author shijia.wxr
+ * @author shijia.wxr   接口實現可以參考push consumer的consumer.registerMessageListener(new MessageListenerConcurrently()
+ *  PushConsumer类中会实现接口
  */
 public interface MessageListenerConcurrently extends MessageListener {
     /**
@@ -34,6 +35,7 @@ public interface MessageListenerConcurrently extends MessageListener {
      *                DefaultMQPushConsumer.consumeMessageBatchMaxSize=1，you can modify here
      * @param context
      * @return
+     * ConsumeMessageConcurrentlyService中的接口consumeMessageDirectly中執行該函數
      */
     ConsumeConcurrentlyStatus consumeMessage(final List<MessageExt> msgs,
                                              final ConsumeConcurrentlyContext context);

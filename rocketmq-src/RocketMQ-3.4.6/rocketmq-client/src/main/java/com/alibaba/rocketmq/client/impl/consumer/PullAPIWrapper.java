@@ -49,6 +49,9 @@ import java.util.concurrent.atomic.AtomicLong;
  */
 public class PullAPIWrapper {
     private final Logger log = ClientLogger.getLog();
+    /**
+     * 缓存消费队列应该从什么broker拉取消息。
+     */ //该queue对应在那个broker上面，该queue存在那个broker上面，当获取到消息后，在PullAPIWrapper.processPullResult进行更新该hashMap
     private ConcurrentHashMap<MessageQueue, AtomicLong/* brokerId */> pullFromWhichNodeTable =
             new ConcurrentHashMap<MessageQueue, AtomicLong>(32);
 
@@ -59,14 +62,14 @@ public class PullAPIWrapper {
     private volatile boolean connectBrokerByUser = false;
     private volatile long defaultBrokerId = MixAll.MASTER_ID;
 
-
+    //DefaultMQPushConsumerImpl.start()接口中new该类
     public PullAPIWrapper(MQClientInstance mQClientFactory, String consumerGroup, boolean unitMode) {
         this.mQClientFactory = mQClientFactory;
         this.consumerGroup = consumerGroup;
         this.unitMode = unitMode;
     }
 
-
+    //PullAPIWrapper.processPullResult中调用该接口
     public void updatePullFromWhichNode(final MessageQueue mq, final long brokerId) {
         AtomicLong suggest = this.pullFromWhichNodeTable.get(mq);
         if (null == suggest) {
@@ -107,11 +110,12 @@ public class PullAPIWrapper {
                 + topic, null);
     }
 
-
+    //消息解析 //DefaultMQPushConsumerImpl.pullMessage.PullCallback.onSuccess赋值
     public PullResult processPullResult(final MessageQueue mq, final PullResult pullResult,
             final SubscriptionData subscriptionData) {
         PullResultExt pullResultExt = (PullResultExt) pullResult;
 
+        //消息解析时，在消息的拉取结果中明确告知队列应该从哪个broker拉取。
         this.updatePullFromWhichNode(mq, pullResultExt.getSuggestWhichBrokerId());
         if (PullStatus.FOUND == pullResult.getPullStatus()) {
             ByteBuffer byteBuffer = ByteBuffer.wrap(pullResultExt.getMessageBinary());
@@ -122,7 +126,8 @@ public class PullAPIWrapper {
                 msgListFilterAgain = new ArrayList<MessageExt>(msgList.size());
                 for (MessageExt msg : msgList) {
                     if (msg.getTags() != null) {
-                        if (subscriptionData.getTagsSet().contains(msg.getTags())) {
+                        //把tag匹配的消息加入到msgListFilterAgain
+                        if (subscriptionData.getTagsSet().contains(msg.getTags())) { //本地做消息tag的精确匹配。
                             msgListFilterAgain.add(msg);
                         }
                     }
@@ -143,6 +148,8 @@ public class PullAPIWrapper {
                     Long.toString(pullResult.getMaxOffset()));
             }
 
+            //拉取到的消息，匹配tag后存入msgFoundList
+            //然后在 DefaultMQPushConsumerImpl.pullMessage 中取出消息进行 GroovyScript 匹配
             pullResultExt.setMsgFoundList(msgListFilterAgain);
         }
 
@@ -166,6 +173,7 @@ public class PullAPIWrapper {
     }
 
 
+    //从broker拉取消息
     public PullResult pullKernelImpl(//
             final MessageQueue mq,// 1
             final String subExpression,// 2
@@ -183,6 +191,7 @@ public class PullAPIWrapper {
                 this.mQClientFactory.findBrokerAddressInSubscribe(mq.getBrokerName(),
                     this.recalculatePullFromWhichNode(mq), false);
         if (null == findBrokerResult) {
+            //PullAPIWrapper.pullKernelImpl中调用updateTopicRouteInfoFromNameServer进行TopicRoute信息更新，最终保存在MQClientInstance.topicRouteTable
             this.mQClientFactory.updateTopicRouteInfoFromNameServer(mq.getTopic());
             findBrokerResult =
                     this.mQClientFactory.findBrokerAddressInSubscribe(mq.getBrokerName(),
@@ -192,7 +201,7 @@ public class PullAPIWrapper {
         if (findBrokerResult != null) {
             int sysFlagInner = sysFlag;
 
-            if (findBrokerResult.isSlave()) {
+            if (findBrokerResult.isSlave()) { //拉取broker选择了slave, 清理掉提交消费位点的系统标识位。
                 sysFlagInner = PullSysFlag.clearCommitOffsetFlag(sysFlagInner);
             }
 
@@ -213,12 +222,13 @@ public class PullAPIWrapper {
                 brokerAddr = computPullFromWhichFilterServer(mq.getTopic(), brokerAddr);
             }
 
+            //开始从broker对应的brokerAddr拉取消息
             PullResult pullResult = this.mQClientFactory.getMQClientAPIImpl().pullMessage(//
-                brokerAddr,//
-                requestHeader,//
-                timeoutMillis,//
-                communicationMode,//
-                pullCallback);
+                    brokerAddr,//
+                    requestHeader,//
+                    timeoutMillis,//
+                    communicationMode,//同步从broker拉取消息还是异步拉取消息
+                    pullCallback);
 
             return pullResult;
         }

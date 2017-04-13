@@ -34,7 +34,9 @@ import java.util.concurrent.TimeUnit;
 
 
 /**
- * @author shijia.wxr
+ * //selectOneMessageQueue  messageQueueList 是投递消息的时候对应的topic队列，每次投递的时候乱序选择队列投递，见ROCKET开发手册7.8节
+ //rebalance相关的是针对消费，例如有多个消费者消费同一个topic，该topic有10个队列，则消费者1消费1-5队列，消费者2消费6-10对了，见ROCKETMQ开发手册7-5
+ * @author shijia.wxr  真正使用在 DefaultMQPushConsumerImpl
  */
 public class RebalancePushImpl extends RebalanceImpl {
     private final DefaultMQPushConsumerImpl defaultMQPushConsumerImpl;
@@ -44,7 +46,6 @@ public class RebalancePushImpl extends RebalanceImpl {
         this(null, null, null, null, defaultMQPushConsumerImpl);
     }
 
-
     public RebalancePushImpl(String consumerGroup, MessageModel messageModel,
             AllocateMessageQueueStrategy allocateMessageQueueStrategy, MQClientInstance mQClientFactory,
             DefaultMQPushConsumerImpl defaultMQPushConsumerImpl) {
@@ -52,7 +53,10 @@ public class RebalancePushImpl extends RebalanceImpl {
         this.defaultMQPushConsumerImpl = defaultMQPushConsumerImpl;
     }
 
+    //updateProcessQueueTableInRebalance-> RebalancePushImpl.dispatchPullRequest
 
+    //在按topic做rebalance操作的时候PullRequest被分发出去, 一个PullRequest对应一个消费者分组对topic的某一个队列的消费。
+    //也就是存入 PullMessageService.pullRequestQueue中
     @Override
     public void dispatchPullRequest(List<PullRequest> pullRequestList) {
         for (PullRequest pullRequest : pullRequestList) {
@@ -60,7 +64,6 @@ public class RebalancePushImpl extends RebalanceImpl {
             log.info("doRebalance, {}, add a new pull request {}", consumerGroup, pullRequest);
         }
     }
-
 
     @Override
     public long computePullFromWhere(MessageQueue mq) {
@@ -72,13 +75,14 @@ public class RebalancePushImpl extends RebalanceImpl {
         case CONSUME_FROM_LAST_OFFSET_AND_FROM_MIN_WHEN_BOOT_FIRST:
         case CONSUME_FROM_MIN_OFFSET:
         case CONSUME_FROM_MAX_OFFSET:
-        case CONSUME_FROM_LAST_OFFSET: {
+        case CONSUME_FROM_LAST_OFFSET: { //从remote broker获取队列的消费位点。
             long lastOffset = offsetStore.readOffset(mq, ReadOffsetType.READ_FROM_STORE);
-            if (lastOffset >= 0) {
+            if (lastOffset >= 0) { //从其他消费者存储的那个位点开始。
                 result = lastOffset;
             }
             // First start,no offset
-            else if (-1 == lastOffset) {
+            else if (-1 == lastOffset) { //集群第一次启动消费的时候，从broker读取不到历史位点时，  如果是分组的重试topic, 则要回溯到开始位点，
+                //否则用最新的位点。
                 if (mq.getTopic().startsWith(MixAll.RETRY_GROUP_TOPIC_PREFIX)) {
                     result = 0L;
                 }
@@ -98,10 +102,10 @@ public class RebalancePushImpl extends RebalanceImpl {
         }
         case CONSUME_FROM_FIRST_OFFSET: {
             long lastOffset = offsetStore.readOffset(mq, ReadOffsetType.READ_FROM_STORE);
-            if (lastOffset >= 0) {
+            if (lastOffset >= 0) { //从broker读取到了历史位点，则从历史位点开始。
                 result = lastOffset;
             }
-            else if (-1 == lastOffset) {
+            else if (-1 == lastOffset) { //从broker读取不到历史位点，则从起始位点开始。
                 result = 0L;
             }
             else {
@@ -125,6 +129,12 @@ public class RebalancePushImpl extends RebalanceImpl {
                 }
                 else {
                     try {
+                        /**
+                         *  //从指定的时间戳开始进行位点消费， 通过时间戳定位位点的方法如下：
+                         //先通过consume queue的mapfile的最后修改时间（比查找时间要大） 找到mapfile,
+                         //然后从mapfile的头开始做二分查找，用consume queue的item找到commitlog中的消息，
+                         //用消息的存储时间和查询时间做比对，直到精确定位，或者定位到距离查询时间最小的那个消息。
+                         */
                         long timestamp =
                                 UtilAll.parseDate(
                                     this.defaultMQPushConsumerImpl.getDefaultMQPushConsumer()
@@ -157,8 +167,8 @@ public class RebalancePushImpl extends RebalanceImpl {
 
     @Override
     public boolean removeUnnecessaryMessageQueue(MessageQueue mq, ProcessQueue pq) {
-        this.defaultMQPushConsumerImpl.getOffsetStore().persist(mq);
-        this.defaultMQPushConsumerImpl.getOffsetStore().removeOffset(mq);
+        this.defaultMQPushConsumerImpl.getOffsetStore().persist(mq); //消费位点同步到broker .
+        this.defaultMQPushConsumerImpl.getOffsetStore().removeOffset(mq); //清理本地存储的队列消费位点。
         if (this.defaultMQPushConsumerImpl.isConsumeOrderly()
                 && MessageModel.CLUSTERING.equals(this.defaultMQPushConsumerImpl.messageModel())) {
             try {

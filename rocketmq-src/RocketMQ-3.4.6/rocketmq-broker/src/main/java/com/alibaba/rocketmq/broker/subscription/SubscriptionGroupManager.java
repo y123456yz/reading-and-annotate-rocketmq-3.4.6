@@ -33,14 +33,16 @@ import java.util.concurrent.ConcurrentHashMap;
 
 
 /**
- * @author shijia.wxr
+ * @author shijia.wxr  消费者订阅关系consumer subscription
  */
 public class SubscriptionGroupManager extends ConfigManager {
     private static final Logger log = LoggerFactory.getLogger(LoggerName.BrokerLoggerName);
     private transient BrokerController brokerController;
 
+    //把/root/store/config/subscriptionGroup.json文件中的信息序列化到这里
     private final ConcurrentHashMap<String, SubscriptionGroupConfig> subscriptionGroupTable =
             new ConcurrentHashMap<String, SubscriptionGroupConfig>(1024);
+    //标识subscriptionGroupTable 的数据版本。
     private final DataVersion dataVersion = new DataVersion();
 
 
@@ -119,15 +121,22 @@ public class SubscriptionGroupManager extends ConfigManager {
     }
 
 
+    /**
+     * 查找某一个消费者分组的订阅配置。
+     * @param group
+     * @return
+     */
     public SubscriptionGroupConfig findSubscriptionGroupConfig(final String group) {
         SubscriptionGroupConfig subscriptionGroupConfig = this.subscriptionGroupTable.get(group);
         if (null == subscriptionGroupConfig) {
+            //如果broker配置可以自动创建订阅者分组或者消费者分组名以 CID_RMQ_SYS_ 开头。
             if (brokerController.getBrokerConfig().isAutoCreateSubscriptionGroup() || MixAll.isSysConsumerGroup(group)) {
                 subscriptionGroupConfig = new SubscriptionGroupConfig();
                 subscriptionGroupConfig.setGroupName(group);
                 this.subscriptionGroupTable.putIfAbsent(group, subscriptionGroupConfig);
                 log.info("auto create a subscription group, {}", subscriptionGroupConfig.toString());
                 this.dataVersion.nextVersion();
+                //把订阅配置信息序列化成json写入配置文件目录。
                 this.persist();
             }
         }
@@ -147,8 +156,8 @@ public class SubscriptionGroupManager extends ConfigManager {
     }
 
 
-    @Override
-    public void decode(String jsonString) {
+    @Override //把/root/store/config/subscriptionGroup.json文件中的信息序列化到 SubscriptionGroupManager.subscriptionGroupTable
+    public void decode(String jsonString) { //ConfigManager.configFilePath中执行
         if (jsonString != null) {
             SubscriptionGroupManager obj = RemotingSerializable.fromJson(jsonString, SubscriptionGroupManager.class);
             if (obj != null) {
@@ -158,7 +167,6 @@ public class SubscriptionGroupManager extends ConfigManager {
             }
         }
     }
-
 
     private void printLoadDataWhenFirstBoot(final SubscriptionGroupManager sgm) {
         Iterator<Entry<String, SubscriptionGroupConfig>> it = sgm.getSubscriptionGroupTable().entrySet().iterator();
@@ -170,7 +178,7 @@ public class SubscriptionGroupManager extends ConfigManager {
 
 
     @Override
-    public String configFilePath() {
+    public String configFilePath() { //ConfigManager.configFilePath中执行
         return BrokerPathConfigHelper.getSubscriptionGroupPath(this.brokerController.getMessageStoreConfig().getStorePathRootDir());
     }
 

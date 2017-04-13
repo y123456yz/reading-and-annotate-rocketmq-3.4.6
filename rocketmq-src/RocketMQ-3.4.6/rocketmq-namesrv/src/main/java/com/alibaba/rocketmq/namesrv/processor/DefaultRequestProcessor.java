@@ -54,7 +54,7 @@ public class DefaultRequestProcessor implements NettyRequestProcessor {
         this.namesrvController = namesrvController;
     }
 
-
+    ////DefaultRequestProcessor.processRequest
     @Override
     public RemotingCommand processRequest(ChannelHandlerContext ctx, RemotingCommand request) throws RemotingCommandException {
         if (log.isDebugEnabled()) {
@@ -71,9 +71,10 @@ public class DefaultRequestProcessor implements NettyRequestProcessor {
             return this.getKVConfig(ctx, request);
         case RequestCode.DELETE_KV_CONFIG:
             return this.deleteKVConfig(ctx, request);
+        /*注册broker到nameserver. */
         case RequestCode.REGISTER_BROKER:
             Version brokerVersion = MQVersion.value2Version(request.getVersion());
-            if (brokerVersion.ordinal() >= MQVersion.Version.V3_0_11.ordinal()) {
+            if (brokerVersion.ordinal() >= MQVersion.Version.V3_0_11.ordinal()) { //broker版本高于3.0.11， 则和过滤服务器一起注册。
                 return this.registerBrokerWithFilterServer(ctx, request);
             }
             else {
@@ -81,6 +82,7 @@ public class DefaultRequestProcessor implements NettyRequestProcessor {
             }
         case RequestCode.UNREGISTER_BROKER:
             return this.unregisterBroker(ctx, request);
+        //获取topic路由信息。
         case RequestCode.GET_ROUTEINTO_BY_TOPIC:
             return this.getRouteInfoByTopic(ctx, request);
         case RequestCode.GET_BROKER_CLUSTER_INFO:

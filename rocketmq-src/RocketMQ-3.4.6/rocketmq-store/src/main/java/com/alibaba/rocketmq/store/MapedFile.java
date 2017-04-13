@@ -38,25 +38,45 @@ import java.util.concurrent.atomic.AtomicLong;
 
 
 /**
+ [root@s10-2-x-5 0]# du -sh *
+ 5.8M    00000000000048000000
+ 5.8M    00000000000054000000
+ 5.8M    00000000000060000000
+ 5.8M    00000000000066000000
+ 5.8M    00000000000072000000
+ 5.8M    00000000000078000000
+ 5.8M    00000000000084000000
+ 5.8M    00000000000090000000
+ 5.8M    00000000000096000000
+ 3.6M    00000000000102000000
  * @author shijia.wxr
+ *
+ *  MapedFileQueue：包含了很多MapedFile，以及每个MapedFile的真实大小；
+MapedFile：包含了具体的文件信息，包括文件路径，文件名，文件起始偏移，写位移，读位移等等信息，同事使用了虚拟内存映射来提高IO效率；
+每个文件构建一个MapedFile对象, 在MapedFileQueue中用集合list把这些MapedFile文件组成一个逻辑上连续的队列
  */
 public class MapedFile extends ReferenceResource {
     public static final int OS_PAGE_SIZE = 1024 * 4;
     private static final Logger log = LoggerFactory.getLogger(LoggerName.StoreLoggerName);
+    //JVM中映射的虚拟内存总大小
     private static final AtomicLong TotalMapedVitualMemory = new AtomicLong(0);
+    //JVM中mmap的数量
     private static final AtomicInteger TotalMapedFiles = new AtomicInteger(0);
     private final String fileName;
-    private final long fileFromOffset;
-    private final int fileSize;
-    private final File file;
-    private final MappedByteBuffer mappedByteBuffer;
-    private final AtomicInteger wrotePostion = new AtomicInteger(0);
-    private final AtomicInteger committedPosition = new AtomicInteger(0);
-    private FileChannel fileChannel;
-    private volatile long storeTimestamp = 0;
-    private boolean firstCreateInQueue = false;
+    //文件名即是消息在此文件的中初始偏移量  文件的起始偏移量
+    private final long fileFromOffset; //也就是/data/store/consumequeue/xx/中各个文件的文件名，表示对应在commitlog中的偏移量，可以参考 MapedFileQueue.load
+    private final int fileSize;//文件大小
+    private final File file; //文件句柄
+    private final MappedByteBuffer mappedByteBuffer;//映射的内存对象
+    //当前文件的写位置
+    private final AtomicInteger wrotePostion = new AtomicInteger(0); //mapfile文件写入的物理位置。
+    //当前文件Flush到的位置
+    private final AtomicInteger committedPosition = new AtomicInteger(0);//mapfile已经刷盘到某一个物理位置
+    private FileChannel fileChannel;//映射的FileChannel对象
+    private volatile long storeTimestamp = 0; //最后一条消息保存时间
+    private boolean firstCreateInQueue = false;//是不是刚刚创建的Map
 
-
+    //MapedFileQueue.load
     public MapedFile(final String fileName, final int fileSize) throws IOException {
         this.fileName = fileName;
         this.fileSize = fileSize;
@@ -182,6 +202,7 @@ public class MapedFile extends ReferenceResource {
         return fileChannel;
     }
 
+    //把msg写入MapedFile
     public AppendMessageResult appendMessage(final Object msg, final AppendMessageCallback cb) {
         assert msg != null;
         assert cb != null;
@@ -191,7 +212,7 @@ public class MapedFile extends ReferenceResource {
         if (currentPos < this.fileSize) {
             ByteBuffer byteBuffer = this.mappedByteBuffer.slice();
             byteBuffer.position(currentPos);
-            AppendMessageResult result =
+            AppendMessageResult result = //DefaultAppendMessageCallback.doAppend
                     cb.doAppend(this.getFileFromOffset(), byteBuffer, this.fileSize - currentPos, msg);
             this.wrotePostion.addAndGet(result.getWroteBytes());
             this.storeTimestamp = result.getStoreTimestamp();
@@ -225,7 +246,7 @@ public class MapedFile extends ReferenceResource {
         if (this.isAbleToFlush(flushLeastPages)) {
             if (this.hold()) {
                 int value = this.wrotePostion.get();
-                this.mappedByteBuffer.force();
+                this.mappedByteBuffer.force(); // 内存映射文件的刷盘动作。
                 this.committedPosition.set(value);
                 this.release();
             }
@@ -249,18 +270,26 @@ public class MapedFile extends ReferenceResource {
     }
 
 
+    /**
+     * 写满了 ，或者写入位点和flush offset的差值超过了指定个数Page的大小，都可以flush .
+     *
+     * flushLeastPages = 0时只要没有完全flush,则可以flush .
+     * @param flushLeastPages
+     * @return
+     */
     private boolean isAbleToFlush(final int flushLeastPages) {
         int flush = this.committedPosition.get();
         int write = this.wrotePostion.get();
 
-        if (this.isFull()) {
+        if (this.isFull()) { //写满了，立即flush .
             return true;
         }
 
-        if (flushLeastPages > 0) {
+        if (flushLeastPages > 0) { //有最少刷新分页数的要求。
             return ((write / OS_PAGE_SIZE) - (flush / OS_PAGE_SIZE)) >= flushLeastPages;
         }
 
+        //没有写满， 并且没有最小flush内存分页数的要求, 则只要写入字节数超过了flush字节数就可以flush
         return write > flush;
     }
 
@@ -269,7 +298,7 @@ public class MapedFile extends ReferenceResource {
         return this.fileSize == this.wrotePostion.get();
     }
 
-
+    //通过SelectMapedBufferResult类返回该mapedFile中从startOffset开始的size字节数据，这size字节数据存入byteBuffer
     public SelectMapedBufferResult selectMapedBuffer(int pos, int size) {
         if ((pos + size) <= this.wrotePostion.get()) {
             if (this.hold()) {
@@ -297,7 +326,7 @@ public class MapedFile extends ReferenceResource {
             if (this.hold()) {
                 ByteBuffer byteBuffer = this.mappedByteBuffer.slice();
                 byteBuffer.position(pos);
-                int size = this.wrotePostion.get() - pos;
+                int size = this.wrotePostion.get() - pos;//当前写入的位置减去pos得到的就是要读取的字节数组的长度。
                 ByteBuffer byteBufferNew = byteBuffer.slice();
                 byteBufferNew.limit(size);
                 return new SelectMapedBufferResult(this.fileFromOffset + pos, byteBufferNew, size, this);
@@ -358,16 +387,25 @@ public class MapedFile extends ReferenceResource {
         return false;
     }
 
+    /**
+     * 所谓预热，就是把超过设定大小（默认1G)的文件 ，每间隔4k（内存分页的大小） 写一个byte （使 page dirty) ,
+     * 脏页累积到一定量（16M)的时候，做刷盘动作 (数据真正的落在本地磁盘)。
+     * @param type
+     * @param pages
+     */
     public void warmMappedFile(FlushDiskType type, int pages) {
-        long beginTime = System.currentTimeMillis();
+        long  beginTime = System.currentTimeMillis();
+        //所谓slice, 可以理解为bytebuffer中剩余容量的一个快照 。
+        //比如原来bytebuffer长度为1024 ， 还有512字节容量，则新的bytebuffer的pos就是512， limit就是1024，
         ByteBuffer byteBuffer = this.mappedByteBuffer.slice();
         int flush = 0;
         long time = System.currentTimeMillis();
         for (int i = 0, j = 0; i < this.fileSize; i += MapedFile.OS_PAGE_SIZE, j++) {
-            byteBuffer.put(i, (byte) 0);
+            byteBuffer.put(i, (byte) 0); // 把bytebuffer的剩余容量即slice 做一个数据填充。
             // force flush when flush disk type is sync
-            if (type == FlushDiskType.SYNC_FLUSH) {
-                if ((i / OS_PAGE_SIZE) - (flush / OS_PAGE_SIZE) >= pages) {
+            if (type == FlushDiskType.SYNC_FLUSH) { //并且同步刷盘的话，
+                if ((i / OS_PAGE_SIZE) - (flush / OS_PAGE_SIZE) >= pages) { //写入的位置和flush的位置差值分页数超过了指定的页数。
+                    //这里算一下，默认是16M做一次强制刷盘。
                     flush = i;
                     mappedByteBuffer.force();
                 }

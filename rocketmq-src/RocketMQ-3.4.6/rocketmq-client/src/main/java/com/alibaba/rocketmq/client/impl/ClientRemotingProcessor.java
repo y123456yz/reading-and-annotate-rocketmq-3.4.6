@@ -44,6 +44,7 @@ import java.util.Map;
 
 
 /**
+ * 客户端处理remoting command的处理器。
  * @author shijia.wxr
  */
 public class ClientRemotingProcessor implements NettyRequestProcessor {

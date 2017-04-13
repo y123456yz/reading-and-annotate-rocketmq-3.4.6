@@ -28,12 +28,13 @@ import java.util.List;
 
 
 /**
- * @author shijia.wxr
+ * @author shijia.wxr       updateTopicRouteInfoFromNameServer获取topicRoute信息
+ * PullAPIWrapper.pullKernelImpl中调用updateTopicRouteInfoFromNameServer进行TopicRoute信息更新，最终保存在MQClientInstance.topicRouteTable
  */
-public class TopicRouteData extends RemotingSerializable {
+public class TopicRouteData extends RemotingSerializable { //所有的broker和队列信息，赋值见getTopicRouteInfoFromNameServer
     private String orderTopicConf;
-    private List<QueueData> queueDatas;
-    private List<BrokerData> brokerDatas;
+    private List<QueueData> queueDatas;  //队列信息，
+    private List<BrokerData> brokerDatas; //broker信息
     private HashMap<String/* brokerAddr */, List<String>/* Filter Server */> filterServerTable;
 
 

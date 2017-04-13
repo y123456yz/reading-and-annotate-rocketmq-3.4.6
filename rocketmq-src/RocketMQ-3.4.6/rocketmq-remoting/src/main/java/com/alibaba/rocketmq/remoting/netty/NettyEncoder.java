@@ -27,13 +27,19 @@ import org.slf4j.LoggerFactory;
 
 import java.nio.ByteBuffer;
 
-
-/**
- * @author shijia.wxr
+/**  协议格式:<length> <header length> <header data> <bodydata>
+ *所有的通信协议列表见 RequestCode，通过 createRequestCommand 来构建通信内容，然后通过 NettyEncoder.encode 进行序列化，然后发送
+ *服务端收到后通过 NettyDecoder.decode反序列号，然后NettyServerHandler读取反序列号后的报文，
+ * 数据收发 请求 应答对应的分支在 RemotingCommandType（NettyRemotingAbstract.processMessageReceived）
+ * 接收到 RemotingCommand 在 NettyDecoder.decode 中生成
+ *
+ * @author shijia.wxr  RocketMq服务器与客户端通过传递RemotingCommand来交互，通过 NettyDecoder，对RemotingCommand进行协议的编码与解码
+ *
  */
 public class NettyEncoder extends MessageToByteEncoder<RemotingCommand> {
     private static final Logger log = LoggerFactory.getLogger(RemotingHelper.RemotingLogName);
 
+    //最终在 RemotingCommand.encode 中进行编码组包
     @Override
     public void encode(ChannelHandlerContext ctx, RemotingCommand remotingCommand, ByteBuf out)
             throws Exception {

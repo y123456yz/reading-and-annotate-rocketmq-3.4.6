@@ -27,15 +27,20 @@ import java.util.Set;
 
 
 /**
- * @author shijia.wxr
+ * @author shijia.wxr　　 订阅信息和TAG topic信息   存储在 RebalanceImpl.subscriptionInner中  这里面存有关注的tag相关的信息
  */
 public class SubscriptionData implements Comparable<SubscriptionData> {
     public final static String SUB_ALL = "*";
     private boolean classFilterMode = false;
+    //订阅的topic。  这个topic可能是RETRY_GROUP_TOPIC_PREFIX+ConsumerGroup,见DefaultMQPushConsumerImpl.start.copySubscription
     private String topic;
+    //订阅表达式。
     private String subString;
+    //subString被分解得到的tag集合。
     private Set<String> tagsSet = new HashSet<String>();
+    //tagSet中的tag hashcode 集合。
     private Set<Integer> codeSet = new HashSet<Integer>();
+    //订阅版本号， 默认用当前时间。
     private long subVersion = System.currentTimeMillis();
 
     @JSONField(serialize = false)

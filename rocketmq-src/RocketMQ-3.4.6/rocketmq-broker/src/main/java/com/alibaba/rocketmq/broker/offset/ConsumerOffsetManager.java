@@ -32,13 +32,14 @@ import java.util.concurrent.ConcurrentHashMap;
 
 /**
  *
- * @author shijia.wxr
+ * @author shijia.wxr  加载消费进度consumer offset 到 offsetTable
  */
 public class ConsumerOffsetManager extends ConfigManager {
     private static final Logger log = LoggerFactory.getLogger(LoggerName.BrokerLoggerName);
     private static final String TOPIC_GROUP_SEPARATOR = "@";
 
-    private ConcurrentHashMap<String/* topic@group */, ConcurrentHashMap<Integer, Long>> offsetTable =
+    //记录 消费者分组对topic 的某一个queue的消费位点。 //把从 /root/store/config/consumerOffset.json 解析的内容序列化到这里
+    private ConcurrentHashMap<String/* topic@group */, ConcurrentHashMap<Integer /*queueid */, Long /*consumeoffset*/>> offsetTable =
             new ConcurrentHashMap<String, ConcurrentHashMap<Integer, Long>>(512);
 
     private transient BrokerController brokerController;
@@ -91,6 +92,11 @@ public class ConsumerOffsetManager extends ConfigManager {
     }
 
 
+    /**
+     * 获取消费者分组消费的topic;
+     * @param group
+     * @return
+     */
     public Set<String> whichTopicByConsumer(final String group) {
         Set<String> topics = new HashSet<String>();
 
@@ -173,8 +179,8 @@ public class ConsumerOffsetManager extends ConfigManager {
     }
 
 
-    @Override
-    public void decode(String jsonString) {
+    @Override //把从 /root/store/config/consumerOffset.json 解析的配置内容序列化到 ConsumerOffsetManager.offsetTable
+    public void decode(String jsonString) { //ConfigManager.configFilePath中执行
         if (jsonString != null) {
             ConsumerOffsetManager obj = RemotingSerializable.fromJson(jsonString, ConsumerOffsetManager.class);
             if (obj != null) {
@@ -183,9 +189,8 @@ public class ConsumerOffsetManager extends ConfigManager {
         }
     }
 
-
     @Override
-    public String configFilePath() {
+    public String configFilePath() {//ConfigManager.configFilePath中执行
         return BrokerPathConfigHelper.getConsumerOffsetPath(this.brokerController.getMessageStoreConfig().getStorePathRootDir());
     }
 

@@ -25,6 +25,9 @@ import java.net.UnknownHostException;
 
 
 /**
+ * 每一个broker 只属于一个cluster 下的一个brokername ， 并且有一个broker id .
+ * brokerid 大于0 ，则是slave .否则是master.
+ *
  * @author shijia.wxr
  */
 public class BrokerConfig {
@@ -42,6 +45,7 @@ public class BrokerConfig {
     private String brokerClusterName = "DefaultCluster";
     @ImportantField
     private long brokerId = MixAll.MASTER_ID;
+    //该broker是否可读 可写等
     private int brokerPermission = PermName.PERM_READ | PermName.PERM_WRITE;
     private int defaultTopicQueueNums = 8;
     @ImportantField

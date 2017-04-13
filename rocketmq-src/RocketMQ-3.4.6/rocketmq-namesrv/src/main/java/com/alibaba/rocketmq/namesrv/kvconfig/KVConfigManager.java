@@ -189,7 +189,7 @@ public class KVConfigManager {
 
     }
 
-
+    //打印configTable中的KV信息
     public void printAllPeriodically() {
         try {
             this.lock.readLock().lockInterruptibly();

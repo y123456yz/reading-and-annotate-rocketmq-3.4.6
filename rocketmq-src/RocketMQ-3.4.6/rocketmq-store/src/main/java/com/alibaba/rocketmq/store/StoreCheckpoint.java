@@ -30,7 +30,14 @@ import java.nio.channels.FileChannel.MapMode;
 
 
 /**
+ *通过checkpoint文件存储 commitlog , consume queue(消费文件) ,index file（按msgkey的查询索引文件） 的flush时间。
  *
+ *
+ * 加载${user.home} \store\checkpoint 这个文件存储了3个long类型的值来记录存储模型最终一致的时间点，这个3个long的值为
+ physicMsgTimestamp为commitLog最后刷盘的时间
+ logicMsgTimestamp为consumeQueue最终刷盘的时间
+ indexMsgTimestamp为索引最终刷盘时间
+ checkpoint作用是当异常恢复时需要根据checkpoint点来恢复消息
  * @author shijia.wxr
  */
 public class StoreCheckpoint {
@@ -38,11 +45,11 @@ public class StoreCheckpoint {
     private final RandomAccessFile randomAccessFile;
     private final FileChannel fileChannel;
     private final MappedByteBuffer mappedByteBuffer;
-    private volatile long physicMsgTimestamp = 0;
-    private volatile long logicsMsgTimestamp = 0;
-    private volatile long indexMsgTimestamp = 0;
+    private volatile long physicMsgTimestamp = 0; //commitLog最后刷盘的时间
+    private volatile long logicsMsgTimestamp = 0; //consumeQueue最终刷盘的时间
+    private volatile long indexMsgTimestamp = 0; //索引最终刷盘时间
 
-
+    // /root/store/checkpoint文件
     public StoreCheckpoint(final String scpPath) throws IOException {
         File file = new File(scpPath);
         MapedFile.ensureDirOK(file.getParent());

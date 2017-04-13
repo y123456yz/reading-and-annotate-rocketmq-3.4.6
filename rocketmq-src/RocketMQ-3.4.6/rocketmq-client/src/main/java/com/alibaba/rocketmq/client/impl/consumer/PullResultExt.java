@@ -30,7 +30,7 @@ public class PullResultExt extends PullResult {
     private final long suggestWhichBrokerId;
     private byte[] messageBinary;
 
-
+    //MQClientAPIImpl.processPullResponse 中调用该接口，并赋值相关成员变量
     public PullResultExt(PullStatus pullStatus, long nextBeginOffset, long minOffset, long maxOffset,
             List<MessageExt> msgFoundList, final long suggestWhichBrokerId, final byte[] messageBinary) {
         super(pullStatus, nextBeginOffset, minOffset, maxOffset, msgFoundList);

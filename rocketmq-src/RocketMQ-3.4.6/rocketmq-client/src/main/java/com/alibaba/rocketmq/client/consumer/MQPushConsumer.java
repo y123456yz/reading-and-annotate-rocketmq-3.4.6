@@ -25,7 +25,7 @@ import com.alibaba.rocketmq.client.exception.MQClientException;
 /**
  * Push consumer
  *
- * @author shijia.wxr
+ * @author shijia.wxr   接口实现在DefaultMQPushConsumer
  */
 public interface MQPushConsumer extends MQConsumer {
     /**

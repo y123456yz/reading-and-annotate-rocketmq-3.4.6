@@ -49,10 +49,13 @@ public class FilterAPI {
         subscriptionData.setTopic(topic);
         subscriptionData.setSubString(subString);
 
+        /*为null ,* ，或者空字符串 都认为是订阅topic的所有消息。*/
         if (null == subString || subString.equals(SubscriptionData.SUB_ALL) || subString.length() == 0) {
             subscriptionData.setSubString(SubscriptionData.SUB_ALL);
         }
         else {
+            //按双竖线切分tag表达式，得到多个tag , trim运算以后，得到每一个tag以及每一个tag的hashcode (因为在broker是用msgTag的hashcode
+            // 来做过滤的。)
             String[] tags = subString.split("\\|\\|");
             if (tags != null && tags.length > 0) {
                 for (String tag : tags) {

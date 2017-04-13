@@ -16,9 +16,16 @@
  */
 
 package com.alibaba.rocketmq.common.protocol;
+ /*
+ 所有的通信协议列表见 RequestCode，通过 createRequestCommand 来构建通信内容，然后通过NettyEncoder进行序列化，然后发送
+ 服务端收到后通过 NettyDecoder.decode反序列号，然后 NettyServerHandler 读取反序列号后的报文，
+ 数据收发 请求 应答对应的分支在 RemotingCommandType（NettyRemotingAbstract.processMessageReceived）
+ //NettyRemotingClient 和 NettyRemotingServer 中的initChannel执行各种命令回调
+ */
 
+ //通信协议注册见 registerProcessor  NettyRemotingClient 和 NettyRemotingServer 中的initChannel执行各种命令回调
 public class RequestCode {
-    public static final int SEND_MESSAGE = 10;
+    public static final int SEND_MESSAGE = 10; //SEND_MESSAGE_V2 和 SEND_MESSAGE都是发送消息
     public static final int PULL_MESSAGE = 11;
     public static final int QUERY_MESSAGE = 12;
     public static final int QUERY_BROKER_OFFSET = 13;
@@ -26,6 +33,9 @@ public class RequestCode {
     public static final int UPDATE_CONSUMER_OFFSET = 15;
     public static final int UPDATE_AND_CREATE_TOPIC = 17;
     public static final int GET_ALL_TOPIC_CONFIG = 21;
+    /**
+     * 增加获取topic配置列表
+     */
     public static final int GET_TOPIC_CONFIG_LIST = 22;
     public static final int GET_TOPIC_NAME_LIST = 23;
     public static final int UPDATE_BROKER_CONFIG = 25;
@@ -39,6 +49,7 @@ public class RequestCode {
     public static final int VIEW_MESSAGE_BY_ID = 33;
     public static final int HEART_BEAT = 34;
     public static final int UNREGISTER_CLIENT = 35;
+    //消费失败，把消息重新打回broker中
     public static final int CONSUMER_SEND_MSG_BACK = 36;
     public static final int END_TRANSACTION = 37;
     public static final int GET_CONSUMER_LIST_BY_GROUP = 38;

@@ -34,17 +34,48 @@ public class BrokerPathConfigHelper {
         brokerConfigPath = path;
     }
 
-
+    /*
+    * "topicYYZ10":{
+                "order":false,
+                "perm":6,
+                "readQueueNums":10,
+                "readable":true,
+                "topicFilterType":"SINGLE_TAG",
+                "topicName":"topicYYZ10",
+                "topicSysFlag":0,
+                "writable":true,
+                "writeQueueNums":10
+        },
+    * */
+    //root/store/config/topics.json  这里面存储的是各种topic信息，如上
     public static String getTopicConfigPath(final String rootDir) {
         return rootDir + File.separator + "config" + File.separator + "topics.json";
     }
 
+    /*
+    *  "topicyyz10@topicyyz10ConsumerGroup":{0:89897052,2:89897210,1:69860336,3:69857016
+        },
 
+        /root/store/config/consumerOffset.json   每个消费分组在topic上的消费位点信息
+    * */
     public static String getConsumerOffsetPath(final String rootDir) {
         return rootDir + File.separator + "config" + File.separator + "consumerOffset.json";
     }
 
-
+    /*
+    "topic-test-2ConsumerGroup":{
+            "brokerId":0,
+            "consumeBroadcastEnable":true,
+            "consumeEnable":true,
+            "consumeFromMinEnable":true,
+            "groupName":"topic-test-2ConsumerGroup",
+            "retryMaxTimes":16,
+            "retryQueueNums":1,
+            "whichBrokerWhenConsumeSlowly":1
+    },
+    * 订阅消费分组信息
+    * /root/store/config/subscriptionGroup.json
+    * */
     public static String getSubscriptionGroupPath(final String rootDir) {
         return rootDir + File.separator + "config" + File.separator + "subscriptionGroup.json";
     }

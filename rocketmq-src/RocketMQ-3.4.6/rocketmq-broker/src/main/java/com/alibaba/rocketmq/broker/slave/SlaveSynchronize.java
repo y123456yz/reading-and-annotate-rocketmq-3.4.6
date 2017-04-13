@@ -31,6 +31,8 @@ import java.io.IOException;
 
 
 /**
+ * slave  broker用于主从数据同步的类。
+ *
  * @author shijia.wxr
  * @author manhong.yqd
  */

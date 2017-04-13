@@ -37,6 +37,7 @@ public class DefaultMessageFilter implements MessageFilter {
             return true;
         }
 
+        //这里的匹配机制很简单 ，只要tags 的hashcode一致， 就认为匹配; 然后把消息发送到client以后做msg tag的精确匹配。
         return subscriptionData.getCodeSet().contains((int) tagsCode);
     }
 

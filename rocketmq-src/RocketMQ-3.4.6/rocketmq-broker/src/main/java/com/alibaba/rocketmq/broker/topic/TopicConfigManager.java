@@ -42,6 +42,7 @@ import java.util.concurrent.locks.ReentrantLock;
 
 /**
  * @author shijia.wxr
+ *  加载topic配置   /root/store/config/topics.json 到 topicConfigTable
  * @author lansheng.zj
  */
 public class TopicConfigManager extends ConfigManager {
@@ -50,7 +51,8 @@ public class TopicConfigManager extends ConfigManager {
     private transient final Lock lockTopicConfigTable = new ReentrantLock();
     private transient BrokerController brokerController;
 
-    private final ConcurrentHashMap<String, TopicConfig> topicConfigTable =
+    //把/root/store/config/topics.json 中的字符串序列化存入topicConfigTable，见 TopicConfigManager.decode
+    private final ConcurrentHashMap<String, TopicConfig> topicConfigTable = //所有的topic信息全部存在该table表中
             new ConcurrentHashMap<String, TopicConfig>(1024);
     private final DataVersion dataVersion = new DataVersion();
 
@@ -228,13 +230,21 @@ public class TopicConfigManager extends ConfigManager {
     }
 
 
+    /**
+     * 创建消息重试topic .
+     * @param topic 主题名称
+     * @param clientDefaultTopicQueueNums 队列数量。
+     * @param perm 队列许可。是否可读 可写
+     * @param topicSysFlag
+     * @return
+     */
     public TopicConfig createTopicInSendMessageBackMethod(//
             final String topic, //
             final int clientDefaultTopicQueueNums,//
             final int perm,//
             final int topicSysFlag) {
         TopicConfig topicConfig = this.topicConfigTable.get(topic);
-        if (topicConfig != null)
+        if (topicConfig != null) //已经存在，直接返回
             return topicConfig;
 
         boolean createNew = false;
@@ -243,20 +253,50 @@ public class TopicConfigManager extends ConfigManager {
             if (this.lockTopicConfigTable.tryLock(LockTimeoutMillis, TimeUnit.MILLISECONDS)) {
                 try {
                     topicConfig = this.topicConfigTable.get(topic);
-                    if (topicConfig != null)
+                    if (topicConfig != null) //double check .
                         return topicConfig;
 
+
+                    //设置读写队列数量。以及读写许可。
                     topicConfig = new TopicConfig(topic);
                     topicConfig.setReadQueueNums(clientDefaultTopicQueueNums);
                     topicConfig.setWriteQueueNums(clientDefaultTopicQueueNums);
-                    topicConfig.setPerm(perm);
+                    topicConfig.setPerm(perm); //是否可读 可写
                     topicConfig.setTopicSysFlag(topicSysFlag);
 
                     log.info("create new topic {}", topicConfig);
                     this.topicConfigTable.put(topic, topicConfig);
                     createNew = true;
                     this.dataVersion.nextVersion();
-                    this.persist();
+                    this.persist(); //把topic订阅信息持久化到 /root/store/config/subscriptionGroup.json
+                    /*格式如下:
+                {
+                              "dataVersion":{
+                    "counter":63,
+                    "timestatmp":1491469850384
+                },
+                "subscriptionGroupTable":{
+                "fk3":{
+                        "brokerId":0,
+                        "consumeBroadcastEnable":true,
+                        "consumeEnable":true,
+                        "consumeFromMinEnable":true,
+                        "groupName":"fk3",
+                        "retryMaxTimes":16,
+                        "retryQueueNums":1,
+                        "whichBrokerWhenConsumeSlowly":1
+                },
+                "admin_ext_group":{
+                        "brokerId":0,
+                        "consumeBroadcastEnable":true,
+                        "consumeEnable":true,
+                        "consumeFromMinEnable":true,
+                        "groupName":"admin_ext_group",
+                        "retryMaxTimes":16,
+                        "retryQueueNums":1,
+                        "whichBrokerWhenConsumeSlowly":1
+                },
+                    */
                 }
                 finally {
                     this.lockTopicConfigTable.unlock();
@@ -267,7 +307,7 @@ public class TopicConfigManager extends ConfigManager {
             log.error("createTopicInSendMessageBackMethod exception", e);
         }
 
-        if (createNew) {
+        if (createNew) {  //有创建消费者分组的retry topic .
             this.brokerController.registerBrokerAll(false, true);
         }
 
@@ -401,7 +441,7 @@ public class TopicConfigManager extends ConfigManager {
         return encode(false);
     }
 
-
+    //topicconfigTable序列化
     public String encode(final boolean prettyFormat) {
         TopicConfigSerializeWrapper topicConfigSerializeWrapper = new TopicConfigSerializeWrapper();
         topicConfigSerializeWrapper.setTopicConfigTable(this.topicConfigTable);
@@ -410,8 +450,8 @@ public class TopicConfigManager extends ConfigManager {
     }
 
 
-    @Override
-    public void decode(String jsonString) {
+    @Override //把/root/store/config/topics.json 中的字符串序列化存入topicConfigTable，
+    public void decode(String jsonString) { //ConfigManager.configFilePath中执行
         if (jsonString != null) {
             TopicConfigSerializeWrapper topicConfigSerializeWrapper =
                     TopicConfigSerializeWrapper.fromJson(jsonString, TopicConfigSerializeWrapper.class);
@@ -423,7 +463,6 @@ public class TopicConfigManager extends ConfigManager {
         }
     }
 
-
     private void printLoadDataWhenFirstBoot(final TopicConfigSerializeWrapper tcs) {
         Iterator<Entry<String, TopicConfig>> it = tcs.getTopicConfigTable().entrySet().iterator();
         while (it.hasNext()) {
@@ -432,9 +471,9 @@ public class TopicConfigManager extends ConfigManager {
         }
     }
 
-
+    //root/store/config/topics.json  这里面存储的是各种topic信息
     @Override
-    public String configFilePath() {
+    public String configFilePath() { //ConfigManager.configFilePath中执行
         return BrokerPathConfigHelper.getTopicConfigPath(this.brokerController.getMessageStoreConfig()
             .getStorePathRootDir());
     }

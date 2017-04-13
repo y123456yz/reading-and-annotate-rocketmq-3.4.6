@@ -20,7 +20,7 @@ package com.alibaba.rocketmq.remoting.netty;
  * @author shijia.wxr
  */
 public class NettyServerConfig implements Cloneable{
-    private int listenPort = 8888;
+    private int listenPort = 8888;  //brokerÄ¬ÈÏ nettyServerConfig.setListenPort(10911);¼àÌý10911¶Ë¿Ú
     private int serverWorkerThreads = 8;
     private int serverCallbackExecutorThreads = 0;
     private int serverSelectorThreads = 3;

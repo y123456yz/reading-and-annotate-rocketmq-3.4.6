@@ -20,13 +20,14 @@ import java.io.Serializable;
 
 
 /**
- * @author shijia.wxr
+ * @author shijia.wxr   该topic所在broker，及其对应的qid        存储在 TopicPublishInfo.messageQueueList中
+ * //每一个消息队列，对应一个处理队列。 RebalanceImpl.processQueueTable(MessageQueue----ProcessQueue)
  */
 public class MessageQueue implements Comparable<MessageQueue>, Serializable {
     private static final long serialVersionUID = 6191200464116433425L;
     private String topic;
     private String brokerName;
-    private int queueId;
+    private int queueId; //QID
 
 
     public MessageQueue() {

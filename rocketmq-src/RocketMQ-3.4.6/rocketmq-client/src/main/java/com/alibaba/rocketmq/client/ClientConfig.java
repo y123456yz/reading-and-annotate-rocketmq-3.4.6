@@ -25,23 +25,27 @@ import com.alibaba.rocketmq.remoting.common.RemotingUtil;
  * Client Common configuration
  *
  * @author shijia.wxr
- * @author vongosling
+ * @author vongosling   主要用于和nameserver通信的相关参数配置
+ * 生效见 MQClientInstance.startScheduledTask 中使用
  */
 public class ClientConfig {
     private String namesrvAddr = System.getProperty(MixAll.NAMESRV_ADDR_PROPERTY, System.getenv(MixAll.NAMESRV_ADDR_ENV));
 
     private String clientIP = RemotingUtil.getLocalAddress();
-    private String instanceName = System.getProperty("rocketmq.client.name", "DEFAULT");
+    private String instanceName = System.getProperty("rocketmq.client.name", "DEFAULT"); //changeInstanceNameToPID会修改为Pid
+    //获取系统处理器个数
     private int clientCallbackExecutorThreads = Runtime.getRuntime().availableProcessors();
-    /**
+    /** 多长时间去NS 轮询topic信息。
      * Pulling topic information interval from the named server
      */
     private int pollNameServerInteval = 1000 * 30;
     /**
+     * 多长时间发送心跳包给broker .
      * Heartbeat interval in microseconds with message broker
      */
     private int heartbeatBrokerInterval = 1000 * 30;
     /**
+     * 消费者多长时间持久化一次位点。
      * Offset persistent interval for consumer
      */
     private int persistConsumerOffsetInterval = 1000 * 5;
@@ -49,6 +53,10 @@ public class ClientConfig {
     private String unitName;
 
 
+    /**
+     * 默认clientip + pid 做clientid .如果是单元模式，则加上 unitname.  通过这个来标识客户端
+     * @return
+     */
     public String buildMQClientId() {
         StringBuilder sb = new StringBuilder();
         sb.append(this.getClientIP());

@@ -20,6 +20,9 @@ import java.util.concurrent.atomic.AtomicLong;
 
 
 /**
+ * 用refcount做对象的引用 计数，
+ * available 判断对象是否可以被获取。
+ *
  * Similar C++ smart pointer
  * @author shijia.wxr
  */
@@ -29,7 +32,7 @@ public abstract class ReferenceResource {
     protected volatile boolean cleanupOver = false;
     private volatile long firstShutdownTimestamp = 0;
 
-    public synchronized boolean hold() {
+    public synchronized boolean hold() { //所有者持有资源，就相当于引用计数+ 1、
         if (this.isAvailable()) {
             if (this.refCount.getAndIncrement() > 0) {
                 return true;
@@ -65,6 +68,9 @@ public abstract class ReferenceResource {
         return this.refCount.get();
     }
 
+    /**
+     * 对资源的引用计数释放到0， 则启动cleanup做资源清理。
+     */
     public void release() {
         long value = this.refCount.decrementAndGet();
         if (value > 0)

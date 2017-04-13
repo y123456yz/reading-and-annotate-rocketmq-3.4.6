@@ -20,7 +20,7 @@ import java.io.File;
 
 
 public class StorePathConfigHelper {
-
+    // /root/store/consumequeue
     public static String getStorePathConsumeQueue(final String rootDir) {
         return rootDir + File.separator + "consumequeue";
     }
@@ -40,7 +40,10 @@ public class StorePathConfigHelper {
         return rootDir + File.separator + "abort";
     }
 
-
+    /*
+    * {"offsetTable":{12:269,6:65,13:297,5:122,7:118,8:158,9:164,10:280,3:5100699,11:279,4:1514}}
+    * */
+    //config/delayOffset.json
     public static String getDelayOffsetStorePath(final String rootDir) {
         return rootDir + File.separator + "config" + File.separator + "delayOffset.json";
     }

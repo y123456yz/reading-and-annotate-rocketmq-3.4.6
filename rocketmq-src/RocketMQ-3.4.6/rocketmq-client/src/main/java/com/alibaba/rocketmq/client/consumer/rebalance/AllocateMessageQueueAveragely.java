@@ -28,8 +28,11 @@ import java.util.List;
 /**
  * Average Hashing queue algorithm
  *
- * @author manhong.yqd
+ * @author manhong.yqd  Rebalance 算法实现策略
+ ** AllocateMessageQueueStrategy实现在类 AllocateMessageQueueAveragely  AllocateMessageQueueByMachineRoom  AllocateMessageQueueByConfig
+ * AllocateMessageQueueAveragelyByCircle  Rebalance 算法实现策略
  */
+
 public class AllocateMessageQueueAveragely implements AllocateMessageQueueStrategy {
     private final Logger log = ClientLogger.getLog();
 
@@ -39,8 +42,10 @@ public class AllocateMessageQueueAveragely implements AllocateMessageQueueStrate
         return "AVG";
     }
 
-
-    @Override
+    /* 下面这个算法的目的就是看属于同一消费分组的消费则如何消费queue上面的消息
+     * 返回值存放了该currentCID应该消费的队列信息，也就是currentCID应该消费list中存放的队列
+    */
+    @Override  //RebalanceImpl.rebalanceByTopic中调用
     public List<MessageQueue> allocate(String consumerGroup, String currentCID, List<MessageQueue> mqAll,
                                        List<String> cidAll) {
         if (currentCID == null || currentCID.length() < 1) {
@@ -62,8 +67,12 @@ public class AllocateMessageQueueAveragely implements AllocateMessageQueueStrate
             return result;
         }
 
-        int index = cidAll.indexOf(currentCID);
+        /* 下面这个算法的目的就是看属于同一消费分组的消费则如何消费queue上面的消息 */
+
+        int index = cidAll.indexOf(currentCID); //cidALL链表中内容为currentCID的索引
         int mod = mqAll.size() % cidAll.size();
+        //如果消费同一个topic的相同消费者数大于队列数，则averageSize=1
+        //如果消费者数小于队列数，则averageSize=队列数/消费者数
         int averageSize =
                 mqAll.size() <= cidAll.size() ? 1 : (mod > 0 && index < mod ? mqAll.size() / cidAll.size()
                         + 1 : mqAll.size() / cidAll.size());

@@ -21,6 +21,10 @@ import com.alibaba.rocketmq.common.message.MessageQueue;
 
 import java.util.List;
 
+/*
+* * AllocateMessageQueueStrategy实现在类AllocateMessageQueueAveragely  AllocateMessageQueueByMachineRoom  AllocateMessageQueueByConfig
+ * AllocateMessageQueueAveragelyByCircle  Rebalance 算法实现策略
+* */
 public class AllocateMessageQueueByConfig implements AllocateMessageQueueStrategy {
     private List<MessageQueue> messageQueueList;
 

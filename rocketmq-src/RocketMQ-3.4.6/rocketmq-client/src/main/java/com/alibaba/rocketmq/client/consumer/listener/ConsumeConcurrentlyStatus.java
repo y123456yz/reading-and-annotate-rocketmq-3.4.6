@@ -18,6 +18,7 @@ package com.alibaba.rocketmq.client.consumer.listener;
 
 /**
  * @author shijia.wxr
+ * 业务处理消息后，对返回值的检查在ConsumeRequest.run-> ConsumeMessageConcurrentlyService.processConsumeResult 中
  */
 public enum ConsumeConcurrentlyStatus {
     /**
@@ -27,5 +28,5 @@ public enum ConsumeConcurrentlyStatus {
     /**
      * Failure consumption,later try to consume
      */
-    RECONSUME_LATER;
+    RECONSUME_LATER; /* 业务消费失败，该条消费失败的消息会放入重试队列，需要重新消费 */
 }

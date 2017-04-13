@@ -38,16 +38,33 @@ import java.util.concurrent.ConcurrentHashMap;
 
 
 /**
+ *
+ *
+ *  这里延迟消息的处理方式是这样的：
+ *  首先系统预设了 "1s 5s 10s 30s 1m 2m 3m 4m 5m 6m 7m 8m 9m 10m 20m 30m 1h 2h" 这样若干个延迟level;
+ *  然后 broker上创建了一个用于延迟消息投递的topic： SCHEDULE_TOPIC_XXXX，  这个topic有若干队列， 每一个队列对应了一个延迟level ，
+ *
+ *  投递者投递消息以后，broker会根据消息的delay level ，写入 SCHEDULE_TOPIC_XXXX 对应的队列，同时在commitlog的消息中增加真正的topic和
+ *  队列Id属性。 SCHEDULE_TOPIC_XXXX 的每一个队列对应了一个timer , 定时通过队列(consume queue）索引项获取commitlog 的消息 ，
+ *  如果到了延迟投递时间，则写入真实topic的队列。
+ *
+ *
+ *  一句话， 就是先把消息投递到delay topic暂存，然后通过定时器把delay topic暂存的消息投递到真实的topic.
+ *
+ *
+ *
  * @author shijia.wxr
  */
 public class ScheduleMessageService extends ConfigManager {
-    public static final String SCHEDULE_TOPIC = "SCHEDULE_TOPIC_XXXX";
+    public static final String SCHEDULE_TOPIC = "SCHEDULE_TOPIC_XXXX"; //延迟消息TOPIC
     private static final Logger log = LoggerFactory.getLogger(LoggerName.StoreLoggerName);
     private static final long FIRST_DELAY_TIME = 1000L;
     private static final long DELAY_FOR_A_WHILE = 100L;
     private static final long DELAY_FOR_A_PERIOD = 10000L;
+    //记录每一个延迟level的延迟毫秒, level从1开始。
     private final ConcurrentHashMap<Integer /* level */, Long/* delay timeMillis */> delayLevelTable =
             new ConcurrentHashMap<Integer, Long>(32);
+    //记录每一个延迟level对应的 consume queue(消费队列）的逻辑位点。
     private final ConcurrentHashMap<Integer /* level */, Long/* offset */> offsetTable =
             new ConcurrentHashMap<Integer, Long>(32);
     private final Timer timer = new Timer("ScheduleMessageTimerThread", true);
@@ -148,9 +165,9 @@ public class ScheduleMessageService extends ConfigManager {
         return delayOffsetSerializeWrapper.toJson(prettyFormat);
     }
 
-
+    //解析文件 root/store/config/delayOffset.json 中的内容到 ScheduleMessageService.offsetTable
     @Override
-    public void decode(String jsonString) {
+    public void decode(String jsonString) { //ConfigManager.configFilePath中执行
         if (jsonString != null) {
             DelayOffsetSerializeWrapper delayOffsetSerializeWrapper =
                     DelayOffsetSerializeWrapper.fromJson(jsonString, DelayOffsetSerializeWrapper.class);
@@ -160,15 +177,18 @@ public class ScheduleMessageService extends ConfigManager {
         }
     }
 
-
+    /*
+    * {"offsetTable":{12:269,6:65,13:297,5:122,7:118,8:158,9:164,10:280,3:5100699,11:279,4:1514}}
+    * */
+    //root/store/config/delayOffset.json
     @Override
-    public String configFilePath() {
+    public String configFilePath() { //ConfigManager.configFilePath中执行
         return StorePathConfigHelper.getDelayOffsetStorePath(this.defaultMessageStore.getMessageStoreConfig()
             .getStorePathRootDir());
     }
 
 
-    public boolean load() {
+    public boolean load() { //DefaultMessageStore.load    configFilePath(//root/store/config/delayOffset.json) 中执行
         boolean result = super.load();
         result = result && this.parseDelayLevel();
         return result;
@@ -182,13 +202,14 @@ public class ScheduleMessageService extends ConfigManager {
         timeUnitTable.put("h", 1000L * 60 * 60);
         timeUnitTable.put("d", 1000L * 60 * 60 * 24);
 
+        //默认配置 "1s 5s 10s 30s 1m 2m 3m 4m 5m 6m 7m 8m 9m 10m 20m 30m 1h 2h"
         String levelString = this.defaultMessageStore.getMessageStoreConfig().getMessageDelayLevel();
         try {
             String[] levelArray = levelString.split(" ");
             for (int i = 0; i < levelArray.length; i++) {
                 String value = levelArray[i];
-                String ch = value.substring(value.length() - 1);
-                Long tu = timeUnitTable.get(ch);
+                String ch = value.substring(value.length() - 1); //时间单位： s, m , h , d
+                Long tu = timeUnitTable.get(ch); //把时间单位换算成毫秒 ；
 
                 int level = i + 1;
                 if (level > this.maxDelayLevel) {
@@ -234,8 +255,9 @@ public class ScheduleMessageService extends ConfigManager {
 
         private long correctDeliverTimestamp(final long now, final long deliverTimestamp) {
             long result = deliverTimestamp;
+            //最迟投递时间。
             long maxTimestamp = now + ScheduleMessageService.this.delayLevelTable.get(this.delayLevel);
-            if (deliverTimestamp > maxTimestamp) {
+            if (deliverTimestamp > maxTimestamp) { //已经到了最迟投递时间，则把投递时间修正为当前时间。
                 result = now;
             }
 
@@ -267,7 +289,7 @@ public class ScheduleMessageService extends ConfigManager {
                             nextOffset = offset + (i / ConsumeQueue.CQStoreUnitSize);
 
                             long countdown = deliverTimestamp - now;
-                            if (countdown <= 0) {
+                            if (countdown <= 0) { //到了投递时间， 则把消息写入真实topic的队列。
                                 MessageExt msgExt =
                                         ScheduleMessageService.this.defaultMessageStore.lookMessageByOffset(
                                             offsetPy, sizePy);
@@ -302,7 +324,7 @@ public class ScheduleMessageService extends ConfigManager {
                                     }
                                 }
                             }
-                            else {
+                            else { //没到消息投递时间，则提交一个延迟任务（ 到指定的时间间隔： deliverTimestamp - now ） 做。
                                 ScheduleMessageService.this.timer.schedule(
                                     new DeliverDelayedMessageTimerTask(this.delayLevel, nextOffset),
                                     countdown);
@@ -310,7 +332,7 @@ public class ScheduleMessageService extends ConfigManager {
                                 return;
                             }
                         }
-
+                        //一次拉到的一批消息都被投递到了真实的topic的队列，则前移逻辑位点并持久化到broker的json文件， 然后继续下一次任务。
                         nextOffset = offset + (i / ConsumeQueue.CQStoreUnitSize);
                         ScheduleMessageService.this.timer.schedule(new DeliverDelayedMessageTimerTask(
                             this.delayLevel, nextOffset), DELAY_FOR_A_WHILE);

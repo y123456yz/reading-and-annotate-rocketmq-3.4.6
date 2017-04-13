@@ -30,6 +30,7 @@ import java.util.concurrent.TimeUnit;
 
 
 /**
+ * 监听消费者和生产者的netty事件。
  * @author shijia.wxr
  */
 public class ClientHousekeepingService implements ChannelEventListener {

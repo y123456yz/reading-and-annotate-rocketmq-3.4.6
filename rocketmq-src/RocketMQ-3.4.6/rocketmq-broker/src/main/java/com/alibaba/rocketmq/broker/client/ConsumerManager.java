@@ -35,7 +35,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 
 /**
- *
+ *  管理消费者分组信息。
  * @author shijia.wxr
  */
 public class ConsumerManager {
@@ -87,6 +87,11 @@ public class ConsumerManager {
     }
 
 
+    /**
+     * 消费者退出时要做rebalance .
+     * @param remoteAddr
+     * @param channel
+     */
     public void doChannelCloseEvent(final String remoteAddr, final Channel channel) {
         Iterator<Entry<String, ConsumerGroupInfo>> it = this.consumerTable.entrySet().iterator();
         while (it.hasNext()) {
@@ -107,6 +112,17 @@ public class ConsumerManager {
         }
     }
 
+    /**
+     * 把 消费者（用clientChannelInfo 标识） 注册到指定的消费者分组(group)，, 并且包含订阅元数据。
+     * （消费类型， 消费模式， 位点类型，订阅的topic列表 。）
+     * @param group
+     * @param clientChannelInfo
+     * @param consumeType
+     * @param messageModel
+     * @param consumeFromWhere
+     * @param subList
+     * @return
+     */
     public boolean registerConsumer(final String group, final ClientChannelInfo clientChannelInfo,
             ConsumeType consumeType, MessageModel messageModel, ConsumeFromWhere consumeFromWhere,
             final Set<SubscriptionData> subList) {
@@ -117,12 +133,25 @@ public class ConsumerManager {
             consumerGroupInfo = prev != null ? prev : tmp;
         }
 
+        //把消费者通道(对应一个clientid ,默认clientip@processid.)注册到消费者分组下。
         boolean r1 =
                 consumerGroupInfo.updateChannel(clientChannelInfo, consumeType, messageModel,
                     consumeFromWhere);
         boolean r2 = consumerGroupInfo.updateSubscription(subList);
 
-        if (r1 || r2) {
+        if (r1 || r2) { //消费者被加入到消费者分组(r1) || 消费者分组增加或者删除了对topic的订阅 ， 则给分组中的所有消费者发送
+            //消费者id的变更通知， 启动client的rebalance (但这里有一点疑问， 如果消费者退出消费者分组，也应该启动消费者id 的变更通知的。
+            // 仔细想一下，因为这里是消费者注册操作， 所以当然是消费者加入消费者分组！！！而消费者退出则应该通过其他的心跳操作来解决。
+
+            //所谓rebalance ,以集群消费为例，其实就是一个消费者分组中的消费者要分摊消费topic下的所有消息。
+            //而具体的rebalance算法是按照topic来做的 ，具体是：
+            //每一个消费者client 收到reblance指令以后，看自己订阅了哪些topic ,然后按topic分别做rebalance .
+
+            //而每一个topic内的rebalance操作如下：
+            //先从client本地缓存的路由表中获取topic归属的brokername下的broker master .
+            //然后问broker master要订阅者clientid列表， 然后把topic下的消费队列按均摊算法大致均匀分配给各个clientid ,
+            //退出某一个队列的消费者放手（把位点更新到broker)  ， 而加入队列的消费者接手（把放手的那个消费者位点拿过来以拉的方式消费）。
+            // )
             this.consumerIdsChangeListener.consumerIdsChanged(group, consumerGroupInfo.getAllChannel());
         }
 

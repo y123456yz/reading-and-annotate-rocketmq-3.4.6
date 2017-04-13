@@ -738,7 +738,7 @@ public class DefaultMQAdminExtImpl implements MQAdminExt, MQAdminExtInner {
             consumerGroup, clientId, msgId, timeoutMillis * 3);
     }
 
-
+    /* 判断属于group消费分组中的msg消息是否已消费 */
     public boolean consumed(final MessageExt msg, final String group) throws RemotingException, MQClientException, InterruptedException,
             MQBrokerException {
         ConsumeStats cstats = this.examineConsumeStats(group);
@@ -754,14 +754,16 @@ public class DefaultMQAdminExtImpl implements MQAdminExt, MQAdminExtInner {
                 if (brokerData != null) {
                     String addr = brokerData.getBrokerAddrs().get(MixAll.MASTER_ID);
                     if (addr.equals(RemotingUtil.socketAddress2String(msg.getStoreHost()))) {
-                        if (next.getValue().getConsumerOffset() > msg.getQueueOffset()) {
-                            return true;
-                        }
+                        /* 检查msg是否已经被消费，根据offset进行比较 */
+                    if (next.getValue().getConsumerOffset() > msg.getQueueOffset()) {
+                        return true;
                     }
                 }
             }
+            }
         }
 
+        /* 还没有被消费 */
         return false;
     }
 
@@ -826,7 +828,7 @@ public class DefaultMQAdminExtImpl implements MQAdminExt, MQAdminExtInner {
                     continue;
                 }
 
-                if (ifConsumed) {
+                if (ifConsumed) { /* 已消费 */
                     mt.setTrackType(TrackType.CONSUMED);
 
                     Iterator<Entry<String, SubscriptionData>> it = cc.getSubscriptionTable().entrySet().iterator();
@@ -844,7 +846,7 @@ public class DefaultMQAdminExtImpl implements MQAdminExt, MQAdminExtInner {
                         }
                     }
                 }
-                else {
+                else { /* 还未消费 */
                     mt.setTrackType(TrackType.NOT_CONSUME_YET);
                 }
                 break;

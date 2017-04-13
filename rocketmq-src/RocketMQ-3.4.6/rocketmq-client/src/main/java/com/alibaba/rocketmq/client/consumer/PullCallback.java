@@ -19,10 +19,12 @@ package com.alibaba.rocketmq.client.consumer;
 /**
  * Async message pulling interface
  *
- * @author shijia.wxr
+ * @author shijia.wxr   在pullMessage中会new一个类，并实现该接口
  */
 public interface PullCallback {
+    //pullMessageAsync中拉取消息成功的时候执行
     void onSuccess(final PullResult pullResult);
 
+    //pullMessageAsync中拉取消息异常的时候执行
     void onException(final Throwable e);
 }

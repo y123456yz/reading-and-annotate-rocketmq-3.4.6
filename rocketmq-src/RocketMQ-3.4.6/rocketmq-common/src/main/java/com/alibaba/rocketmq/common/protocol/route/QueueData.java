@@ -20,6 +20,10 @@
  */
 package com.alibaba.rocketmq.common.protocol.route;
 
+/**
+ * 这个QueueData类是topic在某一个brokername下面的队列元数据
+ * ， 其中包含了brokername(一主多备组成的broker单元） ， 读写队列的数量，队列的读写权限
+ */
 public class QueueData implements Comparable<QueueData> {
     private String brokerName;
     private int readQueueNums;

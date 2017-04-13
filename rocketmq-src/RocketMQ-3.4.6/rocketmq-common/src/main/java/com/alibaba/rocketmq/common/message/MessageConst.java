@@ -24,6 +24,7 @@ public class MessageConst {
     public static final String PROPERTY_TAGS = "TAGS";
     public static final String PROPERTY_WAIT_STORE_MSG_OK = "WAIT";
     public static final String PROPERTY_DELAY_TIME_LEVEL = "DELAY";
+    //标记该msg对应的topic是否是重试队列topic，参考consumerSendMsgBack
     public static final String PROPERTY_RETRY_TOPIC = "RETRY_TOPIC";
     public static final String PROPERTY_REAL_TOPIC = "REAL_TOPIC";
     public static final String PROPERTY_REAL_QUEUE_ID = "REAL_QID";
