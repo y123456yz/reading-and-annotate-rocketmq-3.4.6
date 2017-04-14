@@ -82,6 +82,7 @@ public class BrokerStatsManager {
     // Counting base when sending timer message.
     public static final int TIMER_COUNT_BASE = 100;
 
+    //写消息到commitlog会有相关的统计，例如写了多少次，写了多少字节等，见SendMessageProcessor.sendMessage
     private final HashMap<String, StatsItemSet> statsTable = new HashMap<String, StatsItemSet>();
     private final String clusterName;
 

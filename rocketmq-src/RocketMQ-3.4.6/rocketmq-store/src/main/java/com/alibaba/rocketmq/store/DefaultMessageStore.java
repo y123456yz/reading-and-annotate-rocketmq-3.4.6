@@ -335,7 +335,7 @@ public class DefaultMessageStore implements MessageStore {
 
     /**
      *
-     * @param msg
+     * @param msg   msg写入commitlog文件
      * @return
      */
     public PutMessageResult putMessage(MessageExtBrokerInner msg) {

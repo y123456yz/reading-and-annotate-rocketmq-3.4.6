@@ -21,5 +21,5 @@ package com.alibaba.rocketmq.common;
  */
 public enum TopicFilterType {
     SINGLE_TAG,
-    MULTI_TAG
+    MULTI_TAG //事务相关
 }

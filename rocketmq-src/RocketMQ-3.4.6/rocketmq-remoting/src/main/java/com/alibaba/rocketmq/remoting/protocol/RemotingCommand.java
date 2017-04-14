@@ -69,7 +69,7 @@ public class RemotingCommand {
     //"extFields":{"topic":"yyztest2","queueId":"3","consumerGroup":"yyzGroup2","commitOffset":"28"}
     private HashMap<String, String> extFields;
 
-    //例如CONSUMER_SEND_MSG_BACK消息，customHeader为ConsumerSendMsgBackRequestHeader 填充见consumerSendMessageBack
+    //例如CONSUMER_SEND_MSG_BACK消息，customHeader为 ConsumerSendMsgBackRequestHeader 填充见consumerSendMessageBack
     //header data
     private transient CommandCustomHeader customHeader; //例如CONSUMER_SEND_MSG_BACK消息，customHeader 填充见 MQClientAPIImpl.consumerSendMessageBack
 

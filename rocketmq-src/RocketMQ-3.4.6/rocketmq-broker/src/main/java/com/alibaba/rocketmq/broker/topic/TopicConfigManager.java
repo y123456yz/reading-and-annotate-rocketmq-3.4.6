@@ -155,7 +155,8 @@ public class TopicConfigManager extends ConfigManager {
         return this.topicConfigTable.get(topic);
     }
 
-
+    //收到重新打回格式的报文后，采用 createTopicInSendMessageBackMethod 创建topic,
+    //收到普通的消息报文的时候，采用 createTopicInSendMessageMethod 创建topic
     public TopicConfig createTopicInSendMessageMethod(final String topic, final String defaultTopic,
             final String remoteAddress, final int clientDefaultTopicQueueNums, final int topicSysFlag) {
         TopicConfig topicConfig = null;
@@ -164,7 +165,7 @@ public class TopicConfigManager extends ConfigManager {
         try {
             if (this.lockTopicConfigTable.tryLock(LockTimeoutMillis, TimeUnit.MILLISECONDS)) {
                 try {
-                    topicConfig = this.topicConfigTable.get(topic);
+                    topicConfig = this.topicConfigTable.get(topic); //该topic存在则直接返回
                     if (topicConfig != null)
                         return topicConfig;
 
@@ -238,6 +239,8 @@ public class TopicConfigManager extends ConfigManager {
      * @param topicSysFlag
      * @return
      */
+    //收到重新打回格式的报文后，采用 createTopicInSendMessageBackMethod 创建topic,
+    //收到普通的消息报文的时候，采用 createTopicInSendMessageMethod 创建topic
     public TopicConfig createTopicInSendMessageBackMethod(//
             final String topic, //
             final int clientDefaultTopicQueueNums,//

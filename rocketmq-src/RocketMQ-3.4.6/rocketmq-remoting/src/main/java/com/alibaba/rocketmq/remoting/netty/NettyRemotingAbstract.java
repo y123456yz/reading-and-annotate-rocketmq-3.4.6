@@ -169,8 +169,10 @@ public abstract class NettyRemotingAbstract {
                                 .doBeforeRequest(RemotingHelper.parseChannelRemoteAddr(ctx.channel()), cmd);
                         }
 
+                        //各种回调见  BrokerController.registerProcessor
+
                         //processor可能是 SendMessageProcessor ClientManageProcessor SendMessageProcessor QueryMessageProcessor ClientManageProcessor
-                        //执行这些processor对应的processRequest接口   //NettyRemotingAbstract.processRequestCommand中执行这些接口函数
+                        //执行这些processor对应的processRequest接口   //NettyRemotingAbstract.processRequestCommand 中执行这些接口函数
                         final RemotingCommand response = pair.getObject1().processRequest(ctx, cmd);
                         if (rpcHook != null) {
                             rpcHook.doAfterResponse(RemotingHelper.parseChannelRemoteAddr(ctx.channel()),

@@ -29,8 +29,10 @@ import com.alibaba.rocketmq.remoting.exception.RemotingCommandException;
 /**
  * @author shijia.wxr
  */
+
+//ConsumerSendMsgBackRequestHeader和SendMessageRequestHeader类区别
 //MSG头部内容在sendKernelImpl组包发送, body内容赋值在mQClientFactory.getMQClientAPIImpl().sendMessage
-//解包在parseRequestHeader
+//解包在parseRequestHeader   组包发送见 DefaultMQProducerImpl.sendKernelImpl
 public class SendMessageRequestHeader implements CommandCustomHeader {
     @CFNotNull
     private String producerGroup;

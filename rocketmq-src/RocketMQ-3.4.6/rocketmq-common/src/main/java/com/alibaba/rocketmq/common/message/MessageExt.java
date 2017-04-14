@@ -48,6 +48,7 @@ public class MessageExt extends Message {
     private String msgId;
     private long commitLogOffset;
     private int bodyCRC;
+    //收到打回消息后，在 SendMessageProcessor.consumerSendMsgBack 自增   Commitlog文件中的消息存储中有个字段代表重复消费的次数
     private int reconsumeTimes; //该条消息重复消费的次数，
 
     private long preparedTransactionOffset;
@@ -228,7 +229,7 @@ public class MessageExt extends Message {
         return reconsumeTimes;
     }
 
-    //processConsumeResult会调用赋值
+    //processConsumeResult会调用赋值  收到打回消息后，在 SendMessageProcessor.consumerSendMsgBack 自增
     public void setReconsumeTimes(int reconsumeTimes) {
         this.reconsumeTimes = reconsumeTimes;
     }

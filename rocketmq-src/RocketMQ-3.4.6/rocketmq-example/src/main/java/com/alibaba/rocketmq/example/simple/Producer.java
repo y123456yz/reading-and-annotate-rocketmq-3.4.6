@@ -62,7 +62,7 @@ public class Producer {
             SendResult sendResult = null;
             try {//同步发送消息 ，并且等待消息存储成功，超时时间3s .
                 System.out.println("send msg with msgKey:" + msg.getKeys());
-                sendResult = producer.send(msg);
+                sendResult = producer.send(msg); //DefaultMQProducer.send
             } catch (Exception e) {
                 e.printStackTrace();
             }

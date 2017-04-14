@@ -25,7 +25,7 @@ import com.alibaba.rocketmq.remoting.exception.RemotingCommandException;
 
 /**
  * @author shijia.wxr  一般从header data中解析出相关信息: "extFields":{"topic":"yyztest2","queueId":"3","consumerGroup":"yyzGroup2","commitOffset":"28"}
- */ //CONSUMER_SEND_MSG_BACK消息的extFields部分携带相关成员内容
+ */ //CONSUMER_SEND_MSG_BACK消息的extFields部分携带相关成员内容  注意 ConsumerSendMsgBackRequestHeader和SendMessageRequestHeader类区别
 public class ConsumerSendMsgBackRequestHeader implements CommandCustomHeader {
     @CFNotNull
     private Long offset; //offset一般在通信报文中的 extFields 携带到对端

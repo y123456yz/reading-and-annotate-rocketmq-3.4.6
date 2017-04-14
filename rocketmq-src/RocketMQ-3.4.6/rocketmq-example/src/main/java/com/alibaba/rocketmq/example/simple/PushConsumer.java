@@ -39,6 +39,8 @@ import java.util.List;
 6. 在步骤5的延时时间到后，执行ConsumeMessageConcurrentlyService.submitConsumeRequest，触发线程池处理消费步骤5中的分批消费任务
 7. 通过线程调度执行 ConsumeRequest.run
 
+数据通信报文类型参考:RequestCode  通信协议中的data header部分的code: 就是用的该类中的各种协议类型
+
 每个客户端消费者分组对每一个topic有一个线程来从broker拉取该topic下面的队列消息，在客户端每个消费者分组从对应的每个queue中最多拉取1000条消息
 例如现在有一个topic，有2个queue，只有一个消费者分组consumer消费该队列信息，则客户端会有 2个 PullRequest 类来分别从broker的2个queue拉取消息，这样本低最多存2000条消息(从每个queue最多拉1000)
 条，两个queue就是2000条。 如果consumer消费分组消费失败，则会把消息打回到broker中的重试队列：topic名为:%RETRY%consumer，队列数为每个broker上面一个queue 。

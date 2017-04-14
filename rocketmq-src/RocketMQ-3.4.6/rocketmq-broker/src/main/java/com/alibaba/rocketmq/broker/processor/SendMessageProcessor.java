@@ -73,13 +73,14 @@ public class SendMessageProcessor extends AbstractSendMessageProcessor implement
         switch (request.getCode()) {
         case RequestCode.CONSUMER_SEND_MSG_BACK: //客户端消费失败，重新打回的消息
             return this.consumerSendMsgBack(ctx, request);
-        default:
-            SendMessageRequestHeader requestHeader = parseRequestHeader(request);
+        default: //其他消息
+            SendMessageRequestHeader requestHeader = parseRequestHeader(request); //客户端producer发送的SEND_MESSAGE 等消息都在这里面解析
             if (requestHeader == null) {
                 return null;
             }
             mqtraceContext = buildMsgContext(ctx, requestHeader);
             this.executeSendMessageHookBefore(ctx, request, mqtraceContext);
+            //消息处理
             final RemotingCommand response = this.sendMessage(ctx, request, mqtraceContext, requestHeader);
             this.executeSendMessageHookAfter(response, mqtraceContext);
             return response;
@@ -213,6 +214,7 @@ public class SendMessageProcessor extends AbstractSendMessageProcessor implement
         msgInner.setBornTimestamp(msgExt.getBornTimestamp());
         msgInner.setBornHost(msgExt.getBornHost());
         msgInner.setStoreHost(this.getStoreHost());
+        //之前的msg消费失败后，这里生成一条心的msg，其reconsumeTimes自增1
         msgInner.setReconsumeTimes(msgExt.getReconsumeTimes() + 1);
 
         //msgExt是通过客户端发送过来的位点offset从commitlog中找到的消息，originMsgId也就是通过位点找到的这条消息的msgid
@@ -285,7 +287,7 @@ public class SendMessageProcessor extends AbstractSendMessageProcessor implement
         return String.format("CL: %5.2f CQ: %5.2f INDEX: %5.2f", physicRatio, logisRatio, indexRatio);
     }
 
-
+    //接收客户端消息并写入commitlog，然后发送应答
     private RemotingCommand sendMessage(final ChannelHandlerContext ctx, //
             final RemotingCommand request,//
             final SendMessageContext mqtraceContext,//
@@ -300,7 +302,7 @@ public class SendMessageProcessor extends AbstractSendMessageProcessor implement
             log.debug("receive SendMessage request command, " + request);
         }
         response.setCode(-1);
-        super.msgCheck(ctx, requestHeader, response);
+        super.msgCheck(ctx, requestHeader, response); // 队列queue读写权限  topic是否创建等检查
         if (response.getCode() != -1) {
             return response;
         }
@@ -344,6 +346,7 @@ public class SendMessageProcessor extends AbstractSendMessageProcessor implement
             }
         }
 
+        //DefaultMessageStore.putMessage   msg写入commitlog文件
         PutMessageResult putMessageResult = this.brokerController.getMessageStore().putMessage(msgInner);
         if (putMessageResult != null) {
             boolean sendOK = false;

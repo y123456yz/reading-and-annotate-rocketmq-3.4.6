@@ -100,7 +100,7 @@ public abstract class AbstractSendMessageProcessor implements NettyRequestProces
             //注意这里没有break;
         case RequestCode.SEND_MESSAGE:
             if (null == requestHeaderV2) {
-                requestHeader =
+                requestHeader = //
                         (SendMessageRequestHeader) request
                             .decodeCommandCustomHeader(SendMessageRequestHeader.class);
             }
@@ -172,6 +172,7 @@ public abstract class AbstractSendMessageProcessor implements NettyRequestProces
     }
 
 
+    //检查该broker是否有写权限  以及broker是否存在，如果不存在在会默认创建一个
     protected RemotingCommand msgCheck(final ChannelHandlerContext ctx,
             final SendMessageRequestHeader requestHeader, final RemotingCommand response) {
         //检查broker的写权限。
@@ -197,7 +198,7 @@ public abstract class AbstractSendMessageProcessor implements NettyRequestProces
         if (null == topicConfig) {
             int topicSysFlag = 0;
             if (requestHeader.isUnitMode()) {
-                if (requestHeader.getTopic().startsWith(MixAll.RETRY_GROUP_TOPIC_PREFIX)) {
+                if (requestHeader.getTopic().startsWith(MixAll.RETRY_GROUP_TOPIC_PREFIX)) { //发给重试队列
                     topicSysFlag = TopicSysFlag.buildSysFlag(false, true);
                 }
                 else {
@@ -208,6 +209,7 @@ public abstract class AbstractSendMessageProcessor implements NettyRequestProces
             log.warn("the topic " + requestHeader.getTopic() + " not exist, producer: "
                     + ctx.channel().remoteAddress());
             //未找到topic ，则用默认的topic:TBW102  的配置来创建一个topic.
+            //如果客户端投递消息过来的时候，发现该topic不存在，则默认创建一个topic
             topicConfig = this.brokerController.getTopicConfigManager().createTopicInSendMessageMethod(//
                 requestHeader.getTopic(), //
                 requestHeader.getDefaultTopic(), //
