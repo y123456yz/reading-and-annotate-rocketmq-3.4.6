@@ -45,6 +45,8 @@ import com.alibaba.rocketmq.common.message.Message;
 *
 * broker会有注销成功
 * ...s...o{"code":0,"extFields":{},"flag":1,"language":"JAVA","opaque":20,"serializeTypeCurrentRPC":"JSON","version":115}
+*
+* 比较好的参考资料:http://www.jianshu.com/p/453c6e7ff81c  分布式开放消息系统(RocketMQ)的原理与实践
 * */
 public class Producer {
     public static void main(String[] args) throws MQClientException, InterruptedException {

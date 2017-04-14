@@ -1488,6 +1488,9 @@ public class DefaultMessageStore implements MessageStore {
         }
     }
 
+    // 异步线程分发 commitlog 文件中的消息到 consumeQueue 或者分发到 indexService 见 ReputMessageService
+    // 1.分发消息位置到 ConsumeQueue
+    // 2.分发到 IndexService 建立索引
     class ReputMessageService extends ServiceThread {
         @Override
         public void shutdown() {

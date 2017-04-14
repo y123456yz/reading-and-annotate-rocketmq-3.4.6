@@ -47,6 +47,8 @@ import java.util.concurrent.TimeUnit;
  * commitlog 里面记录了每条消息的消费情况，是否被消费，由谁消费，该消息是否持久化等信息，例如可以通过qadmin queryMsgById查看消费情况
  * ConsumeQueue 是commitlog的索引，也是以Mapfile为存储。
  *
+ * consume queue是消息的逻辑队列，相当于字典的目录，用来指定消息在物理文件commit log上的位置。
+ *
  * 所有消息都存在一个单一的CommitLog文件里面，然后有后台线程异步的同步到 ConsumeQueue，再由Consumer进行消费。
  * 而RocketMQ却为Producer和Consumer分别设计了不同的存储结构，Producer对应CommitLog, Consumer对应ConsumeQueue。
  * 这里至所以可以用“异步线程”，也是因为消息队列天生就是用来“缓冲消息”的。只要消息到了CommitLog，发送的消息也就不会丢。
@@ -55,6 +57,8 @@ import java.util.concurrent.TimeUnit;
  * 消息最终肯定会进入 ConsumeQueue，让Consumer可见。
  * 参考http://blog.csdn.net/chunlongyu/article/details/54576649
  * commitlog文件中每条消息存储格式可以参考:http://blog.csdn.net/xxxxxx91116/article/details/50333161
+ *
+ * // 异步线程分发 commitlog 文件中的消息到 consumeQueue 或者分发到 indexService 见 ReputMessageService
  */
 public class CommitLog {
     private static final Logger log = LoggerFactory.getLogger(LoggerName.StoreLoggerName);

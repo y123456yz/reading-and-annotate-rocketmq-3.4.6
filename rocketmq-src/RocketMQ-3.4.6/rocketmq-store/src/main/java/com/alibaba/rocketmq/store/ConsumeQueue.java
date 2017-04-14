@@ -33,6 +33,7 @@ import java.util.List;
  * 逻辑上，一个队列是和某一个Topic相关的，有自己的队列id .
  *
  *Consume Queue存储消息在Commit Log中的位置信息
+ *consume queue是消息的逻辑队列，相当于字典的目录，用来指定消息在物理文件commit log上的位置。
  *
  [root@s10-2-s-5 topic-prod-xxxxxservice-xxxxx]# pwd
  /data/store/consumequeue/topic-prod-xxxxxservice-xxxxx
@@ -51,6 +52,9 @@ import java.util.List;
  *DefaultMessageStore.loadConsumeQueue broker起来后，从/data/store/consumequeue路径读取对应topic中各个队列的commit log索引信息
  * 遍历${user.home} \store\consumequeue\${topic}\${queueId}下所有文件，根据topic， queueId， 文件来构建ConsueQueue对象
  * @author shijia.wxr
+ *
+ * // 异步线程分发 commitlog 文件中的消息到 consumeQueue 或者分发到 indexService 见 ReputMessageService
+ *
  */
 public class ConsumeQueue {
     //8字节commitlog offset + 4字节commit log item size + 8字节message tag hashcode.

@@ -22,9 +22,18 @@ package com.alibaba.rocketmq.store;
 public class DispatchRequest {
     private final String topic;
     private final int queueId;
-    private final long commitLogOffset;
-    private final int msgSize;
-    private final long tagsCode;
+
+    /*
+    *
+    * CommitLog Offset是指这条消息在Commit Log文件中的实际偏移量
+    * Size存储中消息的大小
+    * Message Tag HashCode存储消息的Tag的哈希值：主要用于订阅时消息过滤（订阅时如果指定了Tag，会根据HashCode来快速查找到订阅的消息）
+    * */
+    //consumequeue文件存储单元格式:CommitLog Offset + Size +Message Tag HashCode
+    private final long commitLogOffset; //consumequeue文件存储单元格式:CommitLog Offset + Size +Message Tag HashCode中的offset
+    private final int msgSize;//consumequeue文件存储单元格式:CommitLog Offset + Size +Message Tag HashCode中的size
+    private final long tagsCode;//consumequeue文件存储单元格式:CommitLog Offset + Size +Message Tag HashCode中的Message Tag HashCode
+
     private final long storeTimestamp;
     private final long consumeQueueOffset;
     private final String keys;

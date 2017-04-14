@@ -58,6 +58,7 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
  117M    20170407110209375
  [root@s10-2-X-5 index]#
  * @author shijia.wxr   IndexService用于创建索引文件集合，当用户想要查询某个topic下某个key的消息时，能够快速响应  主要用于查询消息用的，例如更加msgid或者topic+key获取消息
+ * // 异步线程分发 commitlog 文件中的消息到 consumeQueue 或者分发到 indexService 见 ReputMessageService
  */
 public class IndexService {
     private static final Logger log = LoggerFactory.getLogger(LoggerName.StoreLoggerName);
