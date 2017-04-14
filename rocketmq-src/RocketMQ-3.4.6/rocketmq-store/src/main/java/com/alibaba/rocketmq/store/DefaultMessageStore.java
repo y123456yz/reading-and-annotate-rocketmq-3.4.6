@@ -1488,6 +1488,18 @@ public class DefaultMessageStore implements MessageStore {
         }
     }
 
+    /*
+    *  ConsumeQueue创建过程：
+    *  1. 首先会创建CommitLog，在将数据写入CommitLog之后，调用defaultMessageStore->doReput->doDispatch
+    *  2. doDispatch 调用 putMessagePostionInfo 将数据写入ConsumeQueue
+    *
+    *  IndexService用于创建索引文件集合，当用户想要查询某个topic下某个key的消息时，能够快速响应；
+    *  这里注意不要与上述的ConsumeQueue混合，ConsumeQueue只是为了抽象出多个queue，方便并发情况下，用户put/get消息。
+    *  IndexFile的创建过程：
+    *  1. 首先在 doDispatch 写入ConsumeQueue后，会再调用indexService.putRequest，创建索引请求
+    *  2. 调用IndexService的buildIndex创建索引
+    * */
+
     // 异步线程分发 commitlog 文件中的消息到 consumeQueue 或者分发到 indexService 见 ReputMessageService
     // 1.分发消息位置到 ConsumeQueue
     // 2.分发到 IndexService 建立索引
