@@ -29,7 +29,7 @@ public class Message implements Serializable {
     private static final long serialVersionUID = 8445773977080406428L;
 
     private String topic;
-    private int flag; //Ò²¾ÍÊÇÍ¨ĞÅ±¨ÎÄÖĞµÄflag×Ö¶Î£¬±êÊ¶ÊÇ·ñĞèÒª
+    private int flag; //ä¹Ÿå°±æ˜¯é€šä¿¡æŠ¥æ–‡ä¸­çš„flagå­—æ®µï¼Œæ ‡è¯†æ˜¯å¦éœ€è¦
     private Map<String, String> properties;
     private byte[] body;
 
@@ -159,7 +159,7 @@ public class Message implements Serializable {
 
 
     /**
-     * ÉèÖÃÑÓ³ÙÍ¶µİµÄÊ±¼älevel .
+     * è®¾ç½®å»¶è¿ŸæŠ•é€’çš„æ—¶é—´level .
      * @param level
      */
     public void setDelayTimeLevel(int level) {
@@ -190,7 +190,7 @@ public class Message implements Serializable {
         this.flag = flag;
     }
 
-    //Ê¹ÓÃ·½·¨byte[] prevBody = msg.getBody();
+    //ä½¿ç”¨æ–¹æ³•byte[] prevBody = msg.getBody();
     public byte[] getBody() {
         return body;
     }

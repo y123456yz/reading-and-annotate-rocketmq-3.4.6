@@ -49,13 +49,13 @@ public class FilterAPI {
         subscriptionData.setTopic(topic);
         subscriptionData.setSubString(subString);
 
-        /*Îªnull ,* £¬»òÕß¿Õ×Ö·û´® ¶¼ÈÏÎªÊÇ¶©ÔÄtopicµÄËùÓÐÏûÏ¢¡£*/
+        /*ä¸ºnull ,* ï¼Œæˆ–è€…ç©ºå­—ç¬¦ä¸² éƒ½è®¤ä¸ºæ˜¯è®¢é˜…topicçš„æ‰€æœ‰æ¶ˆæ¯ã€‚*/
         if (null == subString || subString.equals(SubscriptionData.SUB_ALL) || subString.length() == 0) {
             subscriptionData.setSubString(SubscriptionData.SUB_ALL);
         }
         else {
-            //°´Ë«ÊúÏßÇÐ·Ötag±í´ïÊ½£¬µÃµ½¶à¸ötag , trimÔËËãÒÔºó£¬µÃµ½Ã¿Ò»¸ötagÒÔ¼°Ã¿Ò»¸ötagµÄhashcode (ÒòÎªÔÚbrokerÊÇÓÃmsgTagµÄhashcode
-            // À´×ö¹ýÂËµÄ¡£)
+            //æŒ‰åŒç«–çº¿åˆ‡åˆ†tagè¡¨è¾¾å¼ï¼Œå¾—åˆ°å¤šä¸ªtag , trimè¿ç®—ä»¥åŽï¼Œå¾—åˆ°æ¯ä¸€ä¸ªtagä»¥åŠæ¯ä¸€ä¸ªtagçš„hashcode (å› ä¸ºåœ¨brokeræ˜¯ç”¨msgTagçš„hashcode
+            // æ¥åšè¿‡æ»¤çš„ã€‚)
             String[] tags = subString.split("\\|\\|");
             if (tags != null && tags.length > 0) {
                 for (String tag : tags) {

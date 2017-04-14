@@ -28,7 +28,7 @@ import java.util.concurrent.ExecutorService;
 
 
 /**
- * @author shijia.wxr   NettyRemotingClient ÖĞÊµÏÖ¸Ã½Ó¿Ú
+ * @author shijia.wxr   NettyRemotingClient ä¸­å®ç°è¯¥æ¥å£
  */
 public interface RemotingClient extends RemotingService {
 
@@ -40,7 +40,7 @@ public interface RemotingClient extends RemotingService {
                                final long timeoutMillis) throws InterruptedException, RemotingConnectException,
             RemotingSendRequestException, RemotingTimeoutException;
 
-    //Òì²½·½Ê½´ÓÖ¸¶¨µÄaddr»ñÈ¡ĞÅÏ¢£¬×îÖÕÖ´ĞĞµÄÊÇ NettyRemotingClient.invokeAsync
+    //å¼‚æ­¥æ–¹å¼ä»æŒ‡å®šçš„addrè·å–ä¿¡æ¯ï¼Œæœ€ç»ˆæ‰§è¡Œçš„æ˜¯ NettyRemotingClient.invokeAsync
     void invokeAsync(final String addr, final RemotingCommand request, final long timeoutMillis,
                      final InvokeCallback invokeCallback) throws InterruptedException, RemotingConnectException,
             RemotingTooMuchRequestException, RemotingTimeoutException, RemotingSendRequestException;

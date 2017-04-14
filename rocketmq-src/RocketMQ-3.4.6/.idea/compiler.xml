@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CompilerConfiguration">
+    <annotationProcessing>
+      <profile name="Maven default annotation processors profile" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <module name="rocketmq-broker" />
+        <module name="rocketmq-client" />
+        <module name="rocketmq-common" />
+        <module name="rocketmq-example" />
+        <module name="rocketmq-filtersrv" />
+        <module name="rocketmq-namesrv" />
+        <module name="rocketmq-remoting" />
+        <module name="rocketmq-srvutil" />
+        <module name="rocketmq-store" />
+        <module name="rocketmq-tools" />
+      </profile>
+    </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="rocketmq-all" target="1.6" />
+      <module name="rocketmq-broker" target="1.6" />
+      <module name="rocketmq-client" target="1.6" />
+      <module name="rocketmq-common" target="1.6" />
+      <module name="rocketmq-example" target="1.6" />
+      <module name="rocketmq-filtersrv" target="1.6" />
+      <module name="rocketmq-namesrv" target="1.6" />
+      <module name="rocketmq-remoting" target="1.6" />
+      <module name="rocketmq-srvutil" target="1.6" />
+      <module name="rocketmq-store" target="1.6" />
+      <module name="rocketmq-tools" target="1.6" />
+    </bytecodeTargetLevel>
+  </component>
+</project>

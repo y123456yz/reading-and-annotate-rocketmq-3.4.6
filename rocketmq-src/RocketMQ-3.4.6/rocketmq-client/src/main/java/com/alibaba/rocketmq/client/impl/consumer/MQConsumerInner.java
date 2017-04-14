@@ -29,8 +29,8 @@ import java.util.Set;
 /**
  * Consumer inner interface
  *
- * @author shijia.wxr  DefaultMQPushConsumerImpl »òÕß DefaultMQPullConsumerImpl ÖĞÊµÏÖ¸ÃÀà
- * Ò»¸öÏû·Ñ·Ö×é¶ÔÓ¦Ò»¸öMQConsumerInner£¬´æ´¢ÔÚMQClientInstance.consumerTable
+ * @author shijia.wxr  DefaultMQPushConsumerImpl æˆ–è€… DefaultMQPullConsumerImpl ä¸­å®ç°è¯¥ç±»
+ * ä¸€ä¸ªæ¶ˆè´¹åˆ†ç»„å¯¹åº”ä¸€ä¸ªMQConsumerInnerï¼Œå­˜å‚¨åœ¨MQClientInstance.consumerTable
  */
 public interface MQConsumerInner {
     String groupName();
@@ -50,9 +50,9 @@ public interface MQConsumerInner {
 
     void doRebalance();
 
-    //MQClientInstance.startScheduledTask->persistConsumerOffset->MQClientInstance.startScheduledTask->persistConsumerOffsetÖĞÖ´ĞĞ
-    //µ±¿Í»§¶ËÏû·Ñ³É¹¦ºó£¬ĞèÒª°Ñ¸ÃĞÅÏ¢ÍÆËÍ¸øbroker£¬ÕâÑùbroker²ÅÄÜ¸üĞÂoffsetÖĞÖ´ĞĞ  µ±¿Í»§¶ËÏû·Ñ³É¹¦ºó£¬ĞèÒª°Ñ¸ÃĞÅÏ¢ÍÆËÍ¸øbroker£¬ÕâÑùbroker²ÅÄÜ¸üĞÂoffset
-    //MQClientInstance.startScheduledTask->persistConsumerOffsetÖĞÖ´ĞĞ  µ±¿Í»§¶ËÏû·Ñ³É¹¦ºó£¬ĞèÒª°Ñ¸ÃĞÅÏ¢ÍÆËÍ¸øbroker£¬ÕâÑùbroker²ÅÄÜ¸üĞÂoffset
+    //MQClientInstance.startScheduledTask->persistConsumerOffset->MQClientInstance.startScheduledTask->persistConsumerOffsetä¸­æ‰§è¡Œ
+    //å½“å®¢æˆ·ç«¯æ¶ˆè´¹æˆåŠŸåï¼Œéœ€è¦æŠŠè¯¥ä¿¡æ¯æ¨é€ç»™brokerï¼Œè¿™æ ·brokeræ‰èƒ½æ›´æ–°offsetä¸­æ‰§è¡Œ  å½“å®¢æˆ·ç«¯æ¶ˆè´¹æˆåŠŸåï¼Œéœ€è¦æŠŠè¯¥ä¿¡æ¯æ¨é€ç»™brokerï¼Œè¿™æ ·brokeræ‰èƒ½æ›´æ–°offset
+    //MQClientInstance.startScheduledTask->persistConsumerOffsetä¸­æ‰§è¡Œ  å½“å®¢æˆ·ç«¯æ¶ˆè´¹æˆåŠŸåï¼Œéœ€è¦æŠŠè¯¥ä¿¡æ¯æ¨é€ç»™brokerï¼Œè¿™æ ·brokeræ‰èƒ½æ›´æ–°offset
     void persistConsumerOffset();
 
 

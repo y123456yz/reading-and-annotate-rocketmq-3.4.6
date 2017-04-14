@@ -49,8 +49,8 @@ import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
 
-/** NettyRemotingClient ºÍ NettyRemotingServer ¶ÔÓ¦
- * @author shijia.wxr  NettyRemotingClientÖĞÊµÏÖRemotingClient½Ó¿Ú  ¶¼ÊÇ¶ÔÓ¦ÍøÂçÊÂ¼ş´¦Àí
+/** NettyRemotingClient å’Œ NettyRemotingServer å¯¹åº”
+ * @author shijia.wxr  NettyRemotingClientä¸­å®ç°RemotingClientæ¥å£  éƒ½æ˜¯å¯¹åº”ç½‘ç»œäº‹ä»¶å¤„ç†
  */
 public class NettyRemotingClient extends NettyRemotingAbstract implements RemotingClient {
     private static final Logger log = LoggerFactory.getLogger(RemotingHelper.RemotingLogName);
@@ -242,7 +242,7 @@ public class NettyRemotingClient extends NettyRemotingAbstract implements Remoti
 
 
     @Override
-    public void start() { //MQClientAPIImpl.startÖĞÖ´ĞĞ   //MQClientInstance.start->MQClientAPIImpl.start->NettyRemotingClient.start
+    public void start() { //MQClientAPIImpl.startä¸­æ‰§è¡Œ   //MQClientInstance.start->MQClientAPIImpl.start->NettyRemotingClient.start
         this.defaultEventExecutorGroup = new DefaultEventExecutorGroup(//
             nettyClientConfig.getClientWorkerThreads(), //
             new ThreadFactory() {
@@ -278,13 +278,13 @@ public class NettyRemotingClient extends NettyRemotingAbstract implements Remoti
                         new NettyClientHandler());
                 }
             });
-        //ÑÓ³Ù3Ãë£¬ Ò»ÃëÉ¨Ò»´ÎresposneTable, Í¨¹ı»Øµ÷º¯Êı´¦Àíresponse. client Òì²½À­È¡ÏûÏ¢µÄ´¦ÀíÒ²ÊÇÔÚÕâÀïÍê³É¡£
+        //å»¶è¿Ÿ3ç§’ï¼Œ ä¸€ç§’æ‰«ä¸€æ¬¡resposneTable, é€šè¿‡å›è°ƒå‡½æ•°å¤„ç†response. client å¼‚æ­¥æ‹‰å–æ¶ˆæ¯çš„å¤„ç†ä¹Ÿæ˜¯åœ¨è¿™é‡Œå®Œæˆã€‚
         this.timer.scheduleAtFixedRate(new TimerTask() {
 
             @Override
             public void run() {
                 try {
-                    //¶¨Ê±É¨Ãè
+                    //å®šæ—¶æ‰«æ
                     NettyRemotingClient.this.scanResponseTable();
                 }
                 catch (Exception e) {
@@ -293,7 +293,7 @@ public class NettyRemotingClient extends NettyRemotingAbstract implements Remoti
             }
         }, 1000 * 3, 1000);
 
-        //ÓÃÓÚ´¦ÀínettyEvent.
+        //ç”¨äºå¤„ç†nettyEvent.
         if (this.channelEventListener != null) {
             this.nettyEventExecuter.start();
         }
@@ -617,7 +617,7 @@ public class NettyRemotingClient extends NettyRemotingAbstract implements Remoti
         }
     }
 
-    @Override //Òì²½´ÓaddrµØÖ·»ñÈ¡±¨ÎÄĞÅÏ¢.
+    @Override //å¼‚æ­¥ä»addråœ°å€è·å–æŠ¥æ–‡ä¿¡æ¯.
     public void invokeAsync(String addr, RemotingCommand request, long timeoutMillis,
             InvokeCallback invokeCallback) throws InterruptedException, RemotingConnectException,
             RemotingTooMuchRequestException, RemotingTimeoutException, RemotingSendRequestException {

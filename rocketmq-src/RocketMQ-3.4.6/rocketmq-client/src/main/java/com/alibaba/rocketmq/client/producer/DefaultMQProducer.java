@@ -37,7 +37,7 @@ import java.util.List;
 public class DefaultMQProducer extends ClientConfig implements MQProducer {
     protected final transient DefaultMQProducerImpl defaultMQProducerImpl;
     /**
-     * Í¶µİÕß·Ö×é¡£
+     * æŠ•é€’è€…åˆ†ç»„ã€‚
      */
     private String producerGroup;
     /**
@@ -47,19 +47,19 @@ public class DefaultMQProducer extends ClientConfig implements MQProducer {
     private volatile int defaultTopicQueueNums = 4;
     private int sendMsgTimeout = 3000;
     /**
-     * ÏûÏ¢Ìå³¬¹ı4k ÔòÆô¶¯Ñ¹Ëõ¡£
+     * æ¶ˆæ¯ä½“è¶…è¿‡4k åˆ™å¯åŠ¨å‹ç¼©ã€‚
      */
     private int compressMsgBodyOverHowmuch = 1024 * 4;
     /**
-     * ·¢ËÍÊ§°ÜÊ±ÖØÊÔ´ÎÊı ¡£
+     * å‘é€å¤±è´¥æ—¶é‡è¯•æ¬¡æ•° ã€‚
      */
     private int retryTimesWhenSendFailed = 2;
     /**
-     * Î´´æ´¢³É¹¦ÏûÏ¢Ê±ÊÇ·ñÖØÊÔÆäËûµÄbroker .
+     * æœªå­˜å‚¨æˆåŠŸæ¶ˆæ¯æ—¶æ˜¯å¦é‡è¯•å…¶ä»–çš„broker .
      */
     private boolean retryAnotherBrokerWhenNotStoreOK = false;
     /**
-     * ×î´óÏûÏ¢Ìå´óĞ¡ £¬128k .
+     * æœ€å¤§æ¶ˆæ¯ä½“å¤§å° ï¼Œ128k .
      */
     private int maxMessageSize = 1024 * 128;
 
@@ -93,7 +93,7 @@ public class DefaultMQProducer extends ClientConfig implements MQProducer {
     }
 
 
-    @Override //ÀıÈçProducer.mainÖĞµ÷ÓÃ
+    @Override //ä¾‹å¦‚Producer.mainä¸­è°ƒç”¨
     public void start() throws MQClientException {
         this.defaultMQProducerImpl.start();
     }

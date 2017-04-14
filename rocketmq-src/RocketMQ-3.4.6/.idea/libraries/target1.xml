@@ -1,0 +1,10 @@
+<component name="libraryTable">
+  <library name="target1">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/rocketmq-tools/target/rocketmq-tools-3.4.6.jar!/" />
+      <root url="jar://$PROJECT_DIR$/rocketmq-tools/target/rocketmq-tools-3.4.6-sources.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

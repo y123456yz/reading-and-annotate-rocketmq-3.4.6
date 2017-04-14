@@ -42,16 +42,16 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 
 /**
-  * ÃüÃû·şÎñÆ÷ÏÂµÄÂ·ÓÉĞÅÏ¢¹ÜÀíÆ÷¡£
+  * å‘½åæœåŠ¡å™¨ä¸‹çš„è·¯ç”±ä¿¡æ¯ç®¡ç†å™¨ã€‚
  * @author shijia.wxr
  */
 public class RouteInfoManager {
     private static final Logger log = LoggerFactory.getLogger(LoggerName.NamesrvLoggerName);
     private final ReadWriteLock lock = new ReentrantReadWriteLock();
     /**
-     * ÕâÀïÈç¹û°ÑÊı¾İ½á¹¹ĞŞ¸ÄÎª
-     * HashMap<String,Map<String,QueueData>> »á¸üºÃÀí½âÒ»Ğ©£¬
-     * keyÊÇtopic ,valueÊÇMap<String,QueueData>  , ²¢ÇÒÕâ¸ömapµÄkeyÊÇbrokername , valueÊÇQueueData.
+     * è¿™é‡Œå¦‚æœæŠŠæ•°æ®ç»“æ„ä¿®æ”¹ä¸º
+     * HashMap<String,Map<String,QueueData>> ä¼šæ›´å¥½ç†è§£ä¸€äº›ï¼Œ
+     * keyæ˜¯topic ,valueæ˜¯Map<String,QueueData>  , å¹¶ä¸”è¿™ä¸ªmapçš„keyæ˜¯brokername , valueæ˜¯QueueData.
      */
     private final HashMap<String/* topic */, List<QueueData>> topicQueueTable;
     private final HashMap<String/* brokerName */, BrokerData> brokerAddrTable;
@@ -113,8 +113,8 @@ public class RouteInfoManager {
 
 
     /**
-     *  brokerÆô¶¯»òÕß¹ÜÀí¿ØÖÆÌ¨Ìá½»topicÅäÖÃ±ä¸ü¸øbrokerÒÔºó£¬broker»á·¢Æğregisterµ½namserverµÄ¶¯×÷£¬°Ñbroker
-     *  ×Ô¼ºµÄÔªÊı¾İÒÔ¼°¹ÜÀíµÄtopic Ò»ÆğÌá½»¸ønameserver½øĞĞ¹ÜÀí£¬ ÕâĞ©ĞÅÏ¢×îºó×é³ÉËùÎ½µÄÂ·ÓÉĞÅÏ¢£¬ÓÉÉú²úÕßºÍÏû·ÑÕßÀ´Ê¹ÓÃ¡£
+     *  brokerå¯åŠ¨æˆ–è€…ç®¡ç†æ§åˆ¶å°æäº¤topicé…ç½®å˜æ›´ç»™brokerä»¥åï¼Œbrokerä¼šå‘èµ·registeråˆ°namserverçš„åŠ¨ä½œï¼ŒæŠŠbroker
+     *  è‡ªå·±çš„å…ƒæ•°æ®ä»¥åŠç®¡ç†çš„topic ä¸€èµ·æäº¤ç»™nameserverè¿›è¡Œç®¡ç†ï¼Œ è¿™äº›ä¿¡æ¯æœ€åç»„æˆæ‰€è°“çš„è·¯ç”±ä¿¡æ¯ï¼Œç”±ç”Ÿäº§è€…å’Œæ¶ˆè´¹è€…æ¥ä½¿ç”¨ã€‚
      *
      * @param clusterName
      * @param brokerAddr
@@ -142,7 +142,7 @@ public class RouteInfoManager {
                 this.lock.writeLock().lockInterruptibly();
 
                 Set<String> brokerNames = this.clusterAddrTable.get(clusterName);
-                if (null == brokerNames) { //µÚÒ»´Î´´½¨clusternameÏÂµÄbrokername set
+                if (null == brokerNames) { //ç¬¬ä¸€æ¬¡åˆ›å»ºclusternameä¸‹çš„brokername set
                     brokerNames = new HashSet<String>();
                     this.clusterAddrTable.put(clusterName, brokerNames);
                 }
@@ -151,7 +151,7 @@ public class RouteInfoManager {
                 boolean registerFirst = false;
 
                 BrokerData brokerData = this.brokerAddrTable.get(brokerName);
-                if (null == brokerData) { //µÚÒ»´Î´´½¨brokernameÏÂµÄbroker½Úµã¡£
+                if (null == brokerData) { //ç¬¬ä¸€æ¬¡åˆ›å»ºbrokernameä¸‹çš„brokerèŠ‚ç‚¹ã€‚
                     registerFirst = true;
                     brokerData = new BrokerData();
                     brokerData.setBrokerName(brokerName);
@@ -161,39 +161,39 @@ public class RouteInfoManager {
                     this.brokerAddrTable.put(brokerName, brokerData);
                 }
                 String oldAddr = brokerData.getBrokerAddrs().put(brokerId, brokerAddr);
-                registerFirst = registerFirst || (null == oldAddr); //µÚÒ»´Î´´½¨brokernameÏÂµÄbroker»òÕßbrokerId µÄµØÖ· µÚÒ»´Î×¢²á½øÀ´¡£
+                registerFirst = registerFirst || (null == oldAddr); //ç¬¬ä¸€æ¬¡åˆ›å»ºbrokernameä¸‹çš„brokeræˆ–è€…brokerId çš„åœ°å€ ç¬¬ä¸€æ¬¡æ³¨å†Œè¿›æ¥ã€‚
 
                 /**
-                 * Èç¹ûÊÇbroker master  Ìá½»¹ıÀ´µÄtopicÅäÖÃĞÅÏ¢ £¬µ±Êı¾İ°æ±¾ºÅ·¢ÉúÁË±ä¸ü£¬»òÕßÊÇbrokeridµÚÒ»´Î×¢²á½øÀ´£¬»òÕßÊÇbrokerid
-                 * Ö®Ç°²»ÔÚlive table  £¬Ôò°ÑtopicÅäÖÃ¸üĞÂµ½nameserver
+                 * å¦‚æœæ˜¯broker master  æäº¤è¿‡æ¥çš„topicé…ç½®ä¿¡æ¯ ï¼Œå½“æ•°æ®ç‰ˆæœ¬å·å‘ç”Ÿäº†å˜æ›´ï¼Œæˆ–è€…æ˜¯brokeridç¬¬ä¸€æ¬¡æ³¨å†Œè¿›æ¥ï¼Œæˆ–è€…æ˜¯brokerid
+                 * ä¹‹å‰ä¸åœ¨live table  ï¼Œåˆ™æŠŠtopicé…ç½®æ›´æ–°åˆ°nameserver
                  *
-                 * Ö®Ç°ĞÄÌøĞÅÏ¢·¢ËÍµ½ÁËËùÓĞbroker £¬ËùÒÔÕâÀï×öÁËÊÇ·ñÎªMasterµÄÅĞ¶Ï¡£
+                 * ä¹‹å‰å¿ƒè·³ä¿¡æ¯å‘é€åˆ°äº†æ‰€æœ‰broker ï¼Œæ‰€ä»¥è¿™é‡Œåšäº†æ˜¯å¦ä¸ºMasterçš„åˆ¤æ–­ã€‚
                  *
                 **/
                 if (null != topicConfigWrapper //
-                        && MixAll.MASTER_ID == brokerId) {//master brokerĞ´Èë¹ıÀ´µÄtopicÅäÖÃĞÅÏ¢¡£
+                        && MixAll.MASTER_ID == brokerId) {//master brokerå†™å…¥è¿‡æ¥çš„topicé…ç½®ä¿¡æ¯ã€‚
                     if (this.isBrokerTopicConfigChanged(brokerAddr, topicConfigWrapper.getDataVersion())//
-                            || registerFirst) { //topicÅäÖÃĞÅÏ¢·¢ÉúÁË±ä¸ü»òÕßbrokerµÚÒ»´Î×¢²áµ½brokername
+                            || registerFirst) { //topicé…ç½®ä¿¡æ¯å‘ç”Ÿäº†å˜æ›´æˆ–è€…brokerç¬¬ä¸€æ¬¡æ³¨å†Œåˆ°brokername
                         ConcurrentHashMap<String, TopicConfig> tcTable =
                                 topicConfigWrapper.getTopicConfigTable();
                         if (tcTable != null) {
-                            for (String topic : tcTable.keySet()) { //Ö±½Ó±éÀúentryset¾Í¿ÉÒÔÁË£¬Ã»±ØÒªÕâÑù×ö
+                            for (String topic : tcTable.keySet()) { //ç›´æ¥éå†entrysetå°±å¯ä»¥äº†ï¼Œæ²¡å¿…è¦è¿™æ ·åš
                                 TopicConfig topicConfig = tcTable.get(topic);
-                                //¸üĞÂtopicÔÚbrokernameÏÂµÄ¶ÓÁĞÔªÊı¾İ¡£
+                                //æ›´æ–°topicåœ¨brokernameä¸‹çš„é˜Ÿåˆ—å…ƒæ•°æ®ã€‚
                                 this.createAndUpdateQueueData(brokerName, topicConfig);
                             }
                         }
                     }
                 }
 
-                //°ÑbrokerĞ´ÈënameserverµÄbrokerlivetable  ,¾ÍÊÇÖªµÀÄÄĞ©broker»î×Å ¡£
+                //æŠŠbrokerå†™å…¥nameserverçš„brokerlivetable  ,å°±æ˜¯çŸ¥é“å“ªäº›brokeræ´»ç€ ã€‚
                 BrokerLiveInfo prevBrokerLiveInfo = this.brokerLiveTable.put(brokerAddr, //
                     new BrokerLiveInfo(//
                         System.currentTimeMillis(), //
                         topicConfigWrapper.getDataVersion(),//
                         channel, //
                         haServerAddr));
-                if (null == prevBrokerLiveInfo) { //brokerĞÂ×¢²áµ½Ns
+                if (null == prevBrokerLiveInfo) { //brokeræ–°æ³¨å†Œåˆ°Ns
                     log.info("new broker registerd, {} HAServer: {}", brokerAddr, haServerAddr);
                 }
 
@@ -206,8 +206,8 @@ public class RouteInfoManager {
                     }
                 }
 
-                if (MixAll.MASTER_ID != brokerId) { //slaveµÄ×¢²á½á¹ûÖĞ»á°üº¬masterµÄhaµØÖ·£¬Õâ¸öhaµØÖ·ÓÃÓÚslaveÆô¶¯HaClientºÍMasterµÄ
-                    //HAService½øĞĞ½¨Á´ºó£¬×öcommitlogµÄÒì²½¸´ÖÆÓÃ¡£
+                if (MixAll.MASTER_ID != brokerId) { //slaveçš„æ³¨å†Œç»“æœä¸­ä¼šåŒ…å«masterçš„haåœ°å€ï¼Œè¿™ä¸ªhaåœ°å€ç”¨äºslaveå¯åŠ¨HaClientå’ŒMasterçš„
+                    //HAServiceè¿›è¡Œå»ºé“¾åï¼Œåšcommitlogçš„å¼‚æ­¥å¤åˆ¶ç”¨ã€‚
                     String masterAddr = brokerData.getBrokerAddrs().get(MixAll.MASTER_ID);
                     if (masterAddr != null) {
                         BrokerLiveInfo brokerLiveInfo = this.brokerLiveTable.get(masterAddr);
@@ -230,14 +230,14 @@ public class RouteInfoManager {
     }
 
     /**
-     * broker·¢ËÍÉÏÀ´µÄtopicÅäÖÃÓĞ±ä»¯¡£
+     * brokerå‘é€ä¸Šæ¥çš„topicé…ç½®æœ‰å˜åŒ–ã€‚
      * @param brokerAddr
      * @param dataVersion
      * @return
      */
     private boolean isBrokerTopicConfigChanged(final String brokerAddr, final DataVersion dataVersion) {
         BrokerLiveInfo prev = this.brokerLiveTable.get(brokerAddr);
-        if (null == prev || !prev.getDataVersion().equals(dataVersion)) { //Ö®Ç°Ã»ÓĞbrokerµÄLiveĞÅÏ¢»òÕßÊı¾İ°æ±¾²»Ò»ÖÂ¡£
+        if (null == prev || !prev.getDataVersion().equals(dataVersion)) { //ä¹‹å‰æ²¡æœ‰brokerçš„Liveä¿¡æ¯æˆ–è€…æ•°æ®ç‰ˆæœ¬ä¸ä¸€è‡´ã€‚
             return true;
         }
 
@@ -289,11 +289,11 @@ public class RouteInfoManager {
     /**
      *
      *
-     * ×¢ÒâtopicQueueTable<String,Liat<QueueData>>Õâ¸ö±È½ÏÄÑÀí½âµÄÊı¾İ½á¹¹ ¡£
-     * keyÊÇtopic, valueÊÇtopicÏÂÃæµÄËùÓĞ¶ÓÁĞÅäÖÃĞÅÏ¢¡£
+     * æ³¨æ„topicQueueTable<String,Liat<QueueData>>è¿™ä¸ªæ¯”è¾ƒéš¾ç†è§£çš„æ•°æ®ç»“æ„ ã€‚
+     * keyæ˜¯topic, valueæ˜¯topicä¸‹é¢çš„æ‰€æœ‰é˜Ÿåˆ—é…ç½®ä¿¡æ¯ã€‚
      *
-     * Õâ¸öList<QueueData> ¿ÉÒÔÕâÃ´Àí½â£¬  ÆäÖĞµÄÃ¿Ò»¸öQueueDataÊÇtopicÔÚÄ³Ò»¸öbrokernameÏÂÃæµÄ¶ÓÁĞÅäÖÃÔªÊı¾İ¡£
-     * QueueData List ¾ÍÊÇtopicÔÚËùÓĞbrokernameÏÂÃæµÄÅäÖÃĞÅÏ¢¡£
+     * è¿™ä¸ªList<QueueData> å¯ä»¥è¿™ä¹ˆç†è§£ï¼Œ  å…¶ä¸­çš„æ¯ä¸€ä¸ªQueueDataæ˜¯topicåœ¨æŸä¸€ä¸ªbrokernameä¸‹é¢çš„é˜Ÿåˆ—é…ç½®å…ƒæ•°æ®ã€‚
+     * QueueData List å°±æ˜¯topicåœ¨æ‰€æœ‰brokernameä¸‹é¢çš„é…ç½®ä¿¡æ¯ã€‚
      *
      *
      * @param brokerName
@@ -320,11 +320,11 @@ public class RouteInfoManager {
             Iterator<QueueData> it = queueDataList.iterator();
             while (it.hasNext()) {
                 QueueData qd = it.next();
-                if (qd.getBrokerName().equals(brokerName)) {    //Èç¹ûÊÇÍ¬Ò»¸öbrokernameµÄbrokerÉÏ±¨µÄqueuedata ¡£
-                    if (qd.equals(queueData)) { //Èç¹û¶ÓÁĞĞÅÏ¢ÍêÈ«Ò»ÖÂ£¬Ôò²»ÓÃĞÂÔö¡£
+                if (qd.getBrokerName().equals(brokerName)) {    //å¦‚æœæ˜¯åŒä¸€ä¸ªbrokernameçš„brokerä¸ŠæŠ¥çš„queuedata ã€‚
+                    if (qd.equals(queueData)) { //å¦‚æœé˜Ÿåˆ—ä¿¡æ¯å®Œå…¨ä¸€è‡´ï¼Œåˆ™ä¸ç”¨æ–°å¢ã€‚
                         addNewOne = false;
                     }
-                    else { //Èç¹û¶ÓÁĞĞÅÏ¢²»Ò»ÖÂ£¬ Ôò°ÑÀÏµÄqueuedataÒÆ³ıµô
+                    else { //å¦‚æœé˜Ÿåˆ—ä¿¡æ¯ä¸ä¸€è‡´ï¼Œ åˆ™æŠŠè€çš„queuedataç§»é™¤æ‰
                         log.info("topic changed, {} OLD: {} NEW: {}", topicConfig.getTopicName(), qd,
                             queueData);
                         it.remove();
@@ -332,7 +332,7 @@ public class RouteInfoManager {
                 }
             }
 
-            if (addNewOne) { //326ĞĞ°ÑbrokernameÖĞÀÏµÄqueuedataÒÆ³ıµôÒÔºó £¬°Ñµ±Ç°Õâ¸öqueuedata¼ÓÉÏ¡£ Õâ¸ö²Ù×÷±£Ö¤ÁËtopicÔÚÒ»¸öbrokernameÏÂÖ»»áÓĞÒ»¸öqueuedata.
+            if (addNewOne) { //326è¡ŒæŠŠbrokernameä¸­è€çš„queuedataç§»é™¤æ‰ä»¥å ï¼ŒæŠŠå½“å‰è¿™ä¸ªqueuedataåŠ ä¸Šã€‚ è¿™ä¸ªæ“ä½œä¿è¯äº†topicåœ¨ä¸€ä¸ªbrokernameä¸‹åªä¼šæœ‰ä¸€ä¸ªqueuedata.
                 queueDataList.add(queueData);
             }
         }
@@ -408,7 +408,7 @@ public class RouteInfoManager {
 
 
     /**
-     *  °Ñ¹éÊôÓÚbrokernameµÄ¶ÓÁĞÉ¾³ıµô¡£
+     *  æŠŠå½’å±äºbrokernameçš„é˜Ÿåˆ—åˆ é™¤æ‰ã€‚
      * @param brokerName
      */
     private void removeTopicByBrokerName(final String brokerName) {
@@ -499,13 +499,13 @@ public class RouteInfoManager {
 
     private final static long BrokerChannelExpiredTime = 1000 * 60 * 2;
 
-    /* ¼ì²é±¾µØ brokerLiveTable ÖĞµÄbrokerĞÅÏ¢ÊÇ·ñ¹ıÆÚ£¬¹ıÆÚÔò´ÓbrokerLiveTableÖĞÌŞ³ı */
+    /* æ£€æŸ¥æœ¬åœ° brokerLiveTable ä¸­çš„brokerä¿¡æ¯æ˜¯å¦è¿‡æœŸï¼Œè¿‡æœŸåˆ™ä»brokerLiveTableä¸­å‰”é™¤ */
     public void scanNotActiveBroker() {
         Iterator<Entry<String, BrokerLiveInfo>> it = this.brokerLiveTable.entrySet().iterator();
         while (it.hasNext()) {
             Entry<String, BrokerLiveInfo> next = it.next();
             long last = next.getValue().getLastUpdateTimestamp();
-            //±¾µØ brokerLiveTable Ä¬ÈÏ2·ÖÖÓ¹ıÆÚ
+            //æœ¬åœ° brokerLiveTable é»˜è®¤2åˆ†é’Ÿè¿‡æœŸ
             if ((last + BrokerChannelExpiredTime) < System.currentTimeMillis()) {
                 RemotingUtil.closeChannel(next.getValue().getChannel());
                 it.remove();

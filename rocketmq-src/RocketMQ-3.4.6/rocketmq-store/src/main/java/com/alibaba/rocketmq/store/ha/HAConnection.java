@@ -38,9 +38,9 @@ public class HAConnection {
     private final HAService haService;
     private final SocketChannel socketChannel;
     private final String clientAddr;
-    //masterÏòslaveĞ´¡£
+    //masterå‘slaveå†™ã€‚
     private WriteSocketService writeSocketService;
-    //master´Óslave¶Á¡£
+    //masterä»slaveè¯»ã€‚
     private ReadSocketService readSocketService;
     private volatile long slaveRequestOffset = -1;
     private volatile long slaveAckOffset = -1;
@@ -55,9 +55,9 @@ public class HAConnection {
         this.socketChannel.socket().setTcpNoDelay(true);
         this.socketChannel.socket().setReceiveBufferSize(1024 * 64);
         this.socketChannel.socket().setSendBufferSize(1024 * 64);
-        //µ½slaveµÄĞ´socketÍ¨µÀ
+        //åˆ°slaveçš„å†™socketé€šé“
         this.writeSocketService = new WriteSocketService(this.socketChannel);
-        //´Óslave¶ÁµÄsocketÍ¨µÀ¡£
+        //ä»slaveè¯»çš„socketé€šé“ã€‚
         this.readSocketService = new ReadSocketService(this.socketChannel);
         this.haService.getConnectionCount().incrementAndGet();
     }
@@ -92,7 +92,7 @@ public class HAConnection {
         return socketChannel;
     }
 
-    //master´Óslave¶Á¡£
+    //masterä»slaveè¯»ã€‚
     class ReadSocketService extends ServiceThread {
         private static final int ReadMaxBufferSize = 1024 * 1024;
         private final Selector selector;
@@ -122,7 +122,7 @@ public class HAConnection {
                         HAConnection.log.error("processReadEvent error");
                         break;
                     }
-                    //ÔÚÖ¸¶¨µÄ³¬Ê±Ê±¼äÄÚprocessReadEvent Ã»ÓĞÊÕµ½Êı¾İ¡£
+                    //åœ¨æŒ‡å®šçš„è¶…æ—¶æ—¶é—´å†…processReadEvent æ²¡æœ‰æ”¶åˆ°æ•°æ®ã€‚
                     long interval = HAConnection.this.haService.getDefaultMessageStore().getSystemClock().now() - this.lastReadTimestamp;
                     if (interval > HAConnection.this.haService.getDefaultMessageStore().getMessageStoreConfig().getHaHousekeepingInterval()) {
                         log.warn("ha housekeeping, found this connection[" + HAConnection.this.clientAddr + "] expired, " + interval);
@@ -175,23 +175,23 @@ public class HAConnection {
                     if (readSize > 0) {
                         readSizeZeroTimes = 0;
                         this.lastReadTimestamp = HAConnection.this.haService.getDefaultMessageStore().getSystemClock().now();
-                        if ((this.byteBufferRead.position() - this.processPostion) >= 8) { //Ó¦ÓÃ»º³åÇøÎ´´¦ÀíµÄ×Ö½ÚÊı³¬¹ı8 ¡£
-                            //ÕâÀïÃ»ÓĞÓÃnettyµÄ½âÂëÆ÷×öğ¤°ü´¦Àí£¬  ¶øÊÇ×Ô¼º×öµÄ£¡£¡´ÓÕâÀïµÄÊı¾İ´¦ÀíÀ´¿´£¬ slaveÃ¿´Î¸ømaster»ØµÄack
-                            //offset ¾ÍÊÇÒ»¸ö8×Ö½ÚµÄlongÕûĞÍ±äÁ¿¡£
+                        if ((this.byteBufferRead.position() - this.processPostion) >= 8) { //åº”ç”¨ç¼“å†²åŒºæœªå¤„ç†çš„å­—èŠ‚æ•°è¶…è¿‡8 ã€‚
+                            //è¿™é‡Œæ²¡æœ‰ç”¨nettyçš„è§£ç å™¨åšé»åŒ…å¤„ç†ï¼Œ  è€Œæ˜¯è‡ªå·±åšçš„ï¼ï¼ä»è¿™é‡Œçš„æ•°æ®å¤„ç†æ¥çœ‹ï¼Œ slaveæ¯æ¬¡ç»™masterå›çš„ack
+                            //offset å°±æ˜¯ä¸€ä¸ª8å­—èŠ‚çš„longæ•´å‹å˜é‡ã€‚
 
-                            //(this.byteBufferRead.position() % 8) ÊÇ×îºóÃ»ÓĞ¶ÁÂú8¸ö×Ö½ÚµÄ¼¸¸ö×Ö½Ú¡£ pos¾ÍÊÇÉÏ1¸öLongµÄ×îºóÒ»¸ö×Ö½Ú¡£
+                            //(this.byteBufferRead.position() % 8) æ˜¯æœ€åæ²¡æœ‰è¯»æ»¡8ä¸ªå­—èŠ‚çš„å‡ ä¸ªå­—èŠ‚ã€‚ poså°±æ˜¯ä¸Š1ä¸ªLongçš„æœ€åä¸€ä¸ªå­—èŠ‚ã€‚
                             int pos = this.byteBufferRead.position() - (this.byteBufferRead.position() % 8);
-                            long readOffset = this.byteBufferRead.getLong(pos - 8); //´ÓÉÏÒ»¸ö8×Ö½ÚµÄ×îºóÒ»×Ö½Ú¿ªÊ¼ÍùÇ°¶Á8×Ö½Ú¡£
+                            long readOffset = this.byteBufferRead.getLong(pos - 8); //ä»ä¸Šä¸€ä¸ª8å­—èŠ‚çš„æœ€åä¸€å­—èŠ‚å¼€å§‹å¾€å‰è¯»8å­—èŠ‚ã€‚
                             this.processPostion = pos;
 
-                            HAConnection.this.slaveAckOffset = readOffset; //ackµÄÎ»µã¾ÍÊÇreadOffset±êÊ¶µÄLong±äÁ¿¡£
-                            if (HAConnection.this.slaveRequestOffset < 0) { //HAConnection³õÊ¼µÄslaveRequestOffsetÊÇ -1, Ò»µ©
-                                //¶Áµ½ HAServiceµÄ578ĞĞslave»ã±¨ÉÏÀ´µÄslave ack offset ,Ôò¸üĞÂHaConnectionµÄslaveRequestOffset ¡£
+                            HAConnection.this.slaveAckOffset = readOffset; //ackçš„ä½ç‚¹å°±æ˜¯readOffsetæ ‡è¯†çš„Longå˜é‡ã€‚
+                            if (HAConnection.this.slaveRequestOffset < 0) { //HAConnectionåˆå§‹çš„slaveRequestOffsetæ˜¯ -1, ä¸€æ—¦
+                                //è¯»åˆ° HAServiceçš„578è¡Œslaveæ±‡æŠ¥ä¸Šæ¥çš„slave ack offset ,åˆ™æ›´æ–°HaConnectionçš„slaveRequestOffset ã€‚
                                 HAConnection.this.slaveRequestOffset = readOffset;
                                 log.info("slave[" + HAConnection.this.clientAddr + "] request offset " + readOffset);
                             }
-                            //ÊÕµ½slave¹ØÓÚcommit log µÄÍ¬²½µÄack offsetÒÔºó£¬Í¨ÖªÄÇĞ©µÈ´ıÖ÷±¸Í¬²½µÄÉú²úÕß£ºÖ÷±¸Í¬²½µÄcommitlog
-                            //offsetÒÑ¾­ÍùÇ°×ßÁË¡£
+                            //æ”¶åˆ°slaveå…³äºcommit log çš„åŒæ­¥çš„ack offsetä»¥åï¼Œé€šçŸ¥é‚£äº›ç­‰å¾…ä¸»å¤‡åŒæ­¥çš„ç”Ÿäº§è€…ï¼šä¸»å¤‡åŒæ­¥çš„commitlog
+                            //offsetå·²ç»å¾€å‰èµ°äº†ã€‚
                             HAConnection.this.haService.notifyTransferSome(HAConnection.this.slaveAckOffset);
                         }
                     }
@@ -221,7 +221,7 @@ public class HAConnection {
         }
     }
 
-    //masterÏòslaveĞ´¡£
+    //masterå‘slaveå†™ã€‚
     class WriteSocketService extends ServiceThread {
         private final Selector selector;
         private final SocketChannel socketChannel;
@@ -253,10 +253,10 @@ public class HAConnection {
                         Thread.sleep(10);
                         continue;
                     }
-                    //189ĞĞ»ñÈ¡µ½slave Ìá½»µÄslaveRequestOffset £¬
+                    //189è¡Œè·å–åˆ°slave æäº¤çš„slaveRequestOffset ï¼Œ
                     if (-1 == this.nextTransferFromWhere) {
-                        if (0 == HAConnection.this.slaveRequestOffset) { //slaveÇëÇóµÄÍ¬²½Î»µãÎª0 £¬Ôò´Ó×îºóÒ»¸öMapfile¿ªÊ¼Í¬²½¡£
-                            //±ÈÈçmapfileÄ¬ÈÏÒ»¸öG£¬Ö»ÒªÃ»ÓĞĞ´Âú1G, ÆäÊµ¶¼ÊÇ´Ó0 ¿ªÊ¼Í¬²½¡£
+                        if (0 == HAConnection.this.slaveRequestOffset) { //slaveè¯·æ±‚çš„åŒæ­¥ä½ç‚¹ä¸º0 ï¼Œåˆ™ä»æœ€åä¸€ä¸ªMapfileå¼€å§‹åŒæ­¥ã€‚
+                            //æ¯”å¦‚mapfileé»˜è®¤ä¸€ä¸ªGï¼Œåªè¦æ²¡æœ‰å†™æ»¡1G, å…¶å®éƒ½æ˜¯ä»0 å¼€å§‹åŒæ­¥ã€‚
                             long masterOffset = HAConnection.this.haService.getDefaultMessageStore().getCommitLog().getMaxOffset();
                             masterOffset =
                                     masterOffset
@@ -269,7 +269,7 @@ public class HAConnection {
 
                             this.nextTransferFromWhere = masterOffset;
                         }
-                        else { //´ÓslaveÊÕµ½µÄÖ¸¶¨Î»µã¿ªÊ¼´«Êäcommitlog .
+                        else { //ä»slaveæ”¶åˆ°çš„æŒ‡å®šä½ç‚¹å¼€å§‹ä¼ è¾“commitlog .
                             this.nextTransferFromWhere = HAConnection.this.slaveRequestOffset;
                         }
 
@@ -285,7 +285,7 @@ public class HAConnection {
                             .getHaSendHeartbeatInterval()) {
                             this.byteBufferHeader.position(0);
                             this.byteBufferHeader.limit(HEADER_SIZE);
-                            this.byteBufferHeader.putLong(this.nextTransferFromWhere); //´ÓcommitlogµÄÄÄ¸öÎ»µã¿ªÊ¼¡£
+                            this.byteBufferHeader.putLong(this.nextTransferFromWhere); //ä»commitlogçš„å“ªä¸ªä½ç‚¹å¼€å§‹ã€‚
                             this.byteBufferHeader.putInt(0); 
                             this.byteBufferHeader.flip();
 
@@ -302,10 +302,10 @@ public class HAConnection {
 
                     SelectMapedBufferResult selectResult =
                             HAConnection.this.haService.getDefaultMessageStore().getCommitLogData(this.nextTransferFromWhere);
-                    if (selectResult != null) { //´ÓcommitlogÖ¸¶¨µÄÎ»µã¿ªÊ¼¶ÁÈ¡Êı¾İ¡£
+                    if (selectResult != null) { //ä»commitlogæŒ‡å®šçš„ä½ç‚¹å¼€å§‹è¯»å–æ•°æ®ã€‚
                         int size = selectResult.getSize();
                         if (size > HAConnection.this.haService.getDefaultMessageStore().getMessageStoreConfig().getHaTransferBatchSize()) {
-                            //³¬¹ıÁËÒ»´Î Ö÷±¸Í¬²½µÄ×î´ó×Ö½ÚÊı¡£
+                            //è¶…è¿‡äº†ä¸€æ¬¡ ä¸»å¤‡åŒæ­¥çš„æœ€å¤§å­—èŠ‚æ•°ã€‚
                             size = HAConnection.this.haService.getDefaultMessageStore().getMessageStoreConfig().getHaTransferBatchSize();
                         }
 
@@ -317,8 +317,8 @@ public class HAConnection {
 
                         this.byteBufferHeader.position(0);
                         this.byteBufferHeader.limit(HEADER_SIZE);//
-                        this.byteBufferHeader.putLong(thisOffset); //Êı¾İ´ÓÄÄ¸öÎ»µã¿ªÊ¼//
-                        this.byteBufferHeader.putInt(size);//commitlogÓĞ¶à³¤¡£
+                        this.byteBufferHeader.putLong(thisOffset); //æ•°æ®ä»å“ªä¸ªä½ç‚¹å¼€å§‹//
+                        this.byteBufferHeader.putInt(size);//commitlogæœ‰å¤šé•¿ã€‚
                         this.byteBufferHeader.flip();
 
                         this.lastWriteOver = this.transferData();
@@ -360,7 +360,7 @@ public class HAConnection {
         }
 
         /**
-         *  masterĞ´commit log sync request ¸øslave .
+         *  masterå†™commit log sync request ç»™slave .
          * @return
          * @throws Exception
          */
@@ -374,7 +374,7 @@ public class HAConnection {
                     this.lastWriteTimestamp = HAConnection.this.haService.getDefaultMessageStore().getSystemClock().now();
                 }
                 else if (writeSize == 0) {
-                    if (++writeSizeZeroTimes >= 3) { //Á¬Ğø3´ÎĞ´Êı¾İµÄ×Ö½ÚÊı¶¼ÊÇ0.
+                    if (++writeSizeZeroTimes >= 3) { //è¿ç»­3æ¬¡å†™æ•°æ®çš„å­—èŠ‚æ•°éƒ½æ˜¯0.
                         break;
                     }
                 }

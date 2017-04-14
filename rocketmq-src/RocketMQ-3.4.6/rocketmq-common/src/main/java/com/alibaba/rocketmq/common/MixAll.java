@@ -69,21 +69,21 @@ public class MixAll {
     public static final long MASTER_ID = 0L;
     public static final long CURRENT_JVM_PID = getPID();
     /*
-    * °´ÕÕÏû·Ñ¶ËµÄGroupNameÀ´·Ö×éÖØÊÔ¶ÓÁĞ£¬Èç¹ûÏû·Ñ¶ËÏû·ÑÊ§°Ü£¬ÏûÏ¢½«±»·¢ÍùÖØÊÔ¶ÓÁĞÖĞ£¬±ÈÈçÍ¼ÖĞµÄ%RETRY%ConsumerGroupA¡£
-°´ÕÕÏû·Ñ¶ËµÄGroupNameÀ´·Ö×éËÀĞÅ¶ÓÁĞ£¬Èç¹ûÏû·Ñ¶ËÏû·ÑÊ§°Ü£¬²¢ÖØÊÔÖ¸¶¨´ÎÊıºó£¬ÈÔÈ»Ê§°Ü£¬Ôò·¢ÍùËÀĞÅ¶ÓÁĞ£¬±ÈÈçÍ¼ÖĞµÄ%DLQ%ConsumerGroupA¡£
-ËÀĞÅ¶ÓÁĞ£¨Dead Letter Queue£©Ò»°ãÓÃÓÚ´æ·ÅÓÉÓÚÄ³ÖÖÔ­ÒòÎŞ·¨´«µİµÄÏûÏ¢£¬±ÈÈç´¦ÀíÊ§°Ü»òÕßÒÑ¾­¹ıÆÚµÄÏûÏ¢¡£
-Ã¿¸öÏû·ÑÕß·Ö×é·Ö±ğ¶ÔÓ¦Ò»¸ö%RETRY% ÖØÊÔ¶ÓÁĞºÍÒ»¸ö%DLQ%ËÀĞÅ¶ÓÁĞ
+    * æŒ‰ç…§æ¶ˆè´¹ç«¯çš„GroupNameæ¥åˆ†ç»„é‡è¯•é˜Ÿåˆ—ï¼Œå¦‚æœæ¶ˆè´¹ç«¯æ¶ˆè´¹å¤±è´¥ï¼Œæ¶ˆæ¯å°†è¢«å‘å¾€é‡è¯•é˜Ÿåˆ—ä¸­ï¼Œæ¯”å¦‚å›¾ä¸­çš„%RETRY%ConsumerGroupAã€‚
+æŒ‰ç…§æ¶ˆè´¹ç«¯çš„GroupNameæ¥åˆ†ç»„æ­»ä¿¡é˜Ÿåˆ—ï¼Œå¦‚æœæ¶ˆè´¹ç«¯æ¶ˆè´¹å¤±è´¥ï¼Œå¹¶é‡è¯•æŒ‡å®šæ¬¡æ•°åï¼Œä»ç„¶å¤±è´¥ï¼Œåˆ™å‘å¾€æ­»ä¿¡é˜Ÿåˆ—ï¼Œæ¯”å¦‚å›¾ä¸­çš„%DLQ%ConsumerGroupAã€‚
+æ­»ä¿¡é˜Ÿåˆ—ï¼ˆDead Letter Queueï¼‰ä¸€èˆ¬ç”¨äºå­˜æ”¾ç”±äºæŸç§åŸå› æ— æ³•ä¼ é€’çš„æ¶ˆæ¯ï¼Œæ¯”å¦‚å¤„ç†å¤±è´¥æˆ–è€…å·²ç»è¿‡æœŸçš„æ¶ˆæ¯ã€‚
+æ¯ä¸ªæ¶ˆè´¹è€…åˆ†ç»„åˆ†åˆ«å¯¹åº”ä¸€ä¸ª%RETRY% é‡è¯•é˜Ÿåˆ—å’Œä¸€ä¸ª%DLQ%æ­»ä¿¡é˜Ÿåˆ—
     * */
-    //Ä³¸öÏû·Ñ·Ö×éxxxx¶ÔÓ¦µÄÖØÊÔ¶ÓÁĞ£¬Èç¹ûÒ»¸öÏû·ÑÔò·Ö×éÏû·Ñ¶à¸ötopic£¬ÆäÖØÊÔ¶ÓÁĞÒ²Ö»ÓĞÒ»¸ö£¬¼´%RETRY%xxxx£¬±íÊ¾¸ÃÏû·ÑÕß·Ö×éÏû·ÑÊ§°ÜµÄÏûÏ¢È«²¿´æµ½¸ÃÖØÊÔ¶ÓÁĞÖĞ
+    //æŸä¸ªæ¶ˆè´¹åˆ†ç»„xxxxå¯¹åº”çš„é‡è¯•é˜Ÿåˆ—ï¼Œå¦‚æœä¸€ä¸ªæ¶ˆè´¹åˆ™åˆ†ç»„æ¶ˆè´¹å¤šä¸ªtopicï¼Œå…¶é‡è¯•é˜Ÿåˆ—ä¹Ÿåªæœ‰ä¸€ä¸ªï¼Œå³%RETRY%xxxxï¼Œè¡¨ç¤ºè¯¥æ¶ˆè´¹è€…åˆ†ç»„æ¶ˆè´¹å¤±è´¥çš„æ¶ˆæ¯å…¨éƒ¨å­˜åˆ°è¯¥é‡è¯•é˜Ÿåˆ—ä¸­
     public static final String RETRY_GROUP_TOPIC_PREFIX = "%RETRY%";
-    //SendMessageProcessor.consumerSendMsgBack ÖĞÄ¬ÈÏ´´½¨ËÀĞÅ¶ÓÁĞÊÇ¿ÉĞ´£¬µ«ÊÇ²»¿É¶Á
+    //SendMessageProcessor.consumerSendMsgBack ä¸­é»˜è®¤åˆ›å»ºæ­»ä¿¡é˜Ÿåˆ—æ˜¯å¯å†™ï¼Œä½†æ˜¯ä¸å¯è¯»
     public static final String DLQ_GROUP_TOPIC_PREFIX = "%DLQ%";
 
 
     public static final String SYSTEM_TOPIC_PREFIX = "rmq_sys_";
 
     /*
-    *ÔÚconsumerGroupÇ°Ãæ¼ÓÉÏ¸ÃÇ°×ºRETRY_GROUP_TOPIC_PREFIX
+    *åœ¨consumerGroupå‰é¢åŠ ä¸Šè¯¥å‰ç¼€RETRY_GROUP_TOPIC_PREFIX
     **/
     public static String getRetryTopic(final String consumerGroup) {
         return RETRY_GROUP_TOPIC_PREFIX + consumerGroup;
@@ -94,7 +94,7 @@ public class MixAll {
         return consumerGroup.startsWith(CID_RMQ_SYS_PREFIX);
     }
 
-    //SendMessageProcessor.consumerSendMsgBack ÖĞÄ¬ÈÏ´´½¨ËÀĞÅ¶ÓÁĞÊÇ¿ÉĞ´£¬µ«ÊÇ²»¿É¶Á
+    //SendMessageProcessor.consumerSendMsgBack ä¸­é»˜è®¤åˆ›å»ºæ­»ä¿¡é˜Ÿåˆ—æ˜¯å¯å†™ï¼Œä½†æ˜¯ä¸å¯è¯»
     public static String getDLQTopic(final String consumerGroup) {
         return DLQ_GROUP_TOPIC_PREFIX + consumerGroup;
     }
@@ -131,7 +131,7 @@ public class MixAll {
         return Math.abs(value);
     }
 
-    //°ÑstrĞ´ÈëfilenameÎÄ¼ş
+    //æŠŠstrå†™å…¥filenameæ–‡ä»¶
     public static final void string2File(final String str, final String fileName) throws IOException {
         String tmpFile = fileName + ".tmp";
         string2FileNotSafe(str, tmpFile);
@@ -178,7 +178,7 @@ public class MixAll {
     }
 
 
-    //»ñÈ¡ÎÄ¼şÄÚÈİ²¢·µ»Ø
+    //è·å–æ–‡ä»¶å†…å®¹å¹¶è¿”å›
     public static final String file2String(final String fileName) {
         File file = new File(fileName);
         return file2String(file);
@@ -211,7 +211,7 @@ public class MixAll {
         return null;
     }
 
-    //»ñÈ¡ÎÄ¼şÄÚÈİ²¢·µ»Ø
+    //è·å–æ–‡ä»¶å†…å®¹å¹¶è¿”å›
     public static final String file2String(final File file) {
         if (file.exists()) {
             char[] data = new char[(int) file.length()];

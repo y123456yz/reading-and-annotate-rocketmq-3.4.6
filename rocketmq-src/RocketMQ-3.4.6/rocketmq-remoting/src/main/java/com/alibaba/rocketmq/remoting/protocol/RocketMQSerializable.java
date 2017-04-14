@@ -50,7 +50,7 @@ public class RocketMQSerializable {
     }
 
     /*
-    * ×¥°üÊı¾İÄÚÈİ:
+    * æŠ“åŒ…æ•°æ®å†…å®¹:
 ...5...%{"code":310,"extFields":{"f":"0","g":"1491880549836","d":"4","e":"0","b":"yyztest2","c":"TBW102","a":"yyzGroup2",
 "j":"0","k":"false","h":"0","i":"TAGS\u0001TAG\u0002WAIT\u0001true\u0002KEYS\u0001ffff\u0002"},"flag":0,"language":"JAVA",
 "opaque":3,"serializeTypeCurrentRPC":"JSON","version":115}yang ya zhou
@@ -77,7 +77,7 @@ public class RocketMQSerializable {
 
         // ################### content
         ByteBuffer headerBuffer = ByteBuffer.allocate(totalLen);
-        // int code(~32767) //RequestCode.CONSUMER_SEND_MSG_BACK µÈ
+        // int code(~32767) //RequestCode.CONSUMER_SEND_MSG_BACK ç­‰
         headerBuffer.putShort((short) cmd.getCode());
         // LanguageCode language
         headerBuffer.put(cmd.getLanguage().getCode()); //LanguageCode.JAVA;
@@ -106,13 +106,13 @@ public class RocketMQSerializable {
     }
 
     /*
-* ×¥°üÊı¾İÄÚÈİ:
+* æŠ“åŒ…æ•°æ®å†…å®¹:
 ...5...%{"code":310,"extFields":{"f":"0","g":"1491880549836","d":"4","e":"0","b":"yyztest2","c":"TBW102","a":"yyzGroup2",
 "j":"0","k":"false","h":"0","i":"TAGS\u0001TAG\u0002WAIT\u0001true\u0002KEYS\u0001ffff\u0002"},"flag":0,"language":"JAVA",
 "opaque":3,"serializeTypeCurrentRPC":"JSON","version":115}yang ya zhou
 */
-    //rocketMQProtocolDecode ºÍ rocketMQProtocolEncode ¶ÔÓ¦
-    public static RemotingCommand rocketMQProtocolDecode(final byte[] headerArray) { //Èç¹ûheader data²»ÊÇJSONÍ¨ĞÅ·½Ê½£¬·Çjson¸ñÊ½µÄ½âÎö
+    //rocketMQProtocolDecode å’Œ rocketMQProtocolEncode å¯¹åº”
+    public static RemotingCommand rocketMQProtocolDecode(final byte[] headerArray) { //å¦‚æœheader dataä¸æ˜¯JSONé€šä¿¡æ–¹å¼ï¼Œéjsonæ ¼å¼çš„è§£æ
         RemotingCommand cmd = new RemotingCommand();
         ByteBuffer headerBuffer = ByteBuffer.wrap(headerArray);
         // int code(~32767)

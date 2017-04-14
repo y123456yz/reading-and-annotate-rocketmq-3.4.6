@@ -50,8 +50,8 @@ import java.util.concurrent.atomic.AtomicLong;
 public class PullAPIWrapper {
     private final Logger log = ClientLogger.getLog();
     /**
-     * »º´æÏû·Ñ¶ÓÁĞÓ¦¸Ã´ÓÊ²Ã´brokerÀ­È¡ÏûÏ¢¡£
-     */ //¸Ãqueue¶ÔÓ¦ÔÚÄÇ¸öbrokerÉÏÃæ£¬¸Ãqueue´æÔÚÄÇ¸öbrokerÉÏÃæ£¬µ±»ñÈ¡µ½ÏûÏ¢ºó£¬ÔÚPullAPIWrapper.processPullResult½øĞĞ¸üĞÂ¸ÃhashMap
+     * ç¼“å­˜æ¶ˆè´¹é˜Ÿåˆ—åº”è¯¥ä»ä»€ä¹ˆbrokeræ‹‰å–æ¶ˆæ¯ã€‚
+     */ //è¯¥queueå¯¹åº”åœ¨é‚£ä¸ªbrokerä¸Šé¢ï¼Œè¯¥queueå­˜åœ¨é‚£ä¸ªbrokerä¸Šé¢ï¼Œå½“è·å–åˆ°æ¶ˆæ¯åï¼Œåœ¨PullAPIWrapper.processPullResultè¿›è¡Œæ›´æ–°è¯¥hashMap
     private ConcurrentHashMap<MessageQueue, AtomicLong/* brokerId */> pullFromWhichNodeTable =
             new ConcurrentHashMap<MessageQueue, AtomicLong>(32);
 
@@ -62,14 +62,14 @@ public class PullAPIWrapper {
     private volatile boolean connectBrokerByUser = false;
     private volatile long defaultBrokerId = MixAll.MASTER_ID;
 
-    //DefaultMQPushConsumerImpl.start()½Ó¿ÚÖĞnew¸ÃÀà
+    //DefaultMQPushConsumerImpl.start()æ¥å£ä¸­newè¯¥ç±»
     public PullAPIWrapper(MQClientInstance mQClientFactory, String consumerGroup, boolean unitMode) {
         this.mQClientFactory = mQClientFactory;
         this.consumerGroup = consumerGroup;
         this.unitMode = unitMode;
     }
 
-    //PullAPIWrapper.processPullResultÖĞµ÷ÓÃ¸Ã½Ó¿Ú
+    //PullAPIWrapper.processPullResultä¸­è°ƒç”¨è¯¥æ¥å£
     public void updatePullFromWhichNode(final MessageQueue mq, final long brokerId) {
         AtomicLong suggest = this.pullFromWhichNodeTable.get(mq);
         if (null == suggest) {
@@ -110,12 +110,12 @@ public class PullAPIWrapper {
                 + topic, null);
     }
 
-    //ÏûÏ¢½âÎö //DefaultMQPushConsumerImpl.pullMessage.PullCallback.onSuccess¸³Öµ
+    //æ¶ˆæ¯è§£æ //DefaultMQPushConsumerImpl.pullMessage.PullCallback.onSuccessèµ‹å€¼
     public PullResult processPullResult(final MessageQueue mq, final PullResult pullResult,
             final SubscriptionData subscriptionData) {
         PullResultExt pullResultExt = (PullResultExt) pullResult;
 
-        //ÏûÏ¢½âÎöÊ±£¬ÔÚÏûÏ¢µÄÀ­È¡½á¹ûÖĞÃ÷È·¸æÖª¶ÓÁĞÓ¦¸Ã´ÓÄÄ¸öbrokerÀ­È¡¡£
+        //æ¶ˆæ¯è§£ææ—¶ï¼Œåœ¨æ¶ˆæ¯çš„æ‹‰å–ç»“æœä¸­æ˜ç¡®å‘ŠçŸ¥é˜Ÿåˆ—åº”è¯¥ä»å“ªä¸ªbrokeræ‹‰å–ã€‚
         this.updatePullFromWhichNode(mq, pullResultExt.getSuggestWhichBrokerId());
         if (PullStatus.FOUND == pullResult.getPullStatus()) {
             ByteBuffer byteBuffer = ByteBuffer.wrap(pullResultExt.getMessageBinary());
@@ -126,8 +126,8 @@ public class PullAPIWrapper {
                 msgListFilterAgain = new ArrayList<MessageExt>(msgList.size());
                 for (MessageExt msg : msgList) {
                     if (msg.getTags() != null) {
-                        //°ÑtagÆ¥ÅäµÄÏûÏ¢¼ÓÈëµ½msgListFilterAgain
-                        if (subscriptionData.getTagsSet().contains(msg.getTags())) { //±¾µØ×öÏûÏ¢tagµÄ¾«È·Æ¥Åä¡£
+                        //æŠŠtagåŒ¹é…çš„æ¶ˆæ¯åŠ å…¥åˆ°msgListFilterAgain
+                        if (subscriptionData.getTagsSet().contains(msg.getTags())) { //æœ¬åœ°åšæ¶ˆæ¯tagçš„ç²¾ç¡®åŒ¹é…ã€‚
                             msgListFilterAgain.add(msg);
                         }
                     }
@@ -148,8 +148,8 @@ public class PullAPIWrapper {
                     Long.toString(pullResult.getMaxOffset()));
             }
 
-            //À­È¡µ½µÄÏûÏ¢£¬Æ¥Åätagºó´æÈëmsgFoundList
-            //È»ºóÔÚ DefaultMQPushConsumerImpl.pullMessage ÖĞÈ¡³öÏûÏ¢½øĞĞ GroovyScript Æ¥Åä
+            //æ‹‰å–åˆ°çš„æ¶ˆæ¯ï¼ŒåŒ¹é…tagåå­˜å…¥msgFoundList
+            //ç„¶ååœ¨ DefaultMQPushConsumerImpl.pullMessage ä¸­å–å‡ºæ¶ˆæ¯è¿›è¡Œ GroovyScript åŒ¹é…
             pullResultExt.setMsgFoundList(msgListFilterAgain);
         }
 
@@ -173,7 +173,7 @@ public class PullAPIWrapper {
     }
 
 
-    //´ÓbrokerÀ­È¡ÏûÏ¢
+    //ä»brokeræ‹‰å–æ¶ˆæ¯
     public PullResult pullKernelImpl(//
             final MessageQueue mq,// 1
             final String subExpression,// 2
@@ -191,7 +191,7 @@ public class PullAPIWrapper {
                 this.mQClientFactory.findBrokerAddressInSubscribe(mq.getBrokerName(),
                     this.recalculatePullFromWhichNode(mq), false);
         if (null == findBrokerResult) {
-            //PullAPIWrapper.pullKernelImplÖĞµ÷ÓÃupdateTopicRouteInfoFromNameServer½øĞĞTopicRouteĞÅÏ¢¸üĞÂ£¬×îÖÕ±£´æÔÚMQClientInstance.topicRouteTable
+            //PullAPIWrapper.pullKernelImplä¸­è°ƒç”¨updateTopicRouteInfoFromNameServerè¿›è¡ŒTopicRouteä¿¡æ¯æ›´æ–°ï¼Œæœ€ç»ˆä¿å­˜åœ¨MQClientInstance.topicRouteTable
             this.mQClientFactory.updateTopicRouteInfoFromNameServer(mq.getTopic());
             findBrokerResult =
                     this.mQClientFactory.findBrokerAddressInSubscribe(mq.getBrokerName(),
@@ -201,7 +201,7 @@ public class PullAPIWrapper {
         if (findBrokerResult != null) {
             int sysFlagInner = sysFlag;
 
-            if (findBrokerResult.isSlave()) { //À­È¡brokerÑ¡ÔñÁËslave, ÇåÀíµôÌá½»Ïû·ÑÎ»µãµÄÏµÍ³±êÊ¶Î»¡£
+            if (findBrokerResult.isSlave()) { //æ‹‰å–brokeré€‰æ‹©äº†slave, æ¸…ç†æ‰æäº¤æ¶ˆè´¹ä½ç‚¹çš„ç³»ç»Ÿæ ‡è¯†ä½ã€‚
                 sysFlagInner = PullSysFlag.clearCommitOffsetFlag(sysFlagInner);
             }
 
@@ -222,12 +222,12 @@ public class PullAPIWrapper {
                 brokerAddr = computPullFromWhichFilterServer(mq.getTopic(), brokerAddr);
             }
 
-            //¿ªÊ¼´Óbroker¶ÔÓ¦µÄbrokerAddrÀ­È¡ÏûÏ¢
+            //å¼€å§‹ä»brokerå¯¹åº”çš„brokerAddræ‹‰å–æ¶ˆæ¯
             PullResult pullResult = this.mQClientFactory.getMQClientAPIImpl().pullMessage(//
                     brokerAddr,//
                     requestHeader,//
                     timeoutMillis,//
-                    communicationMode,//Í¬²½´ÓbrokerÀ­È¡ÏûÏ¢»¹ÊÇÒì²½À­È¡ÏûÏ¢
+                    communicationMode,//åŒæ­¥ä»brokeræ‹‰å–æ¶ˆæ¯è¿˜æ˜¯å¼‚æ­¥æ‹‰å–æ¶ˆæ¯
                     pullCallback);
 
             return pullResult;

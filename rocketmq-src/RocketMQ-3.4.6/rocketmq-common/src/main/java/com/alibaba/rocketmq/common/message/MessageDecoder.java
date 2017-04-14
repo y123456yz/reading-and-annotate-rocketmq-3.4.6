@@ -33,7 +33,7 @@ import java.util.Map;
 
 
 /**
- * @author shijia.wxr  commitlogÎÄ¼şÖĞÓ³Éäµ½MapedFileÖĞµÄ¾ßÌåÏûÏ¢¾ÍÊÇÍ¨¹ı¸ÃÀàµÄencode decode½Ó¿Ú½øĞĞ²Ù×÷
+ * @author shijia.wxr  commitlogæ–‡ä»¶ä¸­æ˜ å°„åˆ°MapedFileä¸­çš„å…·ä½“æ¶ˆæ¯å°±æ˜¯é€šè¿‡è¯¥ç±»çš„encode decodeæ¥å£è¿›è¡Œæ“ä½œ
  */
 public class MessageDecoder {
     public final static int MSG_ID_LENGTH = 8 + 8;
@@ -95,7 +95,7 @@ public class MessageDecoder {
         return decode(byteBuffer, readBody, true);
     }
 
-    //MessageDecoder.encodeºÍMessageDecoder.decode¶ÔÓ¦£¬¶¼ÊÇ²Ù×÷commitlogÎÄ¼şÖĞµÄÄ³ÌõÏûÏ¢ÄÚÈİ
+    //MessageDecoder.encodeå’ŒMessageDecoder.decodeå¯¹åº”ï¼Œéƒ½æ˜¯æ“ä½œcommitlogæ–‡ä»¶ä¸­çš„æŸæ¡æ¶ˆæ¯å†…å®¹
     public static byte[] encode(MessageExt messageExt) throws Exception {
         byte[] body = messageExt.getBody();
         byte[] topics = messageExt.getTopic().getBytes(CHARSET_UTF8);
@@ -204,9 +204,9 @@ public class MessageDecoder {
 
         return byteBuffer.array();
     }
-    //MessageDecoder.encodeºÍMessageDecoder.decode¶ÔÓ¦£¬¶¼ÊÇ²Ù×÷commitlogÎÄ¼şÖĞµÄÄ³ÌõÏûÏ¢ÄÚÈİ
-    //MessageDecoder.decode½âÎöbyteBufferÊı¾İµ½MessageExtµÄ¸÷¸ö³ÉÔ±(ÕâÀïµÄbyteBufferÖĞµÄÊı¾İÊµ¼ÊÉÏÊÇ´æ´¢ÔÚcommitlogÎÄ¼şÖĞµÄÒ»ÌõÏûÏ¢
-    // ¸ÃÏûÏ¢ÄÚÈİbyteBuffer¾ÍÊÇÍ¨¹ıoffsetÎ»µã´Ócommitlog¶ÔÓ¦µÄMapedFileÖĞ¶ÁÈ¡µÄ)
+    //MessageDecoder.encodeå’ŒMessageDecoder.decodeå¯¹åº”ï¼Œéƒ½æ˜¯æ“ä½œcommitlogæ–‡ä»¶ä¸­çš„æŸæ¡æ¶ˆæ¯å†…å®¹
+    //MessageDecoder.decodeè§£æbyteBufferæ•°æ®åˆ°MessageExtçš„å„ä¸ªæˆå‘˜(è¿™é‡Œçš„byteBufferä¸­çš„æ•°æ®å®é™…ä¸Šæ˜¯å­˜å‚¨åœ¨commitlogæ–‡ä»¶ä¸­çš„ä¸€æ¡æ¶ˆæ¯
+    // è¯¥æ¶ˆæ¯å†…å®¹byteBufferå°±æ˜¯é€šè¿‡offsetä½ç‚¹ä»commitlogå¯¹åº”çš„MapedFileä¸­è¯»å–çš„)
     public static MessageExt decode(java.nio.ByteBuffer byteBuffer, final boolean readBody, final boolean deCompressBody) {
         try {
             MessageExt msgExt = new MessageExt();

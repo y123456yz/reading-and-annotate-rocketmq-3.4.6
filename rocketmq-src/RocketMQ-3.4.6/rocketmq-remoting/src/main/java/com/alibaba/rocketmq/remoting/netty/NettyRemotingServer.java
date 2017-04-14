@@ -51,9 +51,9 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 
 /**
- * @author shijia.wxr  NettyRemotingClient ºÍ NettyRemotingServer ¶ÔÓ¦  ¶¼ÊÇ¶ÔÓ¦ÍøÂçÊÂ¼ş´¦Àí
- *  Êı¾İÊÕ·¢ ÇëÇó Ó¦´ğ¶ÔÓ¦µÄ·ÖÖ§ÔÚ RemotingCommandType£¨NettyRemotingAbstract.processMessageReceived£©
-//NettyRemotingClient ºÍ NettyRemotingServer ÖĞµÄinitChannelÖ´ĞĞ¸÷ÖÖÃüÁî»Øµ÷
+ * @author shijia.wxr  NettyRemotingClient å’Œ NettyRemotingServer å¯¹åº”  éƒ½æ˜¯å¯¹åº”ç½‘ç»œäº‹ä»¶å¤„ç†
+ *  æ•°æ®æ”¶å‘ è¯·æ±‚ åº”ç­”å¯¹åº”çš„åˆ†æ”¯åœ¨ RemotingCommandTypeï¼ˆNettyRemotingAbstract.processMessageReceivedï¼‰
+//NettyRemotingClient å’Œ NettyRemotingServer ä¸­çš„initChannelæ‰§è¡Œå„ç§å‘½ä»¤å›è°ƒ
  */
 public class NettyRemotingServer extends NettyRemotingAbstract implements RemotingServer {
     private static final Logger log = LoggerFactory.getLogger(RemotingHelper.RemotingLogName);
@@ -108,7 +108,7 @@ public class NettyRemotingServer extends NettyRemotingAbstract implements Remoti
         });
 
         if (RemotingUtil.isLinuxPlatform() //
-                && nettyServerConfig.isUseEpollNativeSelector()) { //Ê¹ÓÃepoll ½øĞĞNio¾ÍĞ÷ÊÂ¼şÂÖÑ¯¡£
+                && nettyServerConfig.isUseEpollNativeSelector()) { //ä½¿ç”¨epoll è¿›è¡ŒNioå°±ç»ªäº‹ä»¶è½®è¯¢ã€‚
             this.eventLoopGroupSelector = new EpollEventLoopGroup(nettyServerConfig.getServerSelectorThreads(), new ThreadFactory() {
                 private AtomicInteger threadIndex = new AtomicInteger(0);
                 private int threadTotal = nettyServerConfig.getServerSelectorThreads();
@@ -213,10 +213,10 @@ public class NettyRemotingServer extends NettyRemotingAbstract implements Remoti
 
 
     /**
-     * ×¢²áÇëÇóÂëµÄÇëÇó´¦ÀíÆ÷¡£
-     * @param requestCode ÇëÇóÂğ¡£
-     * @param processor ÇëÇó´¦ÀíÆ÷
-     * @param executor ÈÎÎñÖ´ĞĞÆ÷¡£
+     * æ³¨å†Œè¯·æ±‚ç çš„è¯·æ±‚å¤„ç†å™¨ã€‚
+     * @param requestCode è¯·æ±‚å—ã€‚
+     * @param processor è¯·æ±‚å¤„ç†å™¨
+     * @param executor ä»»åŠ¡æ‰§è¡Œå™¨ã€‚
      */
     @Override
     public void registerProcessor(int requestCode, NettyRequestProcessor processor, ExecutorService executor) {
@@ -304,7 +304,7 @@ public class NettyRemotingServer extends NettyRemotingAbstract implements Remoti
         return this.publicExecutor;
     }
 
-    //RemotingCommand ÔÚ NettyDecoder.decode ÖĞÉú³É
+    //RemotingCommand åœ¨ NettyDecoder.decode ä¸­ç”Ÿæˆ
     class NettyServerHandler extends SimpleChannelInboundHandler<RemotingCommand> {
 
         @Override

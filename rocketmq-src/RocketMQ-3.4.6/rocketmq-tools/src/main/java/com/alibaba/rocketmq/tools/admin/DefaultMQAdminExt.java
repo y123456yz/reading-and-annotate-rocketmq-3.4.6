@@ -217,7 +217,7 @@ public class DefaultMQAdminExt extends ClientConfig implements MQAdminExt {
 
 
     /**
-     * »ñÈ¡Ïû·ÑÕß·Ö×é¶©ÔÄµÄclientĞÅÏ¢ÒÔ¼°topic¶©ÔÄĞÅÏ¢¡£
+     * è·å–æ¶ˆè´¹è€…åˆ†ç»„è®¢é˜…çš„clientä¿¡æ¯ä»¥åŠtopicè®¢é˜…ä¿¡æ¯ã€‚
      * @param consumerGroup
      * @return
      * @throws InterruptedException

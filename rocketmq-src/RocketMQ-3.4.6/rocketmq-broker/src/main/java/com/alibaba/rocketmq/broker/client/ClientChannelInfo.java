@@ -22,9 +22,9 @@ import com.alibaba.rocketmq.remoting.protocol.LanguageCode;
 
 
 /**
- * ±êÊ¶Ò»¸öclientid¶ÔÓ¦µÄÒ»¸öÍ¨µÀ ¡£
- * ¶øÕâ¸öclientid µÄÄ¬ÈÏÖµÊÇclientip@processid .
- * Ò²¾ÍÊÇËµÍ¬Ò»Ì¨ÎïÀí·şÎñÆ÷ÉÏÒ»¸örocketmq client½ø³Ì¶ÔÓ¦Ò»¸öÍ¨µÀ¡£
+ * æ ‡è¯†ä¸€ä¸ªclientidå¯¹åº”çš„ä¸€ä¸ªé€šé“ ã€‚
+ * è€Œè¿™ä¸ªclientid çš„é»˜è®¤å€¼æ˜¯clientip@processid .
+ * ä¹Ÿå°±æ˜¯è¯´åŒä¸€å°ç‰©ç†æœåŠ¡å™¨ä¸Šä¸€ä¸ªrocketmq clientè¿›ç¨‹å¯¹åº”ä¸€ä¸ªé€šé“ã€‚
  *
  *
  * @author shijia.wxr

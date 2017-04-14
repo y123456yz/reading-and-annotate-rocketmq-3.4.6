@@ -51,30 +51,30 @@ import java.util.concurrent.atomic.AtomicLong;
  3.6M    00000000000102000000
  * @author shijia.wxr
  *
- *  MapedFileQueue£º°üº¬ÁËºÜ¶àMapedFile£¬ÒÔ¼°Ã¿¸öMapedFileµÄÕæÊµ´óĞ¡£»
-MapedFile£º°üº¬ÁË¾ßÌåµÄÎÄ¼şĞÅÏ¢£¬°üÀ¨ÎÄ¼şÂ·¾¶£¬ÎÄ¼şÃû£¬ÎÄ¼şÆğÊ¼Æ«ÒÆ£¬Ğ´Î»ÒÆ£¬¶ÁÎ»ÒÆµÈµÈĞÅÏ¢£¬Í¬ÊÂÊ¹ÓÃÁËĞéÄâÄÚ´æÓ³ÉäÀ´Ìá¸ßIOĞ§ÂÊ£»
-Ã¿¸öÎÄ¼ş¹¹½¨Ò»¸öMapedFile¶ÔÏó, ÔÚMapedFileQueueÖĞÓÃ¼¯ºÏlist°ÑÕâĞ©MapedFileÎÄ¼ş×é³ÉÒ»¸öÂß¼­ÉÏÁ¬ĞøµÄ¶ÓÁĞ
+ *  MapedFileQueueï¼šåŒ…å«äº†å¾ˆå¤šMapedFileï¼Œä»¥åŠæ¯ä¸ªMapedFileçš„çœŸå®å¤§å°ï¼›
+MapedFileï¼šåŒ…å«äº†å…·ä½“çš„æ–‡ä»¶ä¿¡æ¯ï¼ŒåŒ…æ‹¬æ–‡ä»¶è·¯å¾„ï¼Œæ–‡ä»¶åï¼Œæ–‡ä»¶èµ·å§‹åç§»ï¼Œå†™ä½ç§»ï¼Œè¯»ä½ç§»ç­‰ç­‰ä¿¡æ¯ï¼ŒåŒäº‹ä½¿ç”¨äº†è™šæ‹Ÿå†…å­˜æ˜ å°„æ¥æé«˜IOæ•ˆç‡ï¼›
+æ¯ä¸ªæ–‡ä»¶æ„å»ºä¸€ä¸ªMapedFileå¯¹è±¡, åœ¨MapedFileQueueä¸­ç”¨é›†åˆlistæŠŠè¿™äº›MapedFileæ–‡ä»¶ç»„æˆä¸€ä¸ªé€»è¾‘ä¸Šè¿ç»­çš„é˜Ÿåˆ—
  */
 public class MapedFile extends ReferenceResource {
     public static final int OS_PAGE_SIZE = 1024 * 4;
     private static final Logger log = LoggerFactory.getLogger(LoggerName.StoreLoggerName);
-    //JVMÖĞÓ³ÉäµÄĞéÄâÄÚ´æ×Ü´óĞ¡
+    //JVMä¸­æ˜ å°„çš„è™šæ‹Ÿå†…å­˜æ€»å¤§å°
     private static final AtomicLong TotalMapedVitualMemory = new AtomicLong(0);
-    //JVMÖĞmmapµÄÊıÁ¿
+    //JVMä¸­mmapçš„æ•°é‡
     private static final AtomicInteger TotalMapedFiles = new AtomicInteger(0);
     private final String fileName;
-    //ÎÄ¼şÃû¼´ÊÇÏûÏ¢ÔÚ´ËÎÄ¼şµÄÖĞ³õÊ¼Æ«ÒÆÁ¿  ÎÄ¼şµÄÆğÊ¼Æ«ÒÆÁ¿
-    private final long fileFromOffset; //Ò²¾ÍÊÇ/data/store/consumequeue/xx/ÖĞ¸÷¸öÎÄ¼şµÄÎÄ¼şÃû£¬±íÊ¾¶ÔÓ¦ÔÚcommitlogÖĞµÄÆ«ÒÆÁ¿£¬¿ÉÒÔ²Î¿¼ MapedFileQueue.load
-    private final int fileSize;//ÎÄ¼ş´óĞ¡
-    private final File file; //ÎÄ¼ş¾ä±ú
-    private final MappedByteBuffer mappedByteBuffer;//Ó³ÉäµÄÄÚ´æ¶ÔÏó
-    //µ±Ç°ÎÄ¼şµÄĞ´Î»ÖÃ
-    private final AtomicInteger wrotePostion = new AtomicInteger(0); //mapfileÎÄ¼şĞ´ÈëµÄÎïÀíÎ»ÖÃ¡£
-    //µ±Ç°ÎÄ¼şFlushµ½µÄÎ»ÖÃ
-    private final AtomicInteger committedPosition = new AtomicInteger(0);//mapfileÒÑ¾­Ë¢ÅÌµ½Ä³Ò»¸öÎïÀíÎ»ÖÃ
-    private FileChannel fileChannel;//Ó³ÉäµÄFileChannel¶ÔÏó
-    private volatile long storeTimestamp = 0; //×îºóÒ»ÌõÏûÏ¢±£´æÊ±¼ä
-    private boolean firstCreateInQueue = false;//ÊÇ²»ÊÇ¸Õ¸Õ´´½¨µÄMap
+    //æ–‡ä»¶åå³æ˜¯æ¶ˆæ¯åœ¨æ­¤æ–‡ä»¶çš„ä¸­åˆå§‹åç§»é‡  æ–‡ä»¶çš„èµ·å§‹åç§»é‡
+    private final long fileFromOffset; //ä¹Ÿå°±æ˜¯/data/store/consumequeue/xx/ä¸­å„ä¸ªæ–‡ä»¶çš„æ–‡ä»¶åï¼Œè¡¨ç¤ºå¯¹åº”åœ¨commitlogä¸­çš„åç§»é‡ï¼Œå¯ä»¥å‚è€ƒ MapedFileQueue.load
+    private final int fileSize;//æ–‡ä»¶å¤§å°
+    private final File file; //æ–‡ä»¶å¥æŸ„
+    private final MappedByteBuffer mappedByteBuffer;//æ˜ å°„çš„å†…å­˜å¯¹è±¡
+    //å½“å‰æ–‡ä»¶çš„å†™ä½ç½®
+    private final AtomicInteger wrotePostion = new AtomicInteger(0); //mapfileæ–‡ä»¶å†™å…¥çš„ç‰©ç†ä½ç½®ã€‚
+    //å½“å‰æ–‡ä»¶Flushåˆ°çš„ä½ç½®
+    private final AtomicInteger committedPosition = new AtomicInteger(0);//mapfileå·²ç»åˆ·ç›˜åˆ°æŸä¸€ä¸ªç‰©ç†ä½ç½®
+    private FileChannel fileChannel;//æ˜ å°„çš„FileChannelå¯¹è±¡
+    private volatile long storeTimestamp = 0; //æœ€åä¸€æ¡æ¶ˆæ¯ä¿å­˜æ—¶é—´
+    private boolean firstCreateInQueue = false;//æ˜¯ä¸æ˜¯åˆšåˆšåˆ›å»ºçš„Map
 
     //MapedFileQueue.load
     public MapedFile(final String fileName, final int fileSize) throws IOException {
@@ -202,7 +202,7 @@ public class MapedFile extends ReferenceResource {
         return fileChannel;
     }
 
-    //°ÑmsgĞ´ÈëMapedFile
+    //æŠŠmsgå†™å…¥MapedFile
     public AppendMessageResult appendMessage(final Object msg, final AppendMessageCallback cb) {
         assert msg != null;
         assert cb != null;
@@ -246,7 +246,7 @@ public class MapedFile extends ReferenceResource {
         if (this.isAbleToFlush(flushLeastPages)) {
             if (this.hold()) {
                 int value = this.wrotePostion.get();
-                this.mappedByteBuffer.force(); // ÄÚ´æÓ³ÉäÎÄ¼şµÄË¢ÅÌ¶¯×÷¡£
+                this.mappedByteBuffer.force(); // å†…å­˜æ˜ å°„æ–‡ä»¶çš„åˆ·ç›˜åŠ¨ä½œã€‚
                 this.committedPosition.set(value);
                 this.release();
             }
@@ -271,9 +271,9 @@ public class MapedFile extends ReferenceResource {
 
 
     /**
-     * Ğ´ÂúÁË £¬»òÕßĞ´ÈëÎ»µãºÍflush offsetµÄ²îÖµ³¬¹ıÁËÖ¸¶¨¸öÊıPageµÄ´óĞ¡£¬¶¼¿ÉÒÔflush .
+     * å†™æ»¡äº† ï¼Œæˆ–è€…å†™å…¥ä½ç‚¹å’Œflush offsetçš„å·®å€¼è¶…è¿‡äº†æŒ‡å®šä¸ªæ•°Pageçš„å¤§å°ï¼Œéƒ½å¯ä»¥flush .
      *
-     * flushLeastPages = 0Ê±Ö»ÒªÃ»ÓĞÍêÈ«flush,Ôò¿ÉÒÔflush .
+     * flushLeastPages = 0æ—¶åªè¦æ²¡æœ‰å®Œå…¨flush,åˆ™å¯ä»¥flush .
      * @param flushLeastPages
      * @return
      */
@@ -281,15 +281,15 @@ public class MapedFile extends ReferenceResource {
         int flush = this.committedPosition.get();
         int write = this.wrotePostion.get();
 
-        if (this.isFull()) { //Ğ´ÂúÁË£¬Á¢¼´flush .
+        if (this.isFull()) { //å†™æ»¡äº†ï¼Œç«‹å³flush .
             return true;
         }
 
-        if (flushLeastPages > 0) { //ÓĞ×îÉÙË¢ĞÂ·ÖÒ³ÊıµÄÒªÇó¡£
+        if (flushLeastPages > 0) { //æœ‰æœ€å°‘åˆ·æ–°åˆ†é¡µæ•°çš„è¦æ±‚ã€‚
             return ((write / OS_PAGE_SIZE) - (flush / OS_PAGE_SIZE)) >= flushLeastPages;
         }
 
-        //Ã»ÓĞĞ´Âú£¬ ²¢ÇÒÃ»ÓĞ×îĞ¡flushÄÚ´æ·ÖÒ³ÊıµÄÒªÇó, ÔòÖ»ÒªĞ´Èë×Ö½ÚÊı³¬¹ıÁËflush×Ö½ÚÊı¾Í¿ÉÒÔflush
+        //æ²¡æœ‰å†™æ»¡ï¼Œ å¹¶ä¸”æ²¡æœ‰æœ€å°flushå†…å­˜åˆ†é¡µæ•°çš„è¦æ±‚, åˆ™åªè¦å†™å…¥å­—èŠ‚æ•°è¶…è¿‡äº†flushå­—èŠ‚æ•°å°±å¯ä»¥flush
         return write > flush;
     }
 
@@ -298,7 +298,7 @@ public class MapedFile extends ReferenceResource {
         return this.fileSize == this.wrotePostion.get();
     }
 
-    //Í¨¹ıSelectMapedBufferResultÀà·µ»Ø¸ÃmapedFileÖĞ´ÓstartOffset¿ªÊ¼µÄsize×Ö½ÚÊı¾İ£¬Õâsize×Ö½ÚÊı¾İ´æÈëbyteBuffer
+    //é€šè¿‡SelectMapedBufferResultç±»è¿”å›è¯¥mapedFileä¸­ä»startOffsetå¼€å§‹çš„sizeå­—èŠ‚æ•°æ®ï¼Œè¿™sizeå­—èŠ‚æ•°æ®å­˜å…¥byteBuffer
     public SelectMapedBufferResult selectMapedBuffer(int pos, int size) {
         if ((pos + size) <= this.wrotePostion.get()) {
             if (this.hold()) {
@@ -326,7 +326,7 @@ public class MapedFile extends ReferenceResource {
             if (this.hold()) {
                 ByteBuffer byteBuffer = this.mappedByteBuffer.slice();
                 byteBuffer.position(pos);
-                int size = this.wrotePostion.get() - pos;//µ±Ç°Ğ´ÈëµÄÎ»ÖÃ¼õÈ¥posµÃµ½µÄ¾ÍÊÇÒª¶ÁÈ¡µÄ×Ö½ÚÊı×éµÄ³¤¶È¡£
+                int size = this.wrotePostion.get() - pos;//å½“å‰å†™å…¥çš„ä½ç½®å‡å»poså¾—åˆ°çš„å°±æ˜¯è¦è¯»å–çš„å­—èŠ‚æ•°ç»„çš„é•¿åº¦ã€‚
                 ByteBuffer byteBufferNew = byteBuffer.slice();
                 byteBufferNew.limit(size);
                 return new SelectMapedBufferResult(this.fileFromOffset + pos, byteBufferNew, size, this);
@@ -388,24 +388,24 @@ public class MapedFile extends ReferenceResource {
     }
 
     /**
-     * ËùÎ½Ô¤ÈÈ£¬¾ÍÊÇ°Ñ³¬¹ıÉè¶¨´óĞ¡£¨Ä¬ÈÏ1G)µÄÎÄ¼ş £¬Ã¿¼ä¸ô4k£¨ÄÚ´æ·ÖÒ³µÄ´óĞ¡£© Ğ´Ò»¸öbyte £¨Ê¹ page dirty) ,
-     * ÔàÒ³ÀÛ»ıµ½Ò»¶¨Á¿£¨16M)µÄÊ±ºò£¬×öË¢ÅÌ¶¯×÷ (Êı¾İÕæÕıµÄÂäÔÚ±¾µØ´ÅÅÌ)¡£
+     * æ‰€è°“é¢„çƒ­ï¼Œå°±æ˜¯æŠŠè¶…è¿‡è®¾å®šå¤§å°ï¼ˆé»˜è®¤1G)çš„æ–‡ä»¶ ï¼Œæ¯é—´éš”4kï¼ˆå†…å­˜åˆ†é¡µçš„å¤§å°ï¼‰ å†™ä¸€ä¸ªbyte ï¼ˆä½¿ page dirty) ,
+     * è„é¡µç´¯ç§¯åˆ°ä¸€å®šé‡ï¼ˆ16M)çš„æ—¶å€™ï¼Œåšåˆ·ç›˜åŠ¨ä½œ (æ•°æ®çœŸæ­£çš„è½åœ¨æœ¬åœ°ç£ç›˜)ã€‚
      * @param type
      * @param pages
      */
     public void warmMappedFile(FlushDiskType type, int pages) {
         long  beginTime = System.currentTimeMillis();
-        //ËùÎ½slice, ¿ÉÒÔÀí½âÎªbytebufferÖĞÊ£ÓàÈİÁ¿µÄÒ»¸ö¿ìÕÕ ¡£
-        //±ÈÈçÔ­À´bytebuffer³¤¶ÈÎª1024 £¬ »¹ÓĞ512×Ö½ÚÈİÁ¿£¬ÔòĞÂµÄbytebufferµÄpos¾ÍÊÇ512£¬ limit¾ÍÊÇ1024£¬
+        //æ‰€è°“slice, å¯ä»¥ç†è§£ä¸ºbytebufferä¸­å‰©ä½™å®¹é‡çš„ä¸€ä¸ªå¿«ç…§ ã€‚
+        //æ¯”å¦‚åŸæ¥bytebufferé•¿åº¦ä¸º1024 ï¼Œ è¿˜æœ‰512å­—èŠ‚å®¹é‡ï¼Œåˆ™æ–°çš„bytebufferçš„poså°±æ˜¯512ï¼Œ limitå°±æ˜¯1024ï¼Œ
         ByteBuffer byteBuffer = this.mappedByteBuffer.slice();
         int flush = 0;
         long time = System.currentTimeMillis();
         for (int i = 0, j = 0; i < this.fileSize; i += MapedFile.OS_PAGE_SIZE, j++) {
-            byteBuffer.put(i, (byte) 0); // °ÑbytebufferµÄÊ£ÓàÈİÁ¿¼´slice ×öÒ»¸öÊı¾İÌî³ä¡£
+            byteBuffer.put(i, (byte) 0); // æŠŠbytebufferçš„å‰©ä½™å®¹é‡å³slice åšä¸€ä¸ªæ•°æ®å¡«å……ã€‚
             // force flush when flush disk type is sync
-            if (type == FlushDiskType.SYNC_FLUSH) { //²¢ÇÒÍ¬²½Ë¢ÅÌµÄ»°£¬
-                if ((i / OS_PAGE_SIZE) - (flush / OS_PAGE_SIZE) >= pages) { //Ğ´ÈëµÄÎ»ÖÃºÍflushµÄÎ»ÖÃ²îÖµ·ÖÒ³Êı³¬¹ıÁËÖ¸¶¨µÄÒ³Êı¡£
-                    //ÕâÀïËãÒ»ÏÂ£¬Ä¬ÈÏÊÇ16M×öÒ»´ÎÇ¿ÖÆË¢ÅÌ¡£
+            if (type == FlushDiskType.SYNC_FLUSH) { //å¹¶ä¸”åŒæ­¥åˆ·ç›˜çš„è¯ï¼Œ
+                if ((i / OS_PAGE_SIZE) - (flush / OS_PAGE_SIZE) >= pages) { //å†™å…¥çš„ä½ç½®å’Œflushçš„ä½ç½®å·®å€¼åˆ†é¡µæ•°è¶…è¿‡äº†æŒ‡å®šçš„é¡µæ•°ã€‚
+                    //è¿™é‡Œç®—ä¸€ä¸‹ï¼Œé»˜è®¤æ˜¯16Måšä¸€æ¬¡å¼ºåˆ¶åˆ·ç›˜ã€‚
                     flush = i;
                     mappedByteBuffer.force();
                 }

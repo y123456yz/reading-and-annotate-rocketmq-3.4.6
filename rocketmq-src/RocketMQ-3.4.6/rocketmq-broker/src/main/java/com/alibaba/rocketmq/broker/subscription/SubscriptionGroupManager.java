@@ -33,16 +33,16 @@ import java.util.concurrent.ConcurrentHashMap;
 
 
 /**
- * @author shijia.wxr  Ïû·ÑÕß¶©ÔÄ¹ØÏµconsumer subscription
+ * @author shijia.wxr  æ¶ˆè´¹è€…è®¢é˜…å…³ç³»consumer subscription
  */
 public class SubscriptionGroupManager extends ConfigManager {
     private static final Logger log = LoggerFactory.getLogger(LoggerName.BrokerLoggerName);
     private transient BrokerController brokerController;
 
-    //°Ñ/root/store/config/subscriptionGroup.jsonÎÄ¼şÖĞµÄĞÅÏ¢ĞòÁĞ»¯µ½ÕâÀï
+    //æŠŠ/root/store/config/subscriptionGroup.jsonæ–‡ä»¶ä¸­çš„ä¿¡æ¯åºåˆ—åŒ–åˆ°è¿™é‡Œ
     private final ConcurrentHashMap<String, SubscriptionGroupConfig> subscriptionGroupTable =
             new ConcurrentHashMap<String, SubscriptionGroupConfig>(1024);
-    //±êÊ¶subscriptionGroupTable µÄÊı¾İ°æ±¾¡£
+    //æ ‡è¯†subscriptionGroupTable çš„æ•°æ®ç‰ˆæœ¬ã€‚
     private final DataVersion dataVersion = new DataVersion();
 
 
@@ -122,21 +122,21 @@ public class SubscriptionGroupManager extends ConfigManager {
 
 
     /**
-     * ²éÕÒÄ³Ò»¸öÏû·ÑÕß·Ö×éµÄ¶©ÔÄÅäÖÃ¡£
+     * æŸ¥æ‰¾æŸä¸€ä¸ªæ¶ˆè´¹è€…åˆ†ç»„çš„è®¢é˜…é…ç½®ã€‚
      * @param group
      * @return
      */
     public SubscriptionGroupConfig findSubscriptionGroupConfig(final String group) {
         SubscriptionGroupConfig subscriptionGroupConfig = this.subscriptionGroupTable.get(group);
         if (null == subscriptionGroupConfig) {
-            //Èç¹ûbrokerÅäÖÃ¿ÉÒÔ×Ô¶¯´´½¨¶©ÔÄÕß·Ö×é»òÕßÏû·ÑÕß·Ö×éÃûÒÔ CID_RMQ_SYS_ ¿ªÍ·¡£
+            //å¦‚æœbrokeré…ç½®å¯ä»¥è‡ªåŠ¨åˆ›å»ºè®¢é˜…è€…åˆ†ç»„æˆ–è€…æ¶ˆè´¹è€…åˆ†ç»„åä»¥ CID_RMQ_SYS_ å¼€å¤´ã€‚
             if (brokerController.getBrokerConfig().isAutoCreateSubscriptionGroup() || MixAll.isSysConsumerGroup(group)) {
                 subscriptionGroupConfig = new SubscriptionGroupConfig();
                 subscriptionGroupConfig.setGroupName(group);
                 this.subscriptionGroupTable.putIfAbsent(group, subscriptionGroupConfig);
                 log.info("auto create a subscription group, {}", subscriptionGroupConfig.toString());
                 this.dataVersion.nextVersion();
-                //°Ñ¶©ÔÄÅäÖÃĞÅÏ¢ĞòÁĞ»¯³ÉjsonĞ´ÈëÅäÖÃÎÄ¼şÄ¿Â¼¡£
+                //æŠŠè®¢é˜…é…ç½®ä¿¡æ¯åºåˆ—åŒ–æˆjsonå†™å…¥é…ç½®æ–‡ä»¶ç›®å½•ã€‚
                 this.persist();
             }
         }
@@ -156,8 +156,8 @@ public class SubscriptionGroupManager extends ConfigManager {
     }
 
 
-    @Override //°Ñ/root/store/config/subscriptionGroup.jsonÎÄ¼şÖĞµÄĞÅÏ¢ĞòÁĞ»¯µ½ SubscriptionGroupManager.subscriptionGroupTable
-    public void decode(String jsonString) { //ConfigManager.configFilePathÖĞÖ´ĞĞ
+    @Override //æŠŠ/root/store/config/subscriptionGroup.jsonæ–‡ä»¶ä¸­çš„ä¿¡æ¯åºåˆ—åŒ–åˆ° SubscriptionGroupManager.subscriptionGroupTable
+    public void decode(String jsonString) { //ConfigManager.configFilePathä¸­æ‰§è¡Œ
         if (jsonString != null) {
             SubscriptionGroupManager obj = RemotingSerializable.fromJson(jsonString, SubscriptionGroupManager.class);
             if (obj != null) {
@@ -178,7 +178,7 @@ public class SubscriptionGroupManager extends ConfigManager {
 
 
     @Override
-    public String configFilePath() { //ConfigManager.configFilePathÖĞÖ´ĞĞ
+    public String configFilePath() { //ConfigManager.configFilePathä¸­æ‰§è¡Œ
         return BrokerPathConfigHelper.getSubscriptionGroupPath(this.brokerController.getMessageStoreConfig().getStorePathRootDir());
     }
 

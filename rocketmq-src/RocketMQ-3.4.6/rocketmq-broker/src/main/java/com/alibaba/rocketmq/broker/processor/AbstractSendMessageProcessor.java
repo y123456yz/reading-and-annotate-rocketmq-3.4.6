@@ -97,7 +97,7 @@ public abstract class AbstractSendMessageProcessor implements NettyRequestProces
             requestHeaderV2 =
                     (SendMessageRequestHeaderV2) request
                         .decodeCommandCustomHeader(SendMessageRequestHeaderV2.class);
-            //×¢ÒâÕâÀïÃ»ÓÐbreak;
+            //æ³¨æ„è¿™é‡Œæ²¡æœ‰break;
         case RequestCode.SEND_MESSAGE:
             if (null == requestHeaderV2) {
                 requestHeader =
@@ -174,7 +174,7 @@ public abstract class AbstractSendMessageProcessor implements NettyRequestProces
 
     protected RemotingCommand msgCheck(final ChannelHandlerContext ctx,
             final SendMessageRequestHeader requestHeader, final RemotingCommand response) {
-        //¼ì²ébrokerµÄÐ´È¨ÏÞ¡£
+        //æ£€æŸ¥brokerçš„å†™æƒé™ã€‚
         if (!PermName.isWriteable(this.brokerController.getBrokerConfig().getBrokerPermission())
                 && this.brokerController.getTopicConfigManager().isOrderTopic(requestHeader.getTopic())) {
             response.setCode(ResponseCode.NO_PERMISSION);
@@ -182,7 +182,7 @@ public abstract class AbstractSendMessageProcessor implements NettyRequestProces
                     + "] sending message is forbidden");
             return response;
         }
-        //¼ì²étopicºÍÏµÍ³±£ÁôµÄtopicÃû×ÖÊÇ·ñ³åÍ»¡£
+        //æ£€æŸ¥topicå’Œç³»ç»Ÿä¿ç•™çš„topicåå­—æ˜¯å¦å†²çªã€‚
         if (!this.brokerController.getTopicConfigManager().isTopicCanSendMessage(requestHeader.getTopic())) {
             String errorMsg =
                     "the topic[" + requestHeader.getTopic() + "] is conflict with system reserved words.";
@@ -207,7 +207,7 @@ public abstract class AbstractSendMessageProcessor implements NettyRequestProces
 
             log.warn("the topic " + requestHeader.getTopic() + " not exist, producer: "
                     + ctx.channel().remoteAddress());
-            //Î´ÕÒµ½topic £¬ÔòÓÃÄ¬ÈÏµÄtopic:TBW102  µÄÅäÖÃÀ´´´½¨Ò»¸ötopic.
+            //æœªæ‰¾åˆ°topic ï¼Œåˆ™ç”¨é»˜è®¤çš„topic:TBW102  çš„é…ç½®æ¥åˆ›å»ºä¸€ä¸ªtopic.
             topicConfig = this.brokerController.getTopicConfigManager().createTopicInSendMessageMethod(//
                 requestHeader.getTopic(), //
                 requestHeader.getDefaultTopic(), //
@@ -233,7 +233,7 @@ public abstract class AbstractSendMessageProcessor implements NettyRequestProces
 
         int queueIdInt = requestHeader.getQueueId();
         int idValid = Math.max(topicConfig.getWriteQueueNums(), topicConfig.getReadQueueNums());
-        if (queueIdInt >= idValid) { //¶ÓÁÐid ³¬¹ýÁË¶ÁÐ´¶ÓÁÐµÄ×î´óID¡£
+        if (queueIdInt >= idValid) { //é˜Ÿåˆ—id è¶…è¿‡äº†è¯»å†™é˜Ÿåˆ—çš„æœ€å¤§IDã€‚
             String errorInfo = String.format("request queueId[%d] is illagal, %s Producer: %s",//
                 queueIdInt,//
                 topicConfig.toString(),//

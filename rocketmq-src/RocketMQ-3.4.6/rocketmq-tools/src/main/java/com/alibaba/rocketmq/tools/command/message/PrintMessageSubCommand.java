@@ -56,7 +56,7 @@ public class PrintMessageSubCommand implements SubCommand {
         opt.setRequired(true);
         options.addOption(opt);
 
-        opt = new Option("c", "charsetName ", true, "CharsetName(eg: UTF-8、GBK)");
+        opt = new Option("c", "charsetName ", true, "CharsetName(eg: UTF-8銆丟BK)");
         opt.setRequired(false);
         options.addOption(opt);
 

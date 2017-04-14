@@ -46,7 +46,7 @@ public abstract class ConfigManager {
       consumerOffsetManager.load();
       subscriptionGroupManager.load();
       ScheduleMessageService.load()
-    * */ //¼ÓÔØconsumerOffset.json  delayOffset.json  subscriptionGroup.json  topics.json µ½ÏàÓ¦µÄµØ·½
+    * */ //åŠ è½½consumerOffset.json  delayOffset.json  subscriptionGroup.json  topics.json åˆ°ç›¸åº”çš„åœ°æ–¹
     public boolean load() {
         String fileName = null;
         try {
@@ -54,7 +54,7 @@ public abstract class ConfigManager {
             * ScheduleMessageService.configFilePath()
             * */
             fileName = this.configFilePath();
-            String jsonString = MixAll.file2String(fileName); //»ñÈ¡ÎÄ¼şÄÚÈİ´æÈëjsonString
+            String jsonString = MixAll.file2String(fileName); //è·å–æ–‡ä»¶å†…å®¹å­˜å…¥jsonString
             if (null == jsonString || jsonString.length() == 0) {
                 return this.loadBak();
             }
@@ -62,7 +62,7 @@ public abstract class ConfigManager {
                 /* topicConfigManager.decode(); consumerOffsetManager.decode(); subscriptionGroupManager.decode();
                 * ScheduleMessageService.decode()
                 * */
-                this.decode(jsonString); //½âÎöÉÏÃæ´ÓÅäÖÃÎÄ¼şÖĞ¶ÁÈ¡µÄÅäÖÃĞÅÏ¢£¬È»ºó°ÑÕâĞ©ÅäÖÃÎÄ¼şÖĞµÄÅäÖÃĞòÁĞ»¯µ½ÏìÓ¦µÄµØ·½´æ´¢
+                this.decode(jsonString); //è§£æä¸Šé¢ä»é…ç½®æ–‡ä»¶ä¸­è¯»å–çš„é…ç½®ä¿¡æ¯ï¼Œç„¶åæŠŠè¿™äº›é…ç½®æ–‡ä»¶ä¸­çš„é…ç½®åºåˆ—åŒ–åˆ°å“åº”çš„åœ°æ–¹å­˜å‚¨
                 plog.info("load {} OK", fileName);
                 return true;
             }
@@ -95,12 +95,12 @@ public abstract class ConfigManager {
 
 
     public synchronized void persist() {
-        //ÀıÈç´´½¨topic¶ÔÓ¦µÄthis¾ÍÊÇTopicConfigManager, TopicConfigManager.encode¾ÍÊÇ topicConfigTable ½øĞĞĞòÁĞ»¯ºóµÄstring,¼û ConfigManager.createTopicInSendMessageBackMethod
+        //ä¾‹å¦‚åˆ›å»ºtopicå¯¹åº”çš„thiså°±æ˜¯TopicConfigManager, TopicConfigManager.encodeå°±æ˜¯ topicConfigTable è¿›è¡Œåºåˆ—åŒ–åçš„string,è§ ConfigManager.createTopicInSendMessageBackMethod
         String jsonString = this.encode(true);
         if (jsonString != null) {
             String fileName = this.configFilePath();
             try {
-                MixAll.string2File(jsonString, fileName); //´æÈë¶ÔÓ¦µÄÎÄ¼ş
+                MixAll.string2File(jsonString, fileName); //å­˜å…¥å¯¹åº”çš„æ–‡ä»¶
             }
             catch (IOException e) {
                 plog.error("persist file Exception, " + fileName, e);

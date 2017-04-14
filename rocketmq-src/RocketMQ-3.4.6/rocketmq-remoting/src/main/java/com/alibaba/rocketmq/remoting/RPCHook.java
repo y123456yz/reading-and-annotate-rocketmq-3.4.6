@@ -21,18 +21,18 @@ import com.alibaba.rocketmq.remoting.protocol.RemotingCommand;
 
 
 /**
- * rpcÇëÇóµÄ¹³×Ó
+ * rpcè¯·æ±‚çš„é’©å­
  */
 public interface RPCHook {
     /**
-     * ·¢ËÍÇëÇóÇ°¡£
+     * å‘é€è¯·æ±‚å‰ã€‚
      * @param remoteAddr
      * @param request
      */
     void doBeforeRequest(final String remoteAddr, final RemotingCommand request);
 
     /**
-     * ½ÓÊÜÏìÓ¦ºó¡£
+     * æ¥å—å“åº”åã€‚
      * @param remoteAddr
      * @param request
      * @param response

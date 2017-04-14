@@ -27,20 +27,20 @@ import java.util.Set;
 
 
 /**
- * @author shijia.wxr¡¡¡¡ ¶©ÔÄĞÅÏ¢ºÍTAG topicĞÅÏ¢   ´æ´¢ÔÚ RebalanceImpl.subscriptionInnerÖĞ  ÕâÀïÃæ´æÓĞ¹Ø×¢µÄtagÏà¹ØµÄĞÅÏ¢
+ * @author shijia.wxrã€€ã€€ è®¢é˜…ä¿¡æ¯å’ŒTAG topicä¿¡æ¯   å­˜å‚¨åœ¨ RebalanceImpl.subscriptionInnerä¸­  è¿™é‡Œé¢å­˜æœ‰å…³æ³¨çš„tagç›¸å…³çš„ä¿¡æ¯
  */
 public class SubscriptionData implements Comparable<SubscriptionData> {
     public final static String SUB_ALL = "*";
     private boolean classFilterMode = false;
-    //¶©ÔÄµÄtopic¡£  Õâ¸ötopic¿ÉÄÜÊÇRETRY_GROUP_TOPIC_PREFIX+ConsumerGroup,¼ûDefaultMQPushConsumerImpl.start.copySubscription
+    //è®¢é˜…çš„topicã€‚  è¿™ä¸ªtopicå¯èƒ½æ˜¯RETRY_GROUP_TOPIC_PREFIX+ConsumerGroup,è§DefaultMQPushConsumerImpl.start.copySubscription
     private String topic;
-    //¶©ÔÄ±í´ïÊ½¡£
+    //è®¢é˜…è¡¨è¾¾å¼ã€‚
     private String subString;
-    //subString±»·Ö½âµÃµ½µÄtag¼¯ºÏ¡£
+    //subStringè¢«åˆ†è§£å¾—åˆ°çš„tagé›†åˆã€‚
     private Set<String> tagsSet = new HashSet<String>();
-    //tagSetÖĞµÄtag hashcode ¼¯ºÏ¡£
+    //tagSetä¸­çš„tag hashcode é›†åˆã€‚
     private Set<Integer> codeSet = new HashSet<Integer>();
-    //¶©ÔÄ°æ±¾ºÅ£¬ Ä¬ÈÏÓÃµ±Ç°Ê±¼ä¡£
+    //è®¢é˜…ç‰ˆæœ¬å·ï¼Œ é»˜è®¤ç”¨å½“å‰æ—¶é—´ã€‚
     private long subVersion = System.currentTimeMillis();
 
     @JSONField(serialize = false)

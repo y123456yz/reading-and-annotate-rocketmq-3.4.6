@@ -57,7 +57,7 @@ import java.util.Map;
 
 
 /**
- * ´¦ÀíclientÏûÏ¢·¢ËÍ¡£
+ * å¤„ç†clientæ¶ˆæ¯å‘é€ã€‚
  * @author shijia.wxr
  */
 public class SendMessageProcessor extends AbstractSendMessageProcessor implements NettyRequestProcessor {
@@ -71,7 +71,7 @@ public class SendMessageProcessor extends AbstractSendMessageProcessor implement
     public RemotingCommand processRequest(ChannelHandlerContext ctx, RemotingCommand request) throws RemotingCommandException {
         SendMessageContext mqtraceContext = null;
         switch (request.getCode()) {
-        case RequestCode.CONSUMER_SEND_MSG_BACK: //¿Í»§¶ËÏû·ÑÊ§°Ü£¬ÖØĞÂ´ò»ØµÄÏûÏ¢
+        case RequestCode.CONSUMER_SEND_MSG_BACK: //å®¢æˆ·ç«¯æ¶ˆè´¹å¤±è´¥ï¼Œé‡æ–°æ‰“å›çš„æ¶ˆæ¯
             return this.consumerSendMsgBack(ctx, request);
         default:
             SendMessageRequestHeader requestHeader = parseRequestHeader(request);
@@ -86,11 +86,11 @@ public class SendMessageProcessor extends AbstractSendMessageProcessor implement
         }
     }
 
-    //SendMessageProcessor.consumerSendMsgBack(·şÎñ¶ËbrokerÊÕ) ºÍ MQClientAPIImpl.consumerSendMessageBack(¿Í»§¶Ë·¢) ¶ÔÓ¦
+    //SendMessageProcessor.consumerSendMsgBack(æœåŠ¡ç«¯brokeræ”¶) å’Œ MQClientAPIImpl.consumerSendMessageBack(å®¢æˆ·ç«¯å‘) å¯¹åº”
     private RemotingCommand consumerSendMsgBack(final ChannelHandlerContext ctx, final RemotingCommand request)
             throws RemotingCommandException {
         final RemotingCommand response = RemotingCommand.createResponseCommand(null);
-        //½âÎö±¨ÎÄHeader dataÖĞµÄextFields ĞÅÏ¢µ½requestHeader
+        //è§£ææŠ¥æ–‡Header dataä¸­çš„extFields ä¿¡æ¯åˆ°requestHeader
         final ConsumerSendMsgBackRequestHeader requestHeader =
                 (ConsumerSendMsgBackRequestHeader) request.decodeCommandCustomHeader(ConsumerSendMsgBackRequestHeader.class);
 
@@ -108,30 +108,30 @@ public class SendMessageProcessor extends AbstractSendMessageProcessor implement
             this.executeConsumeMessageHookAfter(context);
         }
 
-        //²éÕÒÄ³Ò»¸öÏû·ÑÕß·Ö×éµÄ¶©ÔÄÅäÖÃ¡£
+        //æŸ¥æ‰¾æŸä¸€ä¸ªæ¶ˆè´¹è€…åˆ†ç»„çš„è®¢é˜…é…ç½®ã€‚
         SubscriptionGroupConfig subscriptionGroupConfig =
                 this.brokerController.getSubscriptionGroupManager().findSubscriptionGroupConfig(requestHeader.getGroup());
 
-        if (null == subscriptionGroupConfig) { //Ã»ÕÒµ½¶©ÔÄÅäÖÃĞÅÏ¢
+        if (null == subscriptionGroupConfig) { //æ²¡æ‰¾åˆ°è®¢é˜…é…ç½®ä¿¡æ¯
             response.setCode(ResponseCode.SUBSCRIPTION_GROUP_NOT_EXIST);
             response.setRemark("subscription group not exist, " + requestHeader.getGroup() + " "
                     + FAQUrl.suggestTodo(FAQUrl.SUBSCRIPTION_GROUP_NOT_EXIST));
             return response;
         }
 
-        if (!PermName.isWriteable(this.brokerController.getBrokerConfig().getBrokerPermission())) { //²»¿ÉĞ´
+        if (!PermName.isWriteable(this.brokerController.getBrokerConfig().getBrokerPermission())) { //ä¸å¯å†™
             response.setCode(ResponseCode.NO_PERMISSION);
             response.setRemark("the broker[" + this.brokerController.getBrokerConfig().getBrokerIP1() + "] sending message is forbidden");
             return response;
         }
 
-        if (subscriptionGroupConfig.getRetryQueueNums() <= 0) { //ÅäÖÃbrokerÖØÊÔ¶ÓÁĞÎª0£¬ÔòÖ±½Ó·µ»ØOK
+        if (subscriptionGroupConfig.getRetryQueueNums() <= 0) { //é…ç½®brokeré‡è¯•é˜Ÿåˆ—ä¸º0ï¼Œåˆ™ç›´æ¥è¿”å›OK
             response.setCode(ResponseCode.SUCCESS);
             response.setRemark(null);
             return response;
         }
 
-        String newTopic = MixAll.getRetryTopic(requestHeader.getGroup()); //ÖØÊÔ¶ÓÁĞÃû RETRY_GROUP_TOPIC_PREFIX + consumerGroup;
+        String newTopic = MixAll.getRetryTopic(requestHeader.getGroup()); //é‡è¯•é˜Ÿåˆ—å RETRY_GROUP_TOPIC_PREFIX + consumerGroup;
         int queueIdInt = Math.abs(this.random.nextInt() % 99999999) % subscriptionGroupConfig.getRetryQueueNums();
 
         int topicSysFlag = 0;
@@ -140,8 +140,8 @@ public class SendMessageProcessor extends AbstractSendMessageProcessor implement
         }
 
         TopicConfig topicConfig = this.brokerController.getTopicConfigManager().createTopicInSendMessageBackMethod(//
-            newTopic,// ÖØÊÔ¶ÓÁĞÃû
-            subscriptionGroupConfig.getRetryQueueNums(), // ÖØÊÔ¶ÓÁĞ queue ÊıÁ¿
+            newTopic,// é‡è¯•é˜Ÿåˆ—å
+            subscriptionGroupConfig.getRetryQueueNums(), // é‡è¯•é˜Ÿåˆ— queue æ•°é‡
             PermName.PERM_WRITE | PermName.PERM_READ, topicSysFlag);
         if (null == topicConfig) {
             response.setCode(ResponseCode.SYSTEM_ERROR);
@@ -149,19 +149,19 @@ public class SendMessageProcessor extends AbstractSendMessageProcessor implement
             return response;
         }
 
-        if (!PermName.isWriteable(topicConfig.getPerm())) { //²»¿ÉĞ´£¬±¨´í
+        if (!PermName.isWriteable(topicConfig.getPerm())) { //ä¸å¯å†™ï¼ŒæŠ¥é”™
             response.setCode(ResponseCode.NO_PERMISSION);
             response.setRemark(String.format("the topic[%s] sending message is forbidden", newTopic));
             return response;
         }
 
-        //requestHeader.getOffset() ÊÇ´ÓÏûÏ¢ÖĞµÄ MSGBACK±¨ÎÄÖĞµÄ"extFields":{"topic":"yyztest2","queueId":"3","consumerGroup":"yyzGroup2","commitOffset":"28"}
-        //Ğ¯´ø¹ıÀ´µÄ£¬ºÍconsumerSendMessageBackÅäºÏÔÄ¶Á
+        //requestHeader.getOffset() æ˜¯ä»æ¶ˆæ¯ä¸­çš„ MSGBACKæŠ¥æ–‡ä¸­çš„"extFields":{"topic":"yyztest2","queueId":"3","consumerGroup":"yyzGroup2","commitOffset":"28"}
+        //æºå¸¦è¿‡æ¥çš„ï¼Œå’ŒconsumerSendMessageBacké…åˆé˜…è¯»
 
-        //DefaultMessageStore.lookMessageByOffset ²éÕÒcommitlogÎÄ¼şÖĞ´ÓrequestHeader.getOffset()¿ªÊ¼µÄÒ»ÌõÏûÏ¢ÄÚÈİ
-        //commitlogÖĞÃ¿ÌõÏûÏ¢µÄ´æ´¢¸ñÊ½¼û:http://blog.csdn.net/xxxxxx91116/article/details/50333161
+        //DefaultMessageStore.lookMessageByOffset æŸ¥æ‰¾commitlogæ–‡ä»¶ä¸­ä»requestHeader.getOffset()å¼€å§‹çš„ä¸€æ¡æ¶ˆæ¯å†…å®¹
+        //commitlogä¸­æ¯æ¡æ¶ˆæ¯çš„å­˜å‚¨æ ¼å¼è§:http://blog.csdn.net/xxxxxx91116/article/details/50333161
         MessageExt msgExt = this.brokerController.getMessageStore().lookMessageByOffset(requestHeader.getOffset());
-        if (null == msgExt) { //ÎÄ¼şÖĞÃ¿¸ÃÎ»µãµÄÏûÏ¢£¬±¨´í
+        if (null == msgExt) { //æ–‡ä»¶ä¸­æ¯è¯¥ä½ç‚¹çš„æ¶ˆæ¯ï¼ŒæŠ¥é”™
             response.setCode(ResponseCode.SYSTEM_ERROR);
             response.setRemark("look message by offset failed, " + requestHeader.getOffset());
             return response;
@@ -175,16 +175,16 @@ public class SendMessageProcessor extends AbstractSendMessageProcessor implement
 
         int delayLevel = requestHeader.getDelayLevel();
 
-        if (msgExt.getReconsumeTimes() >= subscriptionGroupConfig.getRetryMaxTimes() //³¬¹ı¶àÉÙ´ÎÔòĞ´ÈëËÀĞÅ¶ÓÁĞ
-                || delayLevel < 0) { //delayLevelĞ¡ÓÚ0£¬ËµÃ÷²»ĞèÒªÏû·ÑÁË
+        if (msgExt.getReconsumeTimes() >= subscriptionGroupConfig.getRetryMaxTimes() //è¶…è¿‡å¤šå°‘æ¬¡åˆ™å†™å…¥æ­»ä¿¡é˜Ÿåˆ—
+                || delayLevel < 0) { //delayLevelå°äº0ï¼Œè¯´æ˜ä¸éœ€è¦æ¶ˆè´¹äº†
             newTopic = MixAll.getDLQTopic(requestHeader.getGroup());
             queueIdInt = Math.abs(this.random.nextInt() % 99999999) % DLQ_NUMS_PER_GROUP;
 
-            //ËÀĞÅ¶ÓÁĞÕâÀïÖ»¿ÉĞ´£¬²»¿É¶Á
+            //æ­»ä¿¡é˜Ÿåˆ—è¿™é‡Œåªå¯å†™ï¼Œä¸å¯è¯»
             topicConfig = this.brokerController.getTopicConfigManager().createTopicInSendMessageBackMethod(newTopic, //
                 DLQ_NUMS_PER_GROUP,
                 PermName.PERM_WRITE, 0
-                ); //´´½¨ÖØÊÔtopic£¬Èç¹ûÒÑ¾­´æÔÚÔòÖ±½Ó·µ»Ø
+                ); //åˆ›å»ºé‡è¯•topicï¼Œå¦‚æœå·²ç»å­˜åœ¨åˆ™ç›´æ¥è¿”å›
             if (null == topicConfig) {
                 response.setCode(ResponseCode.SYSTEM_ERROR);
                 response.setRemark("topic[" + newTopic + "] not exist");
@@ -193,14 +193,14 @@ public class SendMessageProcessor extends AbstractSendMessageProcessor implement
         }
         else {
             if (0 == delayLevel) {
-                delayLevel = 3 + msgExt.getReconsumeTimes(); //ÒµÎñÏû·ÑÊ§°Üºó£¬Èç¹ûÖØĞÂ´ò»ØÀ´µÄÏûÏ¢Ã»ÓĞÖ¸¶¨Ê±ÑÓµÈ¼¶£¬ÔòÄ¬ÈÏÎª 3 + msgExt.getReconsumeTimes()
+                delayLevel = 3 + msgExt.getReconsumeTimes(); //ä¸šåŠ¡æ¶ˆè´¹å¤±è´¥åï¼Œå¦‚æœé‡æ–°æ‰“å›æ¥çš„æ¶ˆæ¯æ²¡æœ‰æŒ‡å®šæ—¶å»¶ç­‰çº§ï¼Œåˆ™é»˜è®¤ä¸º 3 + msgExt.getReconsumeTimes()
             }
 
             msgExt.setDelayTimeLevel(delayLevel);
         }
 
         MessageExtBrokerInner msgInner = new MessageExtBrokerInner();
-        msgInner.setTopic(newTopic); //ÖØÊÔtopic
+        msgInner.setTopic(newTopic); //é‡è¯•topic
         msgInner.setBody(msgExt.getBody());
         msgInner.setFlag(msgExt.getFlag());
         MessageAccessor.setProperties(msgInner, msgExt.getProperties());
@@ -214,7 +214,7 @@ public class SendMessageProcessor extends AbstractSendMessageProcessor implement
         msgInner.setStoreHost(this.getStoreHost());
         msgInner.setReconsumeTimes(msgExt.getReconsumeTimes() + 1);
 
-        //msgExtÊÇÍ¨¹ı¿Í»§¶Ë·¢ËÍ¹ıÀ´µÄÎ»µãoffset´ÓcommitlogÖĞÕÒµ½µÄÏûÏ¢£¬originMsgIdÒ²¾ÍÊÇÍ¨¹ıÎ»µãÕÒµ½µÄÕâÌõÏûÏ¢µÄmsgid
+        //msgExtæ˜¯é€šè¿‡å®¢æˆ·ç«¯å‘é€è¿‡æ¥çš„ä½ç‚¹offsetä»commitlogä¸­æ‰¾åˆ°çš„æ¶ˆæ¯ï¼ŒoriginMsgIdä¹Ÿå°±æ˜¯é€šè¿‡ä½ç‚¹æ‰¾åˆ°çš„è¿™æ¡æ¶ˆæ¯çš„msgid
         String originMsgId = MessageAccessor.getOriginMessageId(msgExt);
         MessageAccessor.setOriginMessageId(msgInner, UtilAll.isBlank(originMsgId) ? msgExt.getMsgId() : originMsgId);
 
@@ -328,8 +328,8 @@ public class SendMessageProcessor extends AbstractSendMessageProcessor implement
         msgInner.setStoreHost(this.getStoreHost());
         msgInner.setReconsumeTimes(requestHeader.getReconsumeTimes() == null ? 0 : requestHeader.getReconsumeTimes());
 
-        if (this.brokerController.getBrokerConfig().isRejectTransactionMessage()) { //Èç¹ûbroker¾Ü¾øÊÂÎñÏûÏ¢ £¬Ôò¶Ô
-            //°üº¬ÁËTRAN_MSG ÊôĞÔµÄÏûÏ¢½øĞĞ¾Ü¾ø¡£
+        if (this.brokerController.getBrokerConfig().isRejectTransactionMessage()) { //å¦‚æœbrokeræ‹’ç»äº‹åŠ¡æ¶ˆæ¯ ï¼Œåˆ™å¯¹
+            //åŒ…å«äº†TRAN_MSG å±æ€§çš„æ¶ˆæ¯è¿›è¡Œæ‹’ç»ã€‚
             String traFlag = msgInner.getProperty(MessageConst.PROPERTY_TRANSACTION_PREPARED);
             if (traFlag != null) {
                 response.setCode(ResponseCode.NO_PERMISSION);

@@ -42,7 +42,7 @@ import java.util.concurrent.*;
 
 
 /**
- * @author shijia.wxr     NettyRemotingServer»òÕßNettyRemotingClientÊµÏÖ¸ÃÀàÖĞµÄ½Ó¿Ú
+ * @author shijia.wxr     NettyRemotingServeræˆ–è€…NettyRemotingClientå®ç°è¯¥ç±»ä¸­çš„æ¥å£
  */
 public abstract class NettyRemotingAbstract {
     private static final Logger plog = LoggerFactory.getLogger(RemotingHelper.RemotingLogName);
@@ -51,15 +51,15 @@ public abstract class NettyRemotingAbstract {
 
     protected final Semaphore semaphoreAsync;
 
-    /* Í¨¹ı±¾³éÏóÀàµÄinvokeAsyncImpl»òÕßinvokeSyncImpl½Ó¿ÚÊµÏÖPut²Ù×÷£¬×î½KÊÇÍ¨ß^ NettyRemotingClient.invokeAsync»òÕß
-     * NettyRemotingServer.invokeAsyncÕ{ÓÃˆÌĞĞÔ“invokeAsyncImpl½Ó¿Ú
+    /* é€šè¿‡æœ¬æŠ½è±¡ç±»çš„invokeAsyncImplæˆ–è€…invokeSyncImplæ¥å£å®ç°Putæ“ä½œï¼Œæœ€çµ‚æ˜¯é€šé NettyRemotingClient.invokeAsyncæˆ–è€…
+     * NettyRemotingServer.invokeAsyncèª¿ç”¨åŸ·è¡Œè©²invokeAsyncImplæ¥å£
       * */
     protected final ConcurrentHashMap<Integer /* opaque */, ResponseFuture> responseTable =
-            new ConcurrentHashMap<Integer, ResponseFuture>(256); //scanResponseTableÖĞ±éÀúÉ¨Ãè¸ÃhashÖĞµÄResponseFuture
+            new ConcurrentHashMap<Integer, ResponseFuture>(256); //scanResponseTableä¸­éå†æ‰«æè¯¥hashä¸­çš„ResponseFuture
 
     protected Pair<NettyRequestProcessor, ExecutorService> defaultRequestProcessor;
 
-    //±£´æÁËRPC´¦ÀíÆ÷  BrokerController.registerProcessor ÖĞ×¢²á¸÷ÖÖRPC´¦ÀíÆ÷
+    //ä¿å­˜äº†RPCå¤„ç†å™¨  BrokerController.registerProcessor ä¸­æ³¨å†Œå„ç§RPCå¤„ç†å™¨
     protected final HashMap<Integer/* request code */, Pair<NettyRequestProcessor, ExecutorService>> processorTable =
             new HashMap<Integer, Pair<NettyRequestProcessor, ExecutorService>>(64);
 
@@ -77,7 +77,7 @@ public abstract class NettyRemotingAbstract {
     }
 
     /**
-     * °Ñ´ı´¦ÀíµÄnettyÊÂ¼şĞ´ÈëLinkedBlockingQueue£¬ ½»¸øÊÂ¼ş´¦ÀíÏß³ÌÒì²½ ´¦Àí¡££¬
+     * æŠŠå¾…å¤„ç†çš„nettyäº‹ä»¶å†™å…¥LinkedBlockingQueueï¼Œ äº¤ç»™äº‹ä»¶å¤„ç†çº¿ç¨‹å¼‚æ­¥ å¤„ç†ã€‚ï¼Œ
      */
     class NettyEventExecuter extends ServiceThread {
         private final LinkedBlockingQueue<NettyEvent> eventQueue = new LinkedBlockingQueue<NettyEvent>();
@@ -141,7 +141,7 @@ public abstract class NettyRemotingAbstract {
 
 
     /**
-     * ÔÊĞíµ¥Ïòµ÷ÓÃºÍÒì²½µ÷ÓÃµÄÇëÇóĞÅºÅÁ¿¡£
+     * å…è®¸å•å‘è°ƒç”¨å’Œå¼‚æ­¥è°ƒç”¨çš„è¯·æ±‚ä¿¡å·é‡ã€‚
      * @param permitsOneway
      * @param permitsAsync
      */
@@ -152,7 +152,7 @@ public abstract class NettyRemotingAbstract {
 
 
     public void processRequestCommand(final ChannelHandlerContext ctx, final RemotingCommand cmd) {
-        //»ñÈ¡Ö¸¶¨ÃüÁî¶ÔÓ¦µÄ´¦ÀíÆ÷
+        //è·å–æŒ‡å®šå‘½ä»¤å¯¹åº”çš„å¤„ç†å™¨
         final Pair<NettyRequestProcessor, ExecutorService> matched = this.processorTable.get(cmd.getCode());
         final Pair<NettyRequestProcessor, ExecutorService> pair =
                 null == matched ? this.defaultRequestProcessor : matched;
@@ -162,15 +162,15 @@ public abstract class NettyRemotingAbstract {
                 @Override
                 public void run() {
                     try {
-                        // NettyRemotingServer »òÕß NettyRemotingClient ÊµÏÖ¸ÃÀàÖĞµÄ½Ó¿Ú
+                        // NettyRemotingServer æˆ–è€… NettyRemotingClient å®ç°è¯¥ç±»ä¸­çš„æ¥å£
                         RPCHook rpcHook = NettyRemotingAbstract.this.getRPCHook();
                         if (rpcHook != null) {
                             rpcHook
                                 .doBeforeRequest(RemotingHelper.parseChannelRemoteAddr(ctx.channel()), cmd);
                         }
 
-                        //processor¿ÉÄÜÊÇ SendMessageProcessor ClientManageProcessor SendMessageProcessor QueryMessageProcessor ClientManageProcessor
-                        //Ö´ĞĞÕâĞ©processor¶ÔÓ¦µÄprocessRequest½Ó¿Ú   //NettyRemotingAbstract.processRequestCommandÖĞÖ´ĞĞÕâĞ©½Ó¿Úº¯Êı
+                        //processorå¯èƒ½æ˜¯ SendMessageProcessor ClientManageProcessor SendMessageProcessor QueryMessageProcessor ClientManageProcessor
+                        //æ‰§è¡Œè¿™äº›processorå¯¹åº”çš„processRequestæ¥å£   //NettyRemotingAbstract.processRequestCommandä¸­æ‰§è¡Œè¿™äº›æ¥å£å‡½æ•°
                         final RemotingCommand response = pair.getObject1().processRequest(ctx, cmd);
                         if (rpcHook != null) {
                             rpcHook.doAfterResponse(RemotingHelper.parseChannelRemoteAddr(ctx.channel()),
@@ -230,7 +230,7 @@ public abstract class NettyRemotingAbstract {
                 }
             }
         }
-        else { //Î´ÕÒµ½Æ¥Åäreqcode µÄ´¦ÀíÆ÷¡£
+        else { //æœªæ‰¾åˆ°åŒ¹é…reqcode çš„å¤„ç†å™¨ã€‚
             String error = " request type " + cmd.getCode() + " not supported";
             final RemotingCommand response =
                     RemotingCommand.createResponseCommand(RemotingSysResponseCode.REQUEST_CODE_NOT_SUPPORTED,
@@ -246,11 +246,11 @@ public abstract class NettyRemotingAbstract {
 //        if(this  instanceof  NettyRemotingClient){
 //            plog.info("recv response of opaque {}" , cmd.getOpaque());
 //        }
-        //Í¨¹ıopaque×Ö¶Î´ÓresponseTable»ñÈ¡Ó¦´ğ¡£
+        //é€šè¿‡opaqueå­—æ®µä»responseTableè·å–åº”ç­”ã€‚
         final ResponseFuture responseFuture = responseTable.get(cmd.getOpaque());
         if (responseFuture != null) {
             responseFuture.setResponseCommand(cmd);
-            //ÔÚµÃµ½Òì²½ÇëÇóÏìÓ¦ÒÔºó£¬°ÑÕâÒ»´ÎÒì²½ÇëÇóµÄĞÅºÅÁ¿ÊÍ·Åµô¡£
+            //åœ¨å¾—åˆ°å¼‚æ­¥è¯·æ±‚å“åº”ä»¥åï¼ŒæŠŠè¿™ä¸€æ¬¡å¼‚æ­¥è¯·æ±‚çš„ä¿¡å·é‡é‡Šæ”¾æ‰ã€‚
             responseFuture.release();
 
             responseTable.remove(cmd.getOpaque());
@@ -301,15 +301,15 @@ public abstract class NettyRemotingAbstract {
         }
     }
 
-    //ÇëÇó Ó¦´ğ Í¨ĞÅ±¨ÎÄ·ÖÖ§Á÷³ÌÔÚÕâÀï
+    //è¯·æ±‚ åº”ç­” é€šä¿¡æŠ¥æ–‡åˆ†æ”¯æµç¨‹åœ¨è¿™é‡Œ
     public void processMessageReceived(ChannelHandlerContext ctx, RemotingCommand msg) throws Exception {
         final RemotingCommand cmd = msg;
         if (cmd != null) {
             switch (cmd.getType()) {
-            case REQUEST_COMMAND: //ÇëÇó
+            case REQUEST_COMMAND: //è¯·æ±‚
                 processRequestCommand(ctx, cmd);
                 break;
-            case RESPONSE_COMMAND: //Ó¦´ğ
+            case RESPONSE_COMMAND: //åº”ç­”
                 processResponseCommand(ctx, cmd);
                 break;
             default:
@@ -322,7 +322,7 @@ public abstract class NettyRemotingAbstract {
     abstract public ExecutorService getCallbackExecutor();
 
 
-    public void scanResponseTable() { //NettyRemotingAbstract.scanResponseTableÖĞ
+    public void scanResponseTable() { //NettyRemotingAbstract.scanResponseTableä¸­
         Iterator<Entry<Integer, ResponseFuture>> it = this.responseTable.entrySet().iterator();
         while (it.hasNext()) {
             Entry<Integer, ResponseFuture> next = it.next();
@@ -331,7 +331,7 @@ public abstract class NettyRemotingAbstract {
             if ((rep.getBeginTimestamp() + rep.getTimeoutMillis() + 1000) <= System.currentTimeMillis()) {
                 it.remove();
                 try {
-                    //Ö´ĞĞ»Øµ÷´¦Àí
+                    //æ‰§è¡Œå›è°ƒå¤„ç†
                     rep.executeInvokeCallback();
                 }
                 catch (Throwable e) {
@@ -372,7 +372,7 @@ public abstract class NettyRemotingAbstract {
                     plog.warn(request.toString());
                 }
             });
-            //Ç°ÃæµÄ·¢ËÍºÍÒì²½·¢ËÍ´¦ÀíÒ»Ñù£¬ ÔÚÕâÀïÍ¨¹ıreponseFutureµÄcountdownlatchÊµÏÖÍ¬²½×èÈûµÈ´ı¡£
+            //å‰é¢çš„å‘é€å’Œå¼‚æ­¥å‘é€å¤„ç†ä¸€æ ·ï¼Œ åœ¨è¿™é‡Œé€šè¿‡reponseFutureçš„countdownlatchå®ç°åŒæ­¥é˜»å¡ç­‰å¾…ã€‚
             RemotingCommand responseCommand = responseFuture.waitResponse(timeoutMillis);
             if (null == responseCommand) {
                 if (responseFuture.isSendRequestOK()) {
@@ -394,7 +394,7 @@ public abstract class NettyRemotingAbstract {
 
 
     /**
-     * Òì²½ÇëÇóµÄµ÷ÓÃ£¬ Éæ¼°µ½Í¨¹ıĞÅºÅÁ¿¿ØÖÆ²¢·¢¡£
+     * å¼‚æ­¥è¯·æ±‚çš„è°ƒç”¨ï¼Œ æ¶‰åŠåˆ°é€šè¿‡ä¿¡å·é‡æ§åˆ¶å¹¶å‘ã€‚
      * @param channel
      * @param request
      * @param timeoutMillis
@@ -404,37 +404,37 @@ public abstract class NettyRemotingAbstract {
      * @throws RemotingTimeoutException
      * @throws RemotingSendRequestException
      *
-     * NettyRemotingClient.invokeAsync»òÕßNettyRemotingServer.invokeAsyncÖĞˆÌĞĞÔ“½Ó¿Ú,±¾¿Í‘ô¶ËÖ»ÓĞNettyRemotingClientÓĞÓÃ
+     * NettyRemotingClient.invokeAsyncæˆ–è€…NettyRemotingServer.invokeAsyncä¸­åŸ·è¡Œè©²æ¥å£,æœ¬å®¢æˆ¶ç«¯åªæœ‰NettyRemotingClientæœ‰ç”¨
      */
     public void invokeAsyncImpl(final Channel channel, final RemotingCommand request,
             final long timeoutMillis, final InvokeCallback invokeCallback) throws InterruptedException,
             RemotingTooMuchRequestException, RemotingTimeoutException, RemotingSendRequestException {
-        boolean acquired = this.semaphoreAsync.tryAcquire(timeoutMillis, TimeUnit.MILLISECONDS); //Í¨¹ıĞÅºÅÁ¿¿ØÖÆÒì²½µ÷ÓÃµÄ²¢·¢Á¿¡£
+        boolean acquired = this.semaphoreAsync.tryAcquire(timeoutMillis, TimeUnit.MILLISECONDS); //é€šè¿‡ä¿¡å·é‡æ§åˆ¶å¼‚æ­¥è°ƒç”¨çš„å¹¶å‘é‡ã€‚
         if (acquired) {
             final SemaphoreReleaseOnlyOnce once = new SemaphoreReleaseOnlyOnce(this.semaphoreAsync);
 
             final ResponseFuture responseFuture =
                     new ResponseFuture(request.getOpaque(), timeoutMillis, invokeCallback, once);
-            //Í¨¹ıÏûÏ¢Í·ÖĞµÄopaqueÊµÏÖµ¥¸ötcpÁ¬½ÓµÄ¶àÏß³Ì¸´ÓÃ¡£
+            //é€šè¿‡æ¶ˆæ¯å¤´ä¸­çš„opaqueå®ç°å•ä¸ªtcpè¿æ¥çš„å¤šçº¿ç¨‹å¤ç”¨ã€‚
             this.responseTable.put(request.getOpaque(), responseFuture);
             try {
-                //ÕâÀïµÄ´úÂëÓĞµãÈÆ£¬ writeAndFlush²Ù×÷ÊÇ·¢ËÍremoting command¸øremote server (broker) .
-                //Ö±½Ó°ÑrequestÀà¶ÔÏó´«Êä³öÈ¥£¬¶Ô¶ËÊÕµ½ºóÔÚ»¹Ô­³ö¸ÃÀà
+                //è¿™é‡Œçš„ä»£ç æœ‰ç‚¹ç»•ï¼Œ writeAndFlushæ“ä½œæ˜¯å‘é€remoting commandç»™remote server (broker) .
+                //ç›´æ¥æŠŠrequestç±»å¯¹è±¡ä¼ è¾“å‡ºå»ï¼Œå¯¹ç«¯æ”¶åˆ°ååœ¨è¿˜åŸå‡ºè¯¥ç±»
                 channel.writeAndFlush(request).addListener(new ChannelFutureListener() {
                     @Override
                     public void operationComplete(ChannelFuture f) throws Exception {
-                        if (f.isSuccess()) { //·¢ËÍ³É¹¦ÒÔºó£¬ÔÚresponseTable Õâ¸ö±íÀïÃæ°üº¬ÁËÈô¸É¸ökey, value
-                            //keyÊÇ¶ÔÓ¦µ±Ç°Ì×½Ó×ÖÍ¨µÀµÄopaque £¨ÓÃÓÚtcp Á¬½ÓµÄ¶àÏß³Ì¸´ÓÃ£© £¬ valueÊÇÇëÇóµÄÓ¦´ğ ¡£
+                        if (f.isSuccess()) { //å‘é€æˆåŠŸä»¥åï¼Œåœ¨responseTable è¿™ä¸ªè¡¨é‡Œé¢åŒ…å«äº†è‹¥å¹²ä¸ªkey, value
+                            //keyæ˜¯å¯¹åº”å½“å‰å¥—æ¥å­—é€šé“çš„opaque ï¼ˆç”¨äºtcp è¿æ¥çš„å¤šçº¿ç¨‹å¤ç”¨ï¼‰ ï¼Œ valueæ˜¯è¯·æ±‚çš„åº”ç­” ã€‚
 
-                            //ÕâÀï·¢ËÍ³É¹¦ÒÔºó£¬·şÎñ¶Ë´¦ÀíÍê±ÏÒÔºó £¬»á»ØËÍÒ»¸öresponse.
-                            //ÔÚprocessResponseCommand ·½·¨ÖĞ, »á½ÓÊÜµ½Ò»¸örespose command £¬ÔÚÄÇÀï½øĞĞ»Øµ÷´¦Àí . ²¢ÊÍ·ÅÒì²½ÇëÇóµÄĞÅºÅÁ¿¡£
+                            //è¿™é‡Œå‘é€æˆåŠŸä»¥åï¼ŒæœåŠ¡ç«¯å¤„ç†å®Œæ¯•ä»¥å ï¼Œä¼šå›é€ä¸€ä¸ªresponse.
+                            //åœ¨processResponseCommand æ–¹æ³•ä¸­, ä¼šæ¥å—åˆ°ä¸€ä¸ªrespose command ï¼Œåœ¨é‚£é‡Œè¿›è¡Œå›è°ƒå¤„ç† . å¹¶é‡Šæ”¾å¼‚æ­¥è¯·æ±‚çš„ä¿¡å·é‡ã€‚
                             responseFuture.setSendRequestOK(true);
                             return;
                         }
-                        else { //ÇëÇó·¢ËÍÊ§°Ü
+                        else { //è¯·æ±‚å‘é€å¤±è´¥
                             responseFuture.setSendRequestOK(false);
                         }
-                        //Á¢¼´°Ñresponse´ÓtableÖĞÇåÀíµô¡£
+                        //ç«‹å³æŠŠresponseä»tableä¸­æ¸…ç†æ‰ã€‚
                         responseFuture.putResponse(null);
                         responseTable.remove(request.getOpaque());
                         try {

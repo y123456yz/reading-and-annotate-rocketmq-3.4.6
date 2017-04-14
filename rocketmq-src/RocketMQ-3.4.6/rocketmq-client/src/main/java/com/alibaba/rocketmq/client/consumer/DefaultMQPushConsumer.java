@@ -46,10 +46,10 @@ import java.util.Set;
  * @author shijia.wxr
  */
 public class DefaultMQPushConsumer extends ClientConfig implements MQPushConsumer {
-    protected final transient DefaultMQPushConsumerImpl defaultMQPushConsumerImpl; /* DefaultMQPushConsumerÖĞ¸³Öµ */
+    protected final transient DefaultMQPushConsumerImpl defaultMQPushConsumerImpl; /* DefaultMQPushConsumerä¸­èµ‹å€¼ */
     /**
      * Do the same thing for the same Group, the application must be set,and
-     * guarantee Globally unique //DefaultMQPushConsumerÖĞ¸³Öµ
+     * guarantee Globally unique //DefaultMQPushConsumerä¸­èµ‹å€¼
      */
     private String consumerGroup;
     /**
@@ -68,31 +68,31 @@ public class DefaultMQPushConsumer extends ClientConfig implements MQPushConsume
      */
     private String consumeTimestamp = UtilAll.timeMillisToHumanString3(System.currentTimeMillis() - (1000 * 60 * 30));
     /**
-     * Queue allocation algorithm  //DefaultMQPushConsumerÖĞ¸³Öµ
-     * Rebalance Ëã·¨ÊµÏÖ²ßÂÔ
+     * Queue allocation algorithm  //DefaultMQPushConsumerä¸­èµ‹å€¼
+     * Rebalance ç®—æ³•å®ç°ç­–ç•¥
      */
     private AllocateMessageQueueStrategy allocateMessageQueueStrategy;
 
     /**
-     * Subscription relationship  ¶©ÔÄ¹ØÏµ
+     * Subscription relationship  è®¢é˜…å…³ç³»
      */
     private Map<String /* topic */, String /* sub expression */> subscription = new HashMap<String, String>();
     /**
      * Message listener
-     * ¾ÍÊÇPushConsumer mainº¯ÊıÖĞµÄconsumer.registerMessageListener(new MessageListenerConcurrently()£¬ÕâÀïµÄ
-     * new MessageListenerConcurrently()  ÏûÏ¢¼àÌıÆ÷
+     * å°±æ˜¯PushConsumer mainå‡½æ•°ä¸­çš„consumer.registerMessageListener(new MessageListenerConcurrently()ï¼Œè¿™é‡Œçš„
+     * new MessageListenerConcurrently()  æ¶ˆæ¯ç›‘å¬å™¨
      */
-    private MessageListener messageListener; //¸³Öµ¼ûregisterMessageListener  MessageListenerConcurrently
+    private MessageListener messageListener; //èµ‹å€¼è§registerMessageListener  MessageListenerConcurrently
     /**
-     * Offset Storage Ïû·Ñ½ø¶È´æ´¢
+     * Offset Storage æ¶ˆè´¹è¿›åº¦å­˜å‚¨
      */
     private OffsetStore offsetStore;
     /**
-     * Minimum consumer thread number  Ïû·ÑÏß³Ì³ØÊıÁ¿
+     * Minimum consumer thread number  æ¶ˆè´¹çº¿ç¨‹æ± æ•°é‡
      */
     private int consumeThreadMin = 20;
     /**
-     * Max consumer thread number Ïû·ÑÏß³Ì³ØÊıÁ¿
+     * Max consumer thread number æ¶ˆè´¹çº¿ç¨‹æ± æ•°é‡
      */
     private int consumeThreadMax = 64;
 
@@ -103,27 +103,27 @@ public class DefaultMQPushConsumer extends ClientConfig implements MQPushConsume
 
     /**
      * Concurrently max span offset.it has no effect on sequential consumption
-     *µ¥¶ÓÁĞ²¢ĞĞÏû·ÑÔÊĞíµÄ×î´ó¿ç¶È
-     * ·ÇË³ĞòÏû·ÑÊ±£¬ÏûÏ¢µÄÏû·ÑÎ»µãµÄ×î´ó²îÖµ¡£
+     *å•é˜Ÿåˆ—å¹¶è¡Œæ¶ˆè´¹å…è®¸çš„æœ€å¤§è·¨åº¦
+     * éé¡ºåºæ¶ˆè´¹æ—¶ï¼Œæ¶ˆæ¯çš„æ¶ˆè´¹ä½ç‚¹çš„æœ€å¤§å·®å€¼ã€‚
      */
     private int consumeConcurrentlyMaxSpan = 2000;
     /**
-     * Flow control threshold À­ÏûÏ¢±¾µØ¶ÓÁĞ»º´æÏûÏ¢×î´óÊı
+     * Flow control threshold æ‹‰æ¶ˆæ¯æœ¬åœ°é˜Ÿåˆ—ç¼“å­˜æ¶ˆæ¯æœ€å¤§æ•°
      */
     private int pullThresholdForQueue = 1000;
     /**
      * Message pull Interval
-     * À­ÏûÏ¢¼ä¸ô£¬ÓÉÓÚÊÇ³¤ÂÖÑ¯£¬ËùÒÔ
-     Îª 0£¬µ«ÊÇÈç¹ûÓ¦ÓÃÎªÁËÁ÷¿Ø£¬Ò²
-     ¿ÉÒÔÉèÖÃ´óÓÚ 0 µÄÖµ£¬µ¥Î»ºÁÃë
+     * æ‹‰æ¶ˆæ¯é—´éš”ï¼Œç”±äºæ˜¯é•¿è½®è¯¢ï¼Œæ‰€ä»¥
+     ä¸º 0ï¼Œä½†æ˜¯å¦‚æœåº”ç”¨ä¸ºäº†æµæ§ï¼Œä¹Ÿ
+     å¯ä»¥è®¾ç½®å¤§äº 0 çš„å€¼ï¼Œå•ä½æ¯«ç§’
      */
     private long pullInterval = 0;
     /**
-     * Batch consumption size ÅúÁ¿Ïû·Ñ£¬Ò»´ÎÏû·Ñ¶àÉÙÌõÏûÏ¢
+     * Batch consumption size æ‰¹é‡æ¶ˆè´¹ï¼Œä¸€æ¬¡æ¶ˆè´¹å¤šå°‘æ¡æ¶ˆæ¯
      */
     private int consumeMessageBatchMaxSize = 1;
     /**
-     * Batch pull size ÅúÁ¿À­ÏûÏ¢£¬Ò»´Î×î¶àÀ­¶àÉÙÌõ
+     * Batch pull size æ‰¹é‡æ‹‰æ¶ˆæ¯ï¼Œä¸€æ¬¡æœ€å¤šæ‹‰å¤šå°‘æ¡
      */
     private int pullBatchSize = 32;
 
@@ -154,9 +154,9 @@ public class DefaultMQPushConsumer extends ClientConfig implements MQPushConsume
 
     /**
      *
-     * @param consumerGroup Ïû·ÑÕß·Ö×é
-     * @param rpcHook ¸øbroker·¢ËÍÇëÇóµÄ¹³×Ó£¬¿ÉÒÔÔÚÇëÇóÇ°ºóÖ²ÈëÀ¹½Ø´¦Àí¡£
-     * @param allocateMessageQueueStrategy Ïû·ÑÕß·Öµ£topicÏÂ¶ÓÁĞµÄ²ßÂÔ£¬Ä¬ÈÏÊÇ¾ùÌ¯Ïû·Ñ(´óÖÂ£©
+     * @param consumerGroup æ¶ˆè´¹è€…åˆ†ç»„
+     * @param rpcHook ç»™brokerå‘é€è¯·æ±‚çš„é’©å­ï¼Œå¯ä»¥åœ¨è¯·æ±‚å‰åæ¤å…¥æ‹¦æˆªå¤„ç†ã€‚
+     * @param allocateMessageQueueStrategy æ¶ˆè´¹è€…åˆ†æ‹…topicä¸‹é˜Ÿåˆ—çš„ç­–ç•¥ï¼Œé»˜è®¤æ˜¯å‡æ‘Šæ¶ˆè´¹(å¤§è‡´ï¼‰
      */
     public DefaultMQPushConsumer(final String consumerGroup, RPCHook rpcHook, AllocateMessageQueueStrategy allocateMessageQueueStrategy) {
         this.consumerGroup = consumerGroup;
@@ -240,7 +240,7 @@ public class DefaultMQPushConsumer extends ClientConfig implements MQPushConsume
 
 
     /**
-     * Ö¸¶¨Î»µã´ÓÄÄ¶ù¿ªÊ¼¡£
+     * æŒ‡å®šä½ç‚¹ä»å“ªå„¿å¼€å§‹ã€‚
      * @param consumeFromWhere
      */
     public void setConsumeFromWhere(ConsumeFromWhere consumeFromWhere) {
@@ -309,7 +309,7 @@ public class DefaultMQPushConsumer extends ClientConfig implements MQPushConsume
 
 
     /**
-     * Ö¸¶¨Ïû·ÑÄ£Ê½ÊÇ¼¯Èº»¹ÊÇ¹ã²¥Ïû·Ñ¡£
+     * æŒ‡å®šæ¶ˆè´¹æ¨¡å¼æ˜¯é›†ç¾¤è¿˜æ˜¯å¹¿æ’­æ¶ˆè´¹ã€‚
      * @param messageModel
      */
     public void setMessageModel(MessageModel messageModel) {
@@ -412,10 +412,10 @@ public class DefaultMQPushConsumer extends ClientConfig implements MQPushConsume
 
 
     /**
-     * ¶©ÔÄtopic .
-     * @param topic ÏûÏ¢Ö÷Ìâ
-     * @param subExpression Ö»Ö§³ÖÓĞÏŞµÄ¹ıÂË±í´ïÊ½£¬  ±ÈÈç£º * »òÕß null ÒâÎ¶×ÅËùÓĞtopicµÄÏûÏ¢¶¼±»¶©ÔÄ¡£
-     *                          tagA || tagB ÓÃÊúÏß·Ö¸î£¬±êÊ¶¶©ÔÄÄ³¼¸¸ötags .
+     * è®¢é˜…topic .
+     * @param topic æ¶ˆæ¯ä¸»é¢˜
+     * @param subExpression åªæ”¯æŒæœ‰é™çš„è¿‡æ»¤è¡¨è¾¾å¼ï¼Œ  æ¯”å¦‚ï¼š * æˆ–è€… null æ„å‘³ç€æ‰€æœ‰topicçš„æ¶ˆæ¯éƒ½è¢«è®¢é˜…ã€‚
+     *                          tagA || tagB ç”¨ç«–çº¿åˆ†å‰²ï¼Œæ ‡è¯†è®¢é˜…æŸå‡ ä¸ªtags .
      *            subscription expression.it only support or operation such as
      *            "tag1 || tag2 || tag3" <br>
      *            if null or * expression,meaning subscribe all

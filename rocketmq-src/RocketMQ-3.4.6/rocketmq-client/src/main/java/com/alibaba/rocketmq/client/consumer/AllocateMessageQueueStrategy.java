@@ -23,13 +23,13 @@ import java.util.List;
 
 /**
  * Strategy Algorithm for message allocating between consumers
- * Rebalance Ëã·¨ÊµÏÖ²ßÂÔ
+ * Rebalance ç®—æ³•å®ç°ç­–ç•¥
  * @author shijia.wxr
  * @author vongosling
- * AllocateMessageQueueStrategyÊµÏÖÔÚÀà AllocateMessageQueueAveragely  AllocateMessageQueueByMachineRoom  AllocateMessageQueueByConfig
- * AllocateMessageQueueAveragelyByCircle  Rebalance Ëã·¨ÊµÏÖ²ßÂÔ
+ * AllocateMessageQueueStrategyå®ç°åœ¨ç±» AllocateMessageQueueAveragely  AllocateMessageQueueByMachineRoom  AllocateMessageQueueByConfig
+ * AllocateMessageQueueAveragelyByCircle  Rebalance ç®—æ³•å®ç°ç­–ç•¥
  */
-public interface AllocateMessageQueueStrategy { //ÊôÓÚÍ¬Ò»Ïû·Ñ·Ö×éµÄÏû·ÑÕß°´ÕÕÊ²Ã´·½·¨Ïû·Ñ£¬ÀıÈç3¸öÏû·ÑÕßÏû·ÑtopicÉÏµÄÏûÏ¢£¬¸ÃtopicÒ»¹²10¸ö¶ÓÁĞ£¬¸ÃÈçºÎÏû·Ñ
+public interface AllocateMessageQueueStrategy { //å±äºåŒä¸€æ¶ˆè´¹åˆ†ç»„çš„æ¶ˆè´¹è€…æŒ‰ç…§ä»€ä¹ˆæ–¹æ³•æ¶ˆè´¹ï¼Œä¾‹å¦‚3ä¸ªæ¶ˆè´¹è€…æ¶ˆè´¹topicä¸Šçš„æ¶ˆæ¯ï¼Œè¯¥topicä¸€å…±10ä¸ªé˜Ÿåˆ—ï¼Œè¯¥å¦‚ä½•æ¶ˆè´¹
 
     /**
      * Allocating by consumer id

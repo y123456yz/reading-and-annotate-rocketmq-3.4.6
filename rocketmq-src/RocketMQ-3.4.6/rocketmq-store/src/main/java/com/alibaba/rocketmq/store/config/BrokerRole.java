@@ -20,7 +20,7 @@ package com.alibaba.rocketmq.store.config;
  * @author shijia.wxr
  */
 public enum BrokerRole {
-    ASYNC_MASTER, //�����첽��ʽ�첽��ʽ�£�broker��
-    SYNC_MASTER, //�����첽��ʽͬ����ʽ�£�broker��
+    ASYNC_MASTER, //主备异步方式异步方式下，broker主
+    SYNC_MASTER, //主备异步方式同步方式下，broker主
     SLAVE
 }

@@ -29,8 +29,8 @@ import com.alibaba.rocketmq.remoting.exception.RemotingCommandException;
 /**
  * @author shijia.wxr
  */
-//MSGÍ·²¿ÄÚÈİÔÚsendKernelImpl×é°ü·¢ËÍ, bodyÄÚÈİ¸³ÖµÔÚmQClientFactory.getMQClientAPIImpl().sendMessage
-//½â°üÔÚparseRequestHeader
+//MSGå¤´éƒ¨å†…å®¹åœ¨sendKernelImplç»„åŒ…å‘é€, bodyå†…å®¹èµ‹å€¼åœ¨mQClientFactory.getMQClientAPIImpl().sendMessage
+//è§£åŒ…åœ¨parseRequestHeader
 public class SendMessageRequestHeader implements CommandCustomHeader {
     @CFNotNull
     private String producerGroup;
@@ -45,7 +45,7 @@ public class SendMessageRequestHeader implements CommandCustomHeader {
     @CFNotNull
     private Integer sysFlag;
     @CFNotNull
-    //ÏûÏ¢ÔÚÍ¶µİÕßµÄÉú³ÉÊ±¼ä¡£
+    //æ¶ˆæ¯åœ¨æŠ•é€’è€…çš„ç”Ÿæˆæ—¶é—´ã€‚
     private Long bornTimestamp;
     @CFNotNull
     private Integer flag;

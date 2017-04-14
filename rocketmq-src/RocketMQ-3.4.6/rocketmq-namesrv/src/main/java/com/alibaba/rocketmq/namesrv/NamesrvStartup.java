@@ -102,11 +102,11 @@ root     122841 122839  0  2016 ?        02:27:23 /opt/jdk/jdk1.7.0_71/bin/java 
             [yazhou.yang@s10-2-x-x logs]$
             [yazhou.yang@s10-2-x-x logs]$ cat /opt/rocketmq/alibaba-rocketmq/conf/nameserver-config.properties
             listenPort=9998
-            * */ /* Ä¬ÈÏÊÇ9876¶Ë¿Ú£¬µ«ÊÇ¿ÉÒÔÍ¨¹ıÆô¶¯ mqnamesrv µÄÊ±ºò¼ÓÉÏ-c²ÎÊıÖ¸¶¨ÅäÖÃÎÄ¼ş£¬Ö¸¶¨¶Ë¿Ú */
+            * */ /* é»˜è®¤æ˜¯9876ç«¯å£ï¼Œä½†æ˜¯å¯ä»¥é€šè¿‡å¯åŠ¨ mqnamesrv çš„æ—¶å€™åŠ ä¸Š-cå‚æ•°æŒ‡å®šé…ç½®æ–‡ä»¶ï¼ŒæŒ‡å®šç«¯å£ */
             nettyServerConfig.setListenPort(9876);
-            if (commandLine.hasOption('c')) { //Æô¶¯µÄÊ±ºò´øÓĞ-c²ÎÊı
+            if (commandLine.hasOption('c')) { //å¯åŠ¨çš„æ—¶å€™å¸¦æœ‰-cå‚æ•°
                 String file = commandLine.getOptionValue('c');
-                if (file != null) { //»ñÈ¡¶ÔÓ¦µÄÅäÖÃÎÄ¼şĞÅÏ¢
+                if (file != null) { //è·å–å¯¹åº”çš„é…ç½®æ–‡ä»¶ä¿¡æ¯
                     InputStream in = new BufferedInputStream(new FileInputStream(file));
                     properties = new Properties();
                     properties.load(in);

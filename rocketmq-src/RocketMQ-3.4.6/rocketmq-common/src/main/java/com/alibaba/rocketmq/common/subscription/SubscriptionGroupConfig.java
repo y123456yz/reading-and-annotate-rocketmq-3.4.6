@@ -21,8 +21,8 @@ import com.alibaba.rocketmq.common.MixAll;
 
 
 /**
- * Ä³Ò»¸öÏû·ÑÕß·Ö×éµÄ¶©ÔÄÅäÖÃ¡£
- *£¬ ÖØÊÔ¶ÓÁĞ ÖØÊÔÏû·Ñ¶¼ÔÚÕâÀï
+ * æŸä¸€ä¸ªæ¶ˆè´¹è€…åˆ†ç»„çš„è®¢é˜…é…ç½®ã€‚
+ *ï¼Œ é‡è¯•é˜Ÿåˆ— é‡è¯•æ¶ˆè´¹éƒ½åœ¨è¿™é‡Œ
  * @author shijia.wxr
  */
 public class SubscriptionGroupConfig {
@@ -30,9 +30,9 @@ public class SubscriptionGroupConfig {
     private boolean consumeEnable = true;
     private boolean consumeFromMinEnable = true;
     private boolean consumeBroadcastEnable = true;
-    //Ä³¸öÏû·Ñ·Ö×éxxxx¶ÔÓ¦µÄÖØÊÔ¶ÓÁĞ£¬Èç¹ûÒ»¸öÏû·ÑÔò·Ö×éÏû·Ñ¶à¸ötopic£¬ÆäÖØÊÔ¶ÓÁĞÒ²Ö»ÓĞÒ»¸ö£¬¼´%RETRY%xxxx£¬±íÊ¾¸ÃÏû·ÑÕß·Ö×éÏû·ÑÊ§°ÜµÄÏûÏ¢È«²¿´æµ½¸ÃÖØÊÔ¶ÓÁĞÖĞ
-    private int retryQueueNums = 1; //Í¨¹ıbroker.properties ÖĞµÄretryMaxTimes½øĞĞÅäÖÃ£¬Èç¹ûÅäÖÃÎª0£¬±íÊ¾²»ÔÊĞíÓĞÖØÊÔ¶ÓÁĞ£¬Ïû·ÑÊ§°Ü´ò¹ıÀ´ºó£¬Ö±½Ó·µ»ØOK
-    private int retryMaxTimes = 16; //Ïû·ÑÊ§°ÜÖØÊÔÏû·Ñ×î´ó´ÎÊı broker.properties²ÎÊı¿ÉÅäÖÃ
+    //æŸä¸ªæ¶ˆè´¹åˆ†ç»„xxxxå¯¹åº”çš„é‡è¯•é˜Ÿåˆ—ï¼Œå¦‚æœä¸€ä¸ªæ¶ˆè´¹åˆ™åˆ†ç»„æ¶ˆè´¹å¤šä¸ªtopicï¼Œå…¶é‡è¯•é˜Ÿåˆ—ä¹Ÿåªæœ‰ä¸€ä¸ªï¼Œå³%RETRY%xxxxï¼Œè¡¨ç¤ºè¯¥æ¶ˆè´¹è€…åˆ†ç»„æ¶ˆè´¹å¤±è´¥çš„æ¶ˆæ¯å…¨éƒ¨å­˜åˆ°è¯¥é‡è¯•é˜Ÿåˆ—ä¸­
+    private int retryQueueNums = 1; //é€šè¿‡broker.properties ä¸­çš„retryMaxTimesè¿›è¡Œé…ç½®ï¼Œå¦‚æœé…ç½®ä¸º0ï¼Œè¡¨ç¤ºä¸å…è®¸æœ‰é‡è¯•é˜Ÿåˆ—ï¼Œæ¶ˆè´¹å¤±è´¥æ‰“è¿‡æ¥åï¼Œç›´æ¥è¿”å›OK
+    private int retryMaxTimes = 16; //æ¶ˆè´¹å¤±è´¥é‡è¯•æ¶ˆè´¹æœ€å¤§æ¬¡æ•° broker.propertieså‚æ•°å¯é…ç½®
     private long brokerId = MixAll.MASTER_ID;
     private long whichBrokerWhenConsumeSlowly = 1;
 

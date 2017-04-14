@@ -208,7 +208,7 @@ public class PullMessageProcessor implements NettyRequestProcessor {
 
         final boolean hasSuspendFlag = PullSysFlag.hasSuspendFlag(requestHeader.getSysFlag());
         final boolean hasCommitOffsetFlag = PullSysFlag.hasCommitOffsetFlag(requestHeader.getSysFlag());
-        final boolean hasSubscriptionFlag = PullSysFlag.hasSubscriptionFlag(requestHeader.getSysFlag()); //ÊÇ·ñÓĞ¶©ÔÄ±í´ïÊ½¡£
+        final boolean hasSubscriptionFlag = PullSysFlag.hasSubscriptionFlag(requestHeader.getSysFlag()); //æ˜¯å¦æœ‰è®¢é˜…è¡¨è¾¾å¼ã€‚
 
         final long suspendTimeoutMillisLong = hasSuspendFlag ? requestHeader.getSuspendTimeoutMillis() : 0;
 
@@ -223,7 +223,7 @@ public class PullMessageProcessor implements NettyRequestProcessor {
             return response;
         }
 
-        if (!PermName.isReadable(topicConfig.getPerm())) { //ÀıÈçSendMessageProcessor.consumerSendMsgBack ÖĞÄ¬ÈÏ´´½¨ËÀĞÅ¶ÓÁĞÊÇ¿ÉĞ´£¬µ«ÊÇ²»¿É¶Á
+        if (!PermName.isReadable(topicConfig.getPerm())) { //ä¾‹å¦‚SendMessageProcessor.consumerSendMsgBack ä¸­é»˜è®¤åˆ›å»ºæ­»ä¿¡é˜Ÿåˆ—æ˜¯å¯å†™ï¼Œä½†æ˜¯ä¸å¯è¯»
             response.setCode(ResponseCode.NO_PERMISSION);
             response.setRemark("the topic[" + requestHeader.getTopic() + "] pulling message is forbidden");
             return response;
@@ -241,11 +241,11 @@ public class PullMessageProcessor implements NettyRequestProcessor {
         }
 
         SubscriptionData subscriptionData = null;
-        if (hasSubscriptionFlag) { //Ïû·ÑÕß ÓĞ¶©ÔÄ±í´ïÊ½»òÕßÓĞgroovyÆ¥Åä½Å±¾¡£
+        if (hasSubscriptionFlag) { //æ¶ˆè´¹è€… æœ‰è®¢é˜…è¡¨è¾¾å¼æˆ–è€…æœ‰groovyåŒ¹é…è„šæœ¬ã€‚
             try {
                 subscriptionData =
                         FilterAPI.buildSubscriptionData(requestHeader.getConsumerGroup(),
-                            requestHeader.getTopic(), requestHeader.getSubscription(), requestHeader.getGroovyScript());
+                            requestHeader.getTopic(), requestHeader.getSubscription());
             }
             catch (Exception e) {
                 log.warn("parse the consumer's subscription[{}] failed, group: {}",
@@ -256,8 +256,8 @@ public class PullMessageProcessor implements NettyRequestProcessor {
                 return response;
             }
         }
-        else { //Ïû·ÑÕßÃ»ÓĞ ÔÚÄ³Ò»´ÎÀ­È¡Ê±Ìá½»¶©ÔÄ±í´ïÊ½ºÍgroovyÆ¥Åä½Å±¾¡£
-            //Ôò»ñÈ¡Ïû·ÑÕß·Ö×éµÄÅäÖÃĞÅÏ¢¡£
+        else { //æ¶ˆè´¹è€…æ²¡æœ‰ åœ¨æŸä¸€æ¬¡æ‹‰å–æ—¶æäº¤è®¢é˜…è¡¨è¾¾å¼å’ŒgroovyåŒ¹é…è„šæœ¬ã€‚
+            //åˆ™è·å–æ¶ˆè´¹è€…åˆ†ç»„çš„é…ç½®ä¿¡æ¯ã€‚
             ConsumerGroupInfo consumerGroupInfo =
                     this.brokerController.getConsumerManager().getConsumerGroupInfo(
                         requestHeader.getConsumerGroup());
@@ -270,7 +270,7 @@ public class PullMessageProcessor implements NettyRequestProcessor {
             }
 
             if (!subscriptionGroupConfig.isConsumeBroadcastEnable() //
-                    && consumerGroupInfo.getMessageModel() == MessageModel.BROADCASTING) { //Ïû·ÑÕß·Ö×éÎ´´ò¿ª¹ã²¥¶©ÔÄ·½Ê½¡£
+                    && consumerGroupInfo.getMessageModel() == MessageModel.BROADCASTING) { //æ¶ˆè´¹è€…åˆ†ç»„æœªæ‰“å¼€å¹¿æ’­è®¢é˜…æ–¹å¼ã€‚
                 response.setCode(ResponseCode.NO_PERMISSION);
                 response.setRemark("the consumer group[" + requestHeader.getConsumerGroup()
                         + "] can not consume by broadcast way");
@@ -286,7 +286,7 @@ public class PullMessageProcessor implements NettyRequestProcessor {
                 return response;
             }
 
-            if (subscriptionData.getSubVersion() < requestHeader.getSubVersion()) { //Ïû·ÑÕß·Ö×éÏÂµÄ¶©ÔÄ°æ±¾±ÈÓÃ»§ÇëÇóÍ·ÖĞµÄ¶©ÔÄ°æ±¾µÍ¡£
+            if (subscriptionData.getSubVersion() < requestHeader.getSubVersion()) { //æ¶ˆè´¹è€…åˆ†ç»„ä¸‹çš„è®¢é˜…ç‰ˆæœ¬æ¯”ç”¨æˆ·è¯·æ±‚å¤´ä¸­çš„è®¢é˜…ç‰ˆæœ¬ä½ã€‚
                 log.warn("the broker's subscription is not latest, group: {} {}",
                     requestHeader.getConsumerGroup(), subscriptionData.getSubString());
                 response.setCode(ResponseCode.SUBSCRIPTION_NOT_LATEST);
@@ -305,7 +305,7 @@ public class PullMessageProcessor implements NettyRequestProcessor {
             responseHeader.setMinOffset(getMessageResult.getMinOffset());
             responseHeader.setMaxOffset(getMessageResult.getMaxOffset());
 
-            if (getMessageResult.isSuggestPullingFromSlave()) { //½¨Òé´Óbrokerid=1 µÄslaveÀ­È¡¡£
+            if (getMessageResult.isSuggestPullingFromSlave()) { //å»ºè®®ä»brokerid=1 çš„slaveæ‹‰å–ã€‚
                 responseHeader.setSuggestWhichBrokerId(subscriptionGroupConfig
                     .getWhichBrokerWhenConsumeSlowly());
                 log.warn(
@@ -314,7 +314,7 @@ public class PullMessageProcessor implements NettyRequestProcessor {
                     subscriptionData.getSubString(), requestHeader.getQueueId(),
                     requestHeader.getQueueOffset());
             }
-            else { //À­ÏûÏ¢Ê±Ã»ÓĞ½¨Òé´ÓslaveÀ­È¡, ÔòÄ¬ÈÏ»¹ÊÇ´Óbrokerid=0 À­È¡¡£
+            else { //æ‹‰æ¶ˆæ¯æ—¶æ²¡æœ‰å»ºè®®ä»slaveæ‹‰å–, åˆ™é»˜è®¤è¿˜æ˜¯ä»brokerid=0 æ‹‰å–ã€‚
                 responseHeader.setSuggestWhichBrokerId(subscriptionGroupConfig.getBrokerId());
             }
 
@@ -345,14 +345,14 @@ public class PullMessageProcessor implements NettyRequestProcessor {
                 }
 
                 break;
-            case MESSAGE_WAS_REMOVING: //ÓĞÎ»µãÒÆ¶¯£¬ ¸æÖªÏû·ÑÕßÁ¢¼´À­ÏÂÒ»Åú¡£
+            case MESSAGE_WAS_REMOVING: //æœ‰ä½ç‚¹ç§»åŠ¨ï¼Œ å‘ŠçŸ¥æ¶ˆè´¹è€…ç«‹å³æ‹‰ä¸‹ä¸€æ‰¹ã€‚
                 response.setCode(ResponseCode.PULL_RETRY_IMMEDIATELY);
                 break;
             case NO_MATCHED_LOGIC_QUEUE:
             case NO_MESSAGE_IN_QUEUE:
                 if (0 != requestHeader.getQueueOffset()) {
-                    //ÇëÇóµÄÎ»µã·Ç0  £¬µ«ÊÇÃ»ÓĞÕÒµ½ÏûÏ¢»òÕßÃ»ÓĞÕÒµ½Æ¥ÅäµÄÂß¼­¶ÓÁĞ£¬ ¸æÖªÏû·Ñ¶Ë £¬
-                    //ÒªÒÆ¶¯Î»µã¡£
+                    //è¯·æ±‚çš„ä½ç‚¹é0  ï¼Œä½†æ˜¯æ²¡æœ‰æ‰¾åˆ°æ¶ˆæ¯æˆ–è€…æ²¡æœ‰æ‰¾åˆ°åŒ¹é…çš„é€»è¾‘é˜Ÿåˆ—ï¼Œ å‘ŠçŸ¥æ¶ˆè´¹ç«¯ ï¼Œ
+                    //è¦ç§»åŠ¨ä½ç‚¹ã€‚
                     response.setCode(ResponseCode.PULL_OFFSET_MOVED);
 
                     log.info(
@@ -465,13 +465,13 @@ public class PullMessageProcessor implements NettyRequestProcessor {
                         log.error("transfer many message by pagecache exception", e);
                         getMessageResult.release();
                     }
-                    //Ö±½Ó×özero copy·¢ËÍ¸øclient .
+                    //ç›´æ¥åšzero copyå‘é€ç»™client .
                     response = null;
                 }
                 break;
-            case ResponseCode.PULL_NOT_FOUND: //Î´À­È¡µ½ÏûÏ¢
-                if (brokerAllowSuspend && hasSuspendFlag) { // DefaultMQPushConsumerImpl µÄ591ĞĞ £¬Ïû·ÑÕßÉèÖÃÁËsuspendµÄsysflag;
-                    long pollingTimeMills = suspendTimeoutMillisLong; //À­È¡²»µ½ÏûÏ¢Ê±Ä¬ÈÏ15sµÄsupspend
+            case ResponseCode.PULL_NOT_FOUND: //æœªæ‹‰å–åˆ°æ¶ˆæ¯
+                if (brokerAllowSuspend && hasSuspendFlag) { // DefaultMQPushConsumerImpl çš„591è¡Œ ï¼Œæ¶ˆè´¹è€…è®¾ç½®äº†suspendçš„sysflag;
+                    long pollingTimeMills = suspendTimeoutMillisLong; //æ‹‰å–ä¸åˆ°æ¶ˆæ¯æ—¶é»˜è®¤15sçš„supspend
                     if (!this.brokerController.getBrokerConfig().isLongPollingEnable()) {
                         pollingTimeMills = this.brokerController.getBrokerConfig().getShortPollingTimeMills();
                     }
@@ -529,7 +529,7 @@ public class PullMessageProcessor implements NettyRequestProcessor {
         storeOffsetEnable = storeOffsetEnable && hasCommitOffsetFlag;
         storeOffsetEnable = storeOffsetEnable
                 && this.brokerController.getMessageStoreConfig().getBrokerRole() != BrokerRole.SLAVE;
-        if (storeOffsetEnable) { //´æ´¢Ïû·ÑÕß·Ö×é¶ÔtopicÖ¸¶¨¶ÓÁĞµÄÏû·ÑÎ»µã£¨Âß¼­£© ¡£
+        if (storeOffsetEnable) { //å­˜å‚¨æ¶ˆè´¹è€…åˆ†ç»„å¯¹topicæŒ‡å®šé˜Ÿåˆ—çš„æ¶ˆè´¹ä½ç‚¹ï¼ˆé€»è¾‘ï¼‰ ã€‚
             this.brokerController.getConsumerOffsetManager().commitOffset(requestHeader.getConsumerGroup(),
                 requestHeader.getTopic(), requestHeader.getQueueId(), requestHeader.getCommitOffset());
         }

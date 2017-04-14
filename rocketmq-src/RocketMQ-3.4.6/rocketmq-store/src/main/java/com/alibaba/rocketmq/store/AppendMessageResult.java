@@ -24,15 +24,15 @@ package com.alibaba.rocketmq.store;
 public class AppendMessageResult {
     // Return code
     private AppendMessageStatus status;
-    // Where to start writing   , ´ÓcommitlogµÄÄÄ¸öÎïÀíÎ»µã¿ªÊ¼Ğ´¡£
+    // Where to start writing   , ä»commitlogçš„å“ªä¸ªç‰©ç†ä½ç‚¹å¼€å§‹å†™ã€‚
     private long wroteOffset;
-    // Write Bytes Ğ´ÁË¶àÉÙ×Ö½Ú¡£
+    // Write Bytes å†™äº†å¤šå°‘å­—èŠ‚ã€‚
     private int wroteBytes;
-    // Message ID ÏûÏ¢Î¨Ò»±êÊ¶¡£
+    // Message ID æ¶ˆæ¯å”¯ä¸€æ ‡è¯†ã€‚
     private String msgId;
-    // Message storage timestamp Ğ´ÈëÊ±¼ä¡£
+    // Message storage timestamp å†™å…¥æ—¶é—´ã€‚
     private long storeTimestamp;
-    // Consume queue's offset(step by one) Ïû·Ñ¶ÓÁĞµÄÂß¼­Î»µã¡£
+    // Consume queue's offset(step by one) æ¶ˆè´¹é˜Ÿåˆ—çš„é€»è¾‘ä½ç‚¹ã€‚
     private long logicsOffset;
 
 

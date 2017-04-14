@@ -19,14 +19,14 @@ package com.alibaba.rocketmq.client.impl.consumer;
 import com.alibaba.rocketmq.common.message.MessageQueue;
 
 
-/** Ò»¸öÏû·Ñ¶ÓÁÐµÄÀ­È¡ÇëÇó¡£  Ò»°ãÓÐ¶àÉÙ¸ö¶ÓÁÐ¾ÍÓÐ¶àÉÙ¸öPullRequest   ÔÚ PullMessageService.run ÖÐÍ¨¹ý¸ÃPullRequestÀ´À­È¡ÏûÏ¢
+/** ä¸€ä¸ªæ¶ˆè´¹é˜Ÿåˆ—çš„æ‹‰å–è¯·æ±‚ã€‚  ä¸€èˆ¬æœ‰å¤šå°‘ä¸ªé˜Ÿåˆ—å°±æœ‰å¤šå°‘ä¸ªPullRequest   åœ¨ PullMessageService.run ä¸­é€šè¿‡è¯¥PullRequestæ¥æ‹‰å–æ¶ˆæ¯
  * @author shijia.wxr  //RebalancePushImpl.dispatchPullRequest
  */
 public class PullRequest {
     private String consumerGroup;
     private MessageQueue messageQueue;
     private ProcessQueue processQueue;
-    private long nextOffset; //Ïû·Ñ¶ÓÁÐµÄÂß¼­Î»µã¡£
+    private long nextOffset; //æ¶ˆè´¹é˜Ÿåˆ—çš„é€»è¾‘ä½ç‚¹ã€‚
 
 
     public String getConsumerGroup() {
@@ -53,7 +53,7 @@ public class PullRequest {
         return nextOffset;
     }
 
-    //DefaultMQPushConsumerImpl.pullMessage->PullCallback.onSuccessÖÐ¸³Öµ
+    //DefaultMQPushConsumerImpl.pullMessage->PullCallback.onSuccessä¸­èµ‹å€¼
     public void setNextOffset(long nextOffset) {
         this.nextOffset = nextOffset;
     }

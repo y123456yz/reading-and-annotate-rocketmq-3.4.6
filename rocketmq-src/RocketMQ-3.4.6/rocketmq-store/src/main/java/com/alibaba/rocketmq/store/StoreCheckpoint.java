@@ -30,14 +30,14 @@ import java.nio.channels.FileChannel.MapMode;
 
 
 /**
- *Í¨¹ıcheckpointÎÄ¼ş´æ´¢ commitlog , consume queue(Ïû·ÑÎÄ¼ş) ,index file£¨°´msgkeyµÄ²éÑ¯Ë÷ÒıÎÄ¼ş£© µÄflushÊ±¼ä¡£
+ *é€šè¿‡checkpointæ–‡ä»¶å­˜å‚¨ commitlog , consume queue(æ¶ˆè´¹æ–‡ä»¶) ,index fileï¼ˆæŒ‰msgkeyçš„æŸ¥è¯¢ç´¢å¼•æ–‡ä»¶ï¼‰ çš„flushæ—¶é—´ã€‚
  *
  *
- * ¼ÓÔØ${user.home} \store\checkpoint Õâ¸öÎÄ¼ş´æ´¢ÁË3¸ölongÀàĞÍµÄÖµÀ´¼ÇÂ¼´æ´¢Ä£ĞÍ×îÖÕÒ»ÖÂµÄÊ±¼äµã£¬Õâ¸ö3¸ölongµÄÖµÎª
- physicMsgTimestampÎªcommitLog×îºóË¢ÅÌµÄÊ±¼ä
- logicMsgTimestampÎªconsumeQueue×îÖÕË¢ÅÌµÄÊ±¼ä
- indexMsgTimestampÎªË÷Òı×îÖÕË¢ÅÌÊ±¼ä
- checkpoint×÷ÓÃÊÇµ±Òì³£»Ö¸´Ê±ĞèÒª¸ù¾İcheckpointµãÀ´»Ö¸´ÏûÏ¢
+ * åŠ è½½${user.home} \store\checkpoint è¿™ä¸ªæ–‡ä»¶å­˜å‚¨äº†3ä¸ªlongç±»å‹çš„å€¼æ¥è®°å½•å­˜å‚¨æ¨¡å‹æœ€ç»ˆä¸€è‡´çš„æ—¶é—´ç‚¹ï¼Œè¿™ä¸ª3ä¸ªlongçš„å€¼ä¸º
+ physicMsgTimestampä¸ºcommitLogæœ€ååˆ·ç›˜çš„æ—¶é—´
+ logicMsgTimestampä¸ºconsumeQueueæœ€ç»ˆåˆ·ç›˜çš„æ—¶é—´
+ indexMsgTimestampä¸ºç´¢å¼•æœ€ç»ˆåˆ·ç›˜æ—¶é—´
+ checkpointä½œç”¨æ˜¯å½“å¼‚å¸¸æ¢å¤æ—¶éœ€è¦æ ¹æ®checkpointç‚¹æ¥æ¢å¤æ¶ˆæ¯
  * @author shijia.wxr
  */
 public class StoreCheckpoint {
@@ -45,11 +45,11 @@ public class StoreCheckpoint {
     private final RandomAccessFile randomAccessFile;
     private final FileChannel fileChannel;
     private final MappedByteBuffer mappedByteBuffer;
-    private volatile long physicMsgTimestamp = 0; //commitLog×îºóË¢ÅÌµÄÊ±¼ä
-    private volatile long logicsMsgTimestamp = 0; //consumeQueue×îÖÕË¢ÅÌµÄÊ±¼ä
-    private volatile long indexMsgTimestamp = 0; //Ë÷Òı×îÖÕË¢ÅÌÊ±¼ä
+    private volatile long physicMsgTimestamp = 0; //commitLogæœ€ååˆ·ç›˜çš„æ—¶é—´
+    private volatile long logicsMsgTimestamp = 0; //consumeQueueæœ€ç»ˆåˆ·ç›˜çš„æ—¶é—´
+    private volatile long indexMsgTimestamp = 0; //ç´¢å¼•æœ€ç»ˆåˆ·ç›˜æ—¶é—´
 
-    // /root/store/checkpointÎÄ¼ş
+    // /root/store/checkpointæ–‡ä»¶
     public StoreCheckpoint(final String scpPath) throws IOException {
         File file = new File(scpPath);
         MapedFile.ensureDirOK(file.getParent());

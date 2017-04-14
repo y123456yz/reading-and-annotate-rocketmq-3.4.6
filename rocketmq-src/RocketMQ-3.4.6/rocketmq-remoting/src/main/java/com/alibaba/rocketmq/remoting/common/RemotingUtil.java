@@ -156,7 +156,7 @@ public class RemotingUtil {
         }
     }
 
-    //解析IP:PORT，存入类InetSocketAddress
+    //瑙ｆ瀽IP:PORT锛屽瓨鍏ョ被InetSocketAddress
     public static SocketAddress string2SocketAddress(final String addr) {
         String[] s = addr.split(":");
         InetSocketAddress isa = new InetSocketAddress(s[0], Integer.valueOf(s[1]));

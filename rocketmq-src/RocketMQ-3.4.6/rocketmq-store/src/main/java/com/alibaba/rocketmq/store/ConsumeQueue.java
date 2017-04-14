@@ -26,13 +26,13 @@ import java.util.List;
 
 
 /**
- *ConsumeQueue ÊÇcommitlogµÄË÷Òı£¬Ò²ÊÇÒÔMapfileÎª´æ´¢¡£
- * Ã¿Ò»¸öÔªËØ°üº¬ÁË
- * 8×Ö½Úcommitlog offset + 4×Ö½Úcommitlog´óĞ¡ + 4×Ö½Úmsgtag hashcode .
+ *ConsumeQueue æ˜¯commitlogçš„ç´¢å¼•ï¼Œä¹Ÿæ˜¯ä»¥Mapfileä¸ºå­˜å‚¨ã€‚
+ * æ¯ä¸€ä¸ªå…ƒç´ åŒ…å«äº†
+ * 8å­—èŠ‚commitlog offset + 4å­—èŠ‚commitlogå¤§å° + 4å­—èŠ‚msgtag hashcode .
  *
- * Âß¼­ÉÏ£¬Ò»¸ö¶ÓÁĞÊÇºÍÄ³Ò»¸öTopicÏà¹ØµÄ£¬ÓĞ×Ô¼ºµÄ¶ÓÁĞid .
+ * é€»è¾‘ä¸Šï¼Œä¸€ä¸ªé˜Ÿåˆ—æ˜¯å’ŒæŸä¸€ä¸ªTopicç›¸å…³çš„ï¼Œæœ‰è‡ªå·±çš„é˜Ÿåˆ—id .
  *
- *Consume Queue´æ´¢ÏûÏ¢ÔÚCommit LogÖĞµÄÎ»ÖÃĞÅÏ¢
+ *Consume Queueå­˜å‚¨æ¶ˆæ¯åœ¨Commit Logä¸­çš„ä½ç½®ä¿¡æ¯
  *
  [root@s10-2-s-5 topic-prod-xxxxxservice-xxxxx]# pwd
  /data/store/consumequeue/topic-prod-xxxxxservice-xxxxx
@@ -42,36 +42,36 @@ import java.util.List;
  00000000000048000000  00000000000054000000  00000000000060000000  00000000000066000000  00000000000072000000  00000000000078000000  00000000000084000000  00000000000090000000  00000000000096000000  00000000000102000000
  [root@s10-2-s-5 topic-prod-xxxxxservice-xxxxx]#
  *
- * ConsumeQueueÖĞ²¢²»ĞèÒª´æ´¢ÏûÏ¢µÄÄÚÈİ£¬¶ø´æ´¢µÄÊÇÏûÏ¢ÔÚCommitLogÖĞµÄoffset¡£Ò²¾ÍÊÇËµ£¬ConsumeQuueÆäÊµÊÇCommitLogµÄÒ»¸öË÷ÒıÎÄ¼ş¡£
- *ConsumeQueueÊÇ¶¨³¤µÄ½á¹¹£¬Ã¿1Ìõ¼ÇÂ¼¹Ì¶¨µÄ20¸ö×Ö½Ú¡£ºÜÏÔÈ»£¬ConsumerÏû·ÑÏûÏ¢µÄÊ±ºò£¬Òª¶Á2´Î£ºÏÈ¶ÁConsumeQueueµÃµ½offset£¬ÔÙ¶ÁCommitLogµÃµ½ÏûÏ¢ÄÚÈİ¡£
- * ²Î¿¼:http://blog.csdn.net/chunlongyu/article/details/54576649
+ * ConsumeQueueä¸­å¹¶ä¸éœ€è¦å­˜å‚¨æ¶ˆæ¯çš„å†…å®¹ï¼Œè€Œå­˜å‚¨çš„æ˜¯æ¶ˆæ¯åœ¨CommitLogä¸­çš„offsetã€‚ä¹Ÿå°±æ˜¯è¯´ï¼ŒConsumeQuueå…¶å®æ˜¯CommitLogçš„ä¸€ä¸ªç´¢å¼•æ–‡ä»¶ã€‚
+ *ConsumeQueueæ˜¯å®šé•¿çš„ç»“æ„ï¼Œæ¯1æ¡è®°å½•å›ºå®šçš„20ä¸ªå­—èŠ‚ã€‚å¾ˆæ˜¾ç„¶ï¼ŒConsumeræ¶ˆè´¹æ¶ˆæ¯çš„æ—¶å€™ï¼Œè¦è¯»2æ¬¡ï¼šå…ˆè¯»ConsumeQueueå¾—åˆ°offsetï¼Œå†è¯»CommitLogå¾—åˆ°æ¶ˆæ¯å†…å®¹ã€‚
+ * å‚è€ƒ:http://blog.csdn.net/chunlongyu/article/details/54576649
  * http://blog.csdn.net/chunlongyu/article/details/54576649
  *
  *
- *DefaultMessageStore.loadConsumeQueue brokerÆğÀ´ºó£¬´Ó/data/store/consumequeueÂ·¾¶¶ÁÈ¡¶ÔÓ¦topicÖĞ¸÷¸ö¶ÓÁĞµÄcommit logË÷ÒıĞÅÏ¢
- * ±éÀú${user.home} \store\consumequeue\${topic}\${queueId}ÏÂËùÓĞÎÄ¼ş£¬¸ù¾İtopic£¬ queueId£¬ ÎÄ¼şÀ´¹¹½¨ConsueQueue¶ÔÏó
+ *DefaultMessageStore.loadConsumeQueue brokerèµ·æ¥åï¼Œä»/data/store/consumequeueè·¯å¾„è¯»å–å¯¹åº”topicä¸­å„ä¸ªé˜Ÿåˆ—çš„commit logç´¢å¼•ä¿¡æ¯
+ * éå†${user.home} \store\consumequeue\${topic}\${queueId}ä¸‹æ‰€æœ‰æ–‡ä»¶ï¼Œæ ¹æ®topicï¼Œ queueIdï¼Œ æ–‡ä»¶æ¥æ„å»ºConsueQueueå¯¹è±¡
  * @author shijia.wxr
  */
 public class ConsumeQueue {
-    //8×Ö½Úcommitlog offset + 4×Ö½Úcommit log item size + 8×Ö½Úmessage tag hashcode.
-    public static final int CQStoreUnitSize = 20; //¼ûROCKETMQ¿ª·¢ÊÖ²á±í7-1
+    //8å­—èŠ‚commitlog offset + 4å­—èŠ‚commit log item size + 8å­—èŠ‚message tag hashcode.
+    public static final int CQStoreUnitSize = 20; //è§ROCKETMQå¼€å‘æ‰‹å†Œè¡¨7-1
     private static final Logger log = LoggerFactory.getLogger(LoggerName.StoreLoggerName);
     private static final Logger logError = LoggerFactory.getLogger(LoggerName.StoreErrorLoggerName);
     private final DefaultMessageStore defaultMessageStore;
-    //Ã¿¸öÏû·Ñ¶ÓÁĞ×îÖÕÒ²ÊÇÍ¨¹ıMapfileÀ´²Ù×÷µÄ¡£ ConsumeQueue.ConsumeQueue ÖĞ¸³Öµ
-    //ÎŞÂÛCommitLog£¬»¹ÊÇConsumeQueue£¬¶¼ÓĞÒ»¸ö¶ÔÓ¦µÄMappedFileQueue£¬Ò²¾ÍÊÇ¶ÔÓ¦µÄÄÚ´æÓ³ÉäÎÄ¼şµÄÁ´±í
+    //æ¯ä¸ªæ¶ˆè´¹é˜Ÿåˆ—æœ€ç»ˆä¹Ÿæ˜¯é€šè¿‡Mapfileæ¥æ“ä½œçš„ã€‚ ConsumeQueue.ConsumeQueue ä¸­èµ‹å€¼
+    //æ— è®ºCommitLogï¼Œè¿˜æ˜¯ConsumeQueueï¼Œéƒ½æœ‰ä¸€ä¸ªå¯¹åº”çš„MappedFileQueueï¼Œä¹Ÿå°±æ˜¯å¯¹åº”çš„å†…å­˜æ˜ å°„æ–‡ä»¶çš„é“¾è¡¨
     private final MapedFileQueue mapedFileQueue;
     private final String topic;
     private final int queueId;
     private final ByteBuffer byteBufferIndex;
     private final String storePath;
-    private final int mapedFileSize; //Í¨¹ı MessageStoreConfig.getMapedFileSizeConsumeQueue ¼ÆËã£¬Ä¬ÈÏÎª30W¸ö CQStoreUnitSize´óĞ¡
+    private final int mapedFileSize; //é€šè¿‡ MessageStoreConfig.getMapedFileSizeConsumeQueue è®¡ç®—ï¼Œé»˜è®¤ä¸º30Wä¸ª CQStoreUnitSizeå¤§å°
     /**
-     * ×î´ócommitlogµÄÎ»µã¡£
+     * æœ€å¤§commitlogçš„ä½ç‚¹ã€‚
      */
     private long maxPhysicOffset = -1;
     /**
-     * Ïû·Ñ¶ÓÁĞµÄmapfileµÄ×îĞ¡ÎïÀíÎ»µã, ,±ÈÈç£º Èç¹ûÕâ¸öÖµÊÇ40 £¬Ôò¶ÓÁĞµÄÂß¼­Î»µãÊµ¼ÊÉÏÊÇ40/20=2
+     * æ¶ˆè´¹é˜Ÿåˆ—çš„mapfileçš„æœ€å°ç‰©ç†ä½ç‚¹, ,æ¯”å¦‚ï¼š å¦‚æœè¿™ä¸ªå€¼æ˜¯40 ï¼Œåˆ™é˜Ÿåˆ—çš„é€»è¾‘ä½ç‚¹å®é™…ä¸Šæ˜¯40/20=2
      */
     private volatile long minLogicOffset = 0;
 
@@ -99,7 +99,7 @@ public class ConsumeQueue {
         this.byteBufferIndex = ByteBuffer.allocate(CQStoreUnitSize);
     }
 
-    //DefaultMessageStore.loadConsumeQueue ÖĞ¼ÓÔØ
+    //DefaultMessageStore.loadConsumeQueue ä¸­åŠ è½½
     public boolean load() {
         boolean result = this.mapedFileQueue.load();
         log.info("load consume queue " + this.topic + "-" + this.queueId + " " + (result ? "OK" : "Failed"));
@@ -109,7 +109,7 @@ public class ConsumeQueue {
     public void recover() {
         final List<MapedFile> mapedFiles = this.mapedFileQueue.getMapedFiles();
         if (!mapedFiles.isEmpty()) {
-            int index = mapedFiles.size() - 3; //×îºóÈı¸öÎÄ¼ş²»¿É¿¿£¿
+            int index = mapedFiles.size() - 3; //æœ€åä¸‰ä¸ªæ–‡ä»¶ä¸å¯é ï¼Ÿ
             if (index < 0)
                 index = 0;
 
@@ -179,7 +179,7 @@ public class ConsumeQueue {
                 ByteBuffer byteBuffer = sbr.getByteBuffer();
                 high = byteBuffer.limit() - CQStoreUnitSize;
                 try {
-                    while (high >= low) { //¶ş·Ö²éÕÒ
+                    while (high >= low) { //äºŒåˆ†æŸ¥æ‰¾
                         midOffset = (low + high) / (2 * CQStoreUnitSize) * CQStoreUnitSize;
                         byteBuffer.position(midOffset);
                         long phyOffset = byteBuffer.getLong();
@@ -190,7 +190,7 @@ public class ConsumeQueue {
                         if (storeTime < 0) {
                             return 0;
                         }
-                        else if (storeTime == timestamp) { //ÏûÏ¢µÄ´æ´¢Ê±¼ä´ÁÕıºÃºÍ²éÑ¯Ê±¼ä´ÁÎÇºÏ¡£
+                        else if (storeTime == timestamp) { //æ¶ˆæ¯çš„å­˜å‚¨æ—¶é—´æˆ³æ­£å¥½å’ŒæŸ¥è¯¢æ—¶é—´æˆ³å»åˆã€‚
                             targetOffset = midOffset;
                             break;
                         }
@@ -342,8 +342,8 @@ public class ConsumeQueue {
                         result.getByteBuffer().getInt(); //commitlog item size .
                         result.getByteBuffer().getLong(); //commitlog msgtag hashcode;
 
-                        if (offsetPy >= phyMinOffset) { //ÕÒµ½Ïû·Ñ¶ÓÁĞÖĞµÄÒ»¸öitem ,Õâ¸öitemÒıÓÃµÄcommitlog ÈÕÖ¾ÏîµÄÎ»µã±ÈphyMinOffset
-                            //±êÊ¶µÄÎ»µãÒª´ó¡£
+                        if (offsetPy >= phyMinOffset) { //æ‰¾åˆ°æ¶ˆè´¹é˜Ÿåˆ—ä¸­çš„ä¸€ä¸ªitem ,è¿™ä¸ªitemå¼•ç”¨çš„commitlog æ—¥å¿—é¡¹çš„ä½ç‚¹æ¯”phyMinOffset
+                            //æ ‡è¯†çš„ä½ç‚¹è¦å¤§ã€‚
                             this.minLogicOffset = result.getMapedFile().getFileFromOffset() + i;
                             log.info("compute logics min offset: " + this.getMinOffsetInQuque() + ", topic: "
                                     + this.topic + ", queueId: " + this.queueId);
@@ -368,12 +368,12 @@ public class ConsumeQueue {
 
 
     /**
-     * ÍùÏû·Ñ¶ÓÁĞ(CQ)ÖĞĞ´ÈëË÷ÒıÏî¡£
+     * å¾€æ¶ˆè´¹é˜Ÿåˆ—(CQ)ä¸­å†™å…¥ç´¢å¼•é¡¹ã€‚
      * @param offset commitlog offset
-     * @param size commitlogÖĞÏûÏ¢itemµÄ³¤¶È¡£
-     * @param tagsCode ¹ıÂËtagµÄhashcode.
-     * @param storeTimestamp ÏûÏ¢´æ´¢Ê±¼ä
-     * @param logicOffset  CQµÄÂß¼­Î»µã¡£
+     * @param size commitlogä¸­æ¶ˆæ¯itemçš„é•¿åº¦ã€‚
+     * @param tagsCode è¿‡æ»¤tagçš„hashcode.
+     * @param storeTimestamp æ¶ˆæ¯å­˜å‚¨æ—¶é—´
+     * @param logicOffset  CQçš„é€»è¾‘ä½ç‚¹ã€‚
      */
     public void putMessagePostionInfoWrapper(long offset, int size, long tagsCode, long storeTimestamp,
             long logicOffset) {
@@ -415,7 +415,7 @@ public class ConsumeQueue {
         this.byteBufferIndex.putInt(size);
         this.byteBufferIndex.putLong(tagsCode);
 
-        //CQ item ÔÚmapfileÖĞµÄÎïÀíÎ»µã (Âß¼­Î»µã ³ËÒÔ CQÖĞitemµÄ³¤¶È¡£)
+        //CQ item åœ¨mapfileä¸­çš„ç‰©ç†ä½ç‚¹ (é€»è¾‘ä½ç‚¹ ä¹˜ä»¥ CQä¸­itemçš„é•¿åº¦ã€‚)
         final long expectLogicOffset = cqOffset * CQStoreUnitSize;
 
         //
@@ -429,7 +429,7 @@ public class ConsumeQueue {
             }
 
             if (cqOffset != 0) {
-                //currentLogicOffsetÊÇCQ item ÔÚmapfileÖĞµÄÎïÀíÎ»µã¡£
+                //currentLogicOffsetæ˜¯CQ item åœ¨mapfileä¸­çš„ç‰©ç†ä½ç‚¹ã€‚
                 long currentLogicOffset = mapedFile.getWrotePostion() + mapedFile.getFileFromOffset();
                 if (expectLogicOffset != currentLogicOffset) {
                     logError
@@ -465,7 +465,7 @@ public class ConsumeQueue {
     }
 
     /**
-     * @param startIndex Ïû·Ñ¶ÓÁĞµÄÂß¼­Î»µã¡£
+     * @param startIndex æ¶ˆè´¹é˜Ÿåˆ—çš„é€»è¾‘ä½ç‚¹ã€‚
      * @return
      */
     public SelectMapedBufferResult getIndexBuffer(final long startIndex) {

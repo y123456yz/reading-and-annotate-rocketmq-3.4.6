@@ -76,7 +76,7 @@ public class BrokerStartup {
         start(createBrokerController(args));
     }
 
-    //´´½¨BrokerController£¬²¢ÇÒ¼ÓÔØ¸÷ÖÖÅäÖÃÎÄ¼ş¡¢/store/ÏÂÃæµÄ¸÷ÖÖÏûÏ¢´æ´¢ÎÄ¼ş¡¢topicĞÅÏ¢ Ïû·ÑÎ»µãĞÅÏ¢µÈ
+    //åˆ›å»ºBrokerControllerï¼Œå¹¶ä¸”åŠ è½½å„ç§é…ç½®æ–‡ä»¶ã€/store/ä¸‹é¢çš„å„ç§æ¶ˆæ¯å­˜å‚¨æ–‡ä»¶ã€topicä¿¡æ¯ æ¶ˆè´¹ä½ç‚¹ä¿¡æ¯ç­‰
     public static BrokerController createBrokerController(String[] args) {
         System.setProperty(RemotingCommand.RemotingVersionKey, Integer.toString(MQVersion.CurrentVersion));
 
@@ -103,7 +103,7 @@ public class BrokerStartup {
             final BrokerConfig brokerConfig = new BrokerConfig();
             final NettyServerConfig nettyServerConfig = new NettyServerConfig();
             final NettyClientConfig nettyClientConfig = new NettyClientConfig();
-            nettyServerConfig.setListenPort(10911); //Ä¬ÈÏ¼àÌı¶Ë¿Ú
+            nettyServerConfig.setListenPort(10911); //é»˜è®¤ç›‘å¬ç«¯å£
             final MessageStoreConfig messageStoreConfig = new MessageStoreConfig();
 
             if (BrokerRole.SLAVE == messageStoreConfig.getBrokerRole()) {
@@ -153,14 +153,14 @@ public class BrokerStartup {
 //                System.exit(-2);
 //            }
 
-            //½âÎöÅäÖÃÎÄ¼şÖĞµÄIP:PORT£»IP2£ºPORT2
+            //è§£æé…ç½®æ–‡ä»¶ä¸­çš„IP:PORTï¼›IP2ï¼šPORT2
             String namesrvAddr = brokerConfig.getNamesrvAddr();
             if (null != namesrvAddr) {
                 try {
                     String[] addrArray = namesrvAddr.split(";");
                     if (addrArray != null) {
                         for (String addr : addrArray) {
-                            //½âÎöIP:PORT£¬´æÈëÀàInetSocketAddress
+                            //è§£æIP:PORTï¼Œå­˜å…¥ç±»InetSocketAddress
                             RemotingUtil.string2SocketAddress(addr);
                         }
                     }
@@ -176,11 +176,11 @@ public class BrokerStartup {
 
             switch (messageStoreConfig.getBrokerRole()) {
             case ASYNC_MASTER:
-            case SYNC_MASTER: //MASTER IDºÅ¹Ì¶¨Îª0
+            case SYNC_MASTER: //MASTER IDå·å›ºå®šä¸º0
                 brokerConfig.setBrokerId(MixAll.MASTER_ID);
                 break;
             case SLAVE:
-                if (brokerConfig.getBrokerId() <= 0) { //broker ID±ØĞë´óÓÚ0
+                if (brokerConfig.getBrokerId() <= 0) { //broker IDå¿…é¡»å¤§äº0
                     System.out.println("Slave's brokerId must be > 0");
                     System.exit(-3);
                 }
@@ -190,14 +190,14 @@ public class BrokerStartup {
                 break;
             }
 
-            //slave¼àÌı¶Ë¿ÚºÅ£¬Ä¬ÈÏÎªMASTER¼àÌı¶Ë¿ÚºÅ¼Ó1£¬¼û//BrokerStartup.createBrokerController->setHaListenPort
+            //slaveç›‘å¬ç«¯å£å·ï¼Œé»˜è®¤ä¸ºMASTERç›‘å¬ç«¯å£å·åŠ 1ï¼Œè§//BrokerStartup.createBrokerController->setHaListenPort
             messageStoreConfig.setHaListenPort(nettyServerConfig.getListenPort() + 1);
 
             LoggerContext lc = (LoggerContext) LoggerFactory.getILoggerFactory();
             JoranConfigurator configurator = new JoranConfigurator();
             configurator.setContext(lc);
             lc.reset();
- 		   //¶ÁÈ¡ÅäÖÃÎÄ¼ş/conf/logback_broker.xml£¬ÈÕÖ¾´òÓ¡Ïà¹Ø
+ 		   //è¯»å–é…ç½®æ–‡ä»¶/conf/logback_broker.xmlï¼Œæ—¥å¿—æ‰“å°ç›¸å…³
             configurator.doConfigure(brokerConfig.getRocketmqHome() + "/conf/logback_broker.xml");
             log = LoggerFactory.getLogger(LoggerName.BrokerLoggerName);
 
@@ -212,7 +212,7 @@ public class BrokerStartup {
                 nettyClientConfig, //
                 messageStoreConfig);
 
-            boolean initResult = controller.initialize(); /* Ö÷ÒªÁ÷³ÌÔÚÕâÀïÃæ */
+            boolean initResult = controller.initialize(); /* ä¸»è¦æµç¨‹åœ¨è¿™é‡Œé¢ */
             if (!initResult) {
                 controller.shutdown();
                 System.exit(-3);

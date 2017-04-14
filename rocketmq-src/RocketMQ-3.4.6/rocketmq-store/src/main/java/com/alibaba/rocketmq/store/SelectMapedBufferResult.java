@@ -20,19 +20,19 @@ import java.nio.ByteBuffer;
 
 
 /**
- * @author shijia.wxr  SelectMapedBufferResultÀà»ñÈ¡µ½µÄÊÇmapedFileÖĞ´ÓstartOffset¿ªÊ¼µÄsize×Ö½ÚÊı¾İ£¬Õâsize×Ö½ÚÊı¾İ´æÈëbyteBuffer£¬¼ûMapedFile.selectMapedBuffer
+ * @author shijia.wxr  SelectMapedBufferResultç±»è·å–åˆ°çš„æ˜¯mapedFileä¸­ä»startOffsetå¼€å§‹çš„sizeå­—èŠ‚æ•°æ®ï¼Œè¿™sizeå­—èŠ‚æ•°æ®å­˜å…¥byteBufferï¼Œè§MapedFile.selectMapedBuffer
  */
 public class SelectMapedBufferResult {
-    //mapfileµÄÎïÀíÆğÊ¼Î»µã
+    //mapfileçš„ç‰©ç†èµ·å§‹ä½ç‚¹
     private final long startOffset;
-    //¶ÁÈ¡µ½µÄbytebuffer.
+    //è¯»å–åˆ°çš„bytebuffer.
     private final ByteBuffer byteBuffer;
-    //×Ö½ÚÊı×éµÄ³¤¶È¡£
+    //å­—èŠ‚æ•°ç»„çš„é•¿åº¦ã€‚
     private int size;
-    //´ÓÄÄ¸ömapfileÎÄ¼ş
+    //ä»å“ªä¸ªmapfileæ–‡ä»¶
     private MapedFile mapedFile;
 
-    //·µ»ØmapedFileÖĞ´ÓstartOffset¿ªÊ¼µÄsize×Ö½ÚÊı¾İ£¬²¢´æÈëbyteBuffer
+    //è¿”å›mapedFileä¸­ä»startOffsetå¼€å§‹çš„sizeå­—èŠ‚æ•°æ®ï¼Œå¹¶å­˜å…¥byteBuffer
     public SelectMapedBufferResult(long startOffset, ByteBuffer byteBuffer, int size, MapedFile mapedFile) {
         this.startOffset = startOffset;
         this.byteBuffer = byteBuffer;

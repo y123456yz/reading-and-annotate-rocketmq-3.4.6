@@ -118,7 +118,7 @@ public class RunningFlags {
     }
 
     /**
-     * ·µ»ØdiskFull±êÖ¾Î»ÊÇ·ñÒÑ¾­±»ÉèÖÃÉÏ , ²¢ÉèÖÃ´ÅÅÌÒÑ¾­ÂúµÄ±êÊ¶Î»¡£
+     * è¿”å›diskFullæ ‡å¿—ä½æ˜¯å¦å·²ç»è¢«è®¾ç½®ä¸Š , å¹¶è®¾ç½®ç£ç›˜å·²ç»æ»¡çš„æ ‡è¯†ä½ã€‚
      * @return
      */
     public boolean getAndMakeDiskFull() {

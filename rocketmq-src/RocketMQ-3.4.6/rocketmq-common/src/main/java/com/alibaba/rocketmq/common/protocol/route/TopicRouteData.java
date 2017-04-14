@@ -28,13 +28,13 @@ import java.util.List;
 
 
 /**
- * @author shijia.wxr       updateTopicRouteInfoFromNameServer»ñÈ¡topicRouteĞÅÏ¢
- * PullAPIWrapper.pullKernelImplÖĞµ÷ÓÃupdateTopicRouteInfoFromNameServer½øĞĞTopicRouteĞÅÏ¢¸üĞÂ£¬×îÖÕ±£´æÔÚMQClientInstance.topicRouteTable
+ * @author shijia.wxr       updateTopicRouteInfoFromNameServerè·å–topicRouteä¿¡æ¯
+ * PullAPIWrapper.pullKernelImplä¸­è°ƒç”¨updateTopicRouteInfoFromNameServerè¿›è¡ŒTopicRouteä¿¡æ¯æ›´æ–°ï¼Œæœ€ç»ˆä¿å­˜åœ¨MQClientInstance.topicRouteTable
  */
-public class TopicRouteData extends RemotingSerializable { //ËùÓĞµÄbrokerºÍ¶ÓÁĞĞÅÏ¢£¬¸³Öµ¼ûgetTopicRouteInfoFromNameServer
+public class TopicRouteData extends RemotingSerializable { //æ‰€æœ‰çš„brokerå’Œé˜Ÿåˆ—ä¿¡æ¯ï¼Œèµ‹å€¼è§getTopicRouteInfoFromNameServer
     private String orderTopicConf;
-    private List<QueueData> queueDatas;  //¶ÓÁĞĞÅÏ¢£¬
-    private List<BrokerData> brokerDatas; //brokerĞÅÏ¢
+    private List<QueueData> queueDatas;  //é˜Ÿåˆ—ä¿¡æ¯ï¼Œ
+    private List<BrokerData> brokerDatas; //brokerä¿¡æ¯
     private HashMap<String/* brokerAddr */, List<String>/* Filter Server */> filterServerTable;
 
 

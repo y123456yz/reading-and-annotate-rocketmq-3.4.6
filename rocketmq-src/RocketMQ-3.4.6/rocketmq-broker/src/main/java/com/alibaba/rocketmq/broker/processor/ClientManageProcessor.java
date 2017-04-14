@@ -258,7 +258,7 @@ public class ClientManageProcessor implements NettyRequestProcessor {
 
 
     /**
-     * broker½ÓÊÕclient·¢ËÍ¹ıÀ´µÄĞÄÌøĞÅÏ¢¡£
+     * brokeræ¥æ”¶clientå‘é€è¿‡æ¥çš„å¿ƒè·³ä¿¡æ¯ã€‚
      * @param ctx
      * @param request
      * @return
@@ -266,10 +266,10 @@ public class ClientManageProcessor implements NettyRequestProcessor {
     public RemotingCommand heartBeat(ChannelHandlerContext ctx, RemotingCommand request) {
         RemotingCommand response = RemotingCommand.createResponseCommand(null);
 
-        //½âÎöĞÄÌø°ü¡£
+        //è§£æå¿ƒè·³åŒ…ã€‚
         HeartbeatData heartbeatData = HeartbeatData.decode(request.getBody(), HeartbeatData.class);
 
-        //¿Í»§¶ËÍ¨µÀĞÅÏ¢¡£
+        //å®¢æˆ·ç«¯é€šé“ä¿¡æ¯ã€‚
         ClientChannelInfo clientChannelInfo = new ClientChannelInfo(//
             ctx.channel(),//
             heartbeatData.getClientID(),//
@@ -277,20 +277,20 @@ public class ClientManageProcessor implements NettyRequestProcessor {
             request.getVersion()//
                 );
 
-        //Ò»´ÎÑ­»·£¬ ¶ÔÓ¦µÄÊÇÒ»¸öÏû·ÑÕß·Ö×éµÄ¶©ÔÄÔªÊı¾İ¡£
-        //Ò²¾ÍÊÇËµ£¬ Èç¹ûÒ»¸öclientid(Ä¬ÈÏÊÇclientip@processid) Í¬Ê±·¢ËÍÁË¶à¸öconsumerdata
-        // Õâ¸öforÑ­»·´¦ÀíµÄ¾ÍÊÇ¶à¸öÏû·ÑÕß·Ö×éµÄ¶©ÔÄÔªÊı¾İ¡£
+        //ä¸€æ¬¡å¾ªç¯ï¼Œ å¯¹åº”çš„æ˜¯ä¸€ä¸ªæ¶ˆè´¹è€…åˆ†ç»„çš„è®¢é˜…å…ƒæ•°æ®ã€‚
+        //ä¹Ÿå°±æ˜¯è¯´ï¼Œ å¦‚æœä¸€ä¸ªclientid(é»˜è®¤æ˜¯clientip@processid) åŒæ—¶å‘é€äº†å¤šä¸ªconsumerdata
+        // è¿™ä¸ªforå¾ªç¯å¤„ç†çš„å°±æ˜¯å¤šä¸ªæ¶ˆè´¹è€…åˆ†ç»„çš„è®¢é˜…å…ƒæ•°æ®ã€‚
         for (ConsumerData data : heartbeatData.getConsumerDataSet()) {
             SubscriptionGroupConfig subscriptionGroupConfig =
                     this.brokerController.getSubscriptionGroupManager().findSubscriptionGroupConfig(
                         data.getGroupName());
             if (null != subscriptionGroupConfig) {
                 int topicSysFlag = 0;
-                if (data.isUnitMode()) { // µ¥ÔªÄ£Ê½£¿
+                if (data.isUnitMode()) { // å•å…ƒæ¨¡å¼ï¼Ÿ
                     topicSysFlag = TopicSysFlag.buildSysFlag(false, true);
                 }
-                //ÎªÏû·ÑÕß·Ö×é´´½¨ÖØÊÔtopic .ÓÃÓÚÏû·ÑÊ§°ÜÊ±´ò»ØbrokerÖØĞÂÏû·Ñ¡£
-                //ÖØÊÔtopicµÄÃüÃû¹æÔòÊÇ£º %RETRY% + Ïû·ÑÕß·Ö×éÃû¡£
+                //ä¸ºæ¶ˆè´¹è€…åˆ†ç»„åˆ›å»ºé‡è¯•topic .ç”¨äºæ¶ˆè´¹å¤±è´¥æ—¶æ‰“å›brokeré‡æ–°æ¶ˆè´¹ã€‚
+                //é‡è¯•topicçš„å‘½åè§„åˆ™æ˜¯ï¼š %RETRY% + æ¶ˆè´¹è€…åˆ†ç»„åã€‚
                 String newTopic = MixAll.getRetryTopic(data.getGroupName());
                 this.brokerController.getTopicConfigManager().createTopicInSendMessageBackMethod(//
                     newTopic,//
@@ -315,7 +315,7 @@ public class ClientManageProcessor implements NettyRequestProcessor {
             }
         }
 
-        //Éú²úÕßµÄ×¢²áÏà¶Ô¼òµ¥£¬¾ÍÊÇ°ÑÏûÏ¢Éú²úÕß£¨ÓÃËùÎ½µÄ¿Í»§¶ËÍ¨µÀclientChannelInfoÀ´³éÏó£©×¢²áµ½¶ÔÓ¦µÄÉú²úÕß·Ö×é¼´¿É¡£
+        //ç”Ÿäº§è€…çš„æ³¨å†Œç›¸å¯¹ç®€å•ï¼Œå°±æ˜¯æŠŠæ¶ˆæ¯ç”Ÿäº§è€…ï¼ˆç”¨æ‰€è°“çš„å®¢æˆ·ç«¯é€šé“clientChannelInfoæ¥æŠ½è±¡ï¼‰æ³¨å†Œåˆ°å¯¹åº”çš„ç”Ÿäº§è€…åˆ†ç»„å³å¯ã€‚
         for (ProducerData data : heartbeatData.getProducerDataSet()) {
             this.brokerController.getProducerManager().registerProducer(data.getGroupName(),
                 clientChannelInfo);

@@ -17,15 +17,15 @@
 
 package com.alibaba.rocketmq.common.protocol;
  /*
- ËùÓĞµÄÍ¨ĞÅĞ­ÒéÁĞ±í¼û RequestCode£¬Í¨¹ı createRequestCommand À´¹¹½¨Í¨ĞÅÄÚÈİ£¬È»ºóÍ¨¹ıNettyEncoder½øĞĞĞòÁĞ»¯£¬È»ºó·¢ËÍ
- ·şÎñ¶ËÊÕµ½ºóÍ¨¹ı NettyDecoder.decode·´ĞòÁĞºÅ£¬È»ºó NettyServerHandler ¶ÁÈ¡·´ĞòÁĞºÅºóµÄ±¨ÎÄ£¬
- Êı¾İÊÕ·¢ ÇëÇó Ó¦´ğ¶ÔÓ¦µÄ·ÖÖ§ÔÚ RemotingCommandType£¨NettyRemotingAbstract.processMessageReceived£©
- //NettyRemotingClient ºÍ NettyRemotingServer ÖĞµÄinitChannelÖ´ĞĞ¸÷ÖÖÃüÁî»Øµ÷
+ æ‰€æœ‰çš„é€šä¿¡åè®®åˆ—è¡¨è§ RequestCodeï¼Œé€šè¿‡ createRequestCommand æ¥æ„å»ºé€šä¿¡å†…å®¹ï¼Œç„¶åé€šè¿‡NettyEncoderè¿›è¡Œåºåˆ—åŒ–ï¼Œç„¶åå‘é€
+ æœåŠ¡ç«¯æ”¶åˆ°åé€šè¿‡ NettyDecoder.decodeååºåˆ—å·ï¼Œç„¶å NettyServerHandler è¯»å–ååºåˆ—å·åçš„æŠ¥æ–‡ï¼Œ
+ æ•°æ®æ”¶å‘ è¯·æ±‚ åº”ç­”å¯¹åº”çš„åˆ†æ”¯åœ¨ RemotingCommandTypeï¼ˆNettyRemotingAbstract.processMessageReceivedï¼‰
+ //NettyRemotingClient å’Œ NettyRemotingServer ä¸­çš„initChannelæ‰§è¡Œå„ç§å‘½ä»¤å›è°ƒ
  */
 
- //Í¨ĞÅĞ­Òé×¢²á¼û registerProcessor  NettyRemotingClient ºÍ NettyRemotingServer ÖĞµÄinitChannelÖ´ĞĞ¸÷ÖÖÃüÁî»Øµ÷
+ //é€šä¿¡åè®®æ³¨å†Œè§ registerProcessor  NettyRemotingClient å’Œ NettyRemotingServer ä¸­çš„initChannelæ‰§è¡Œå„ç§å‘½ä»¤å›è°ƒ
 public class RequestCode {
-    public static final int SEND_MESSAGE = 10; //SEND_MESSAGE_V2 ºÍ SEND_MESSAGE¶¼ÊÇ·¢ËÍÏûÏ¢
+    public static final int SEND_MESSAGE = 10; //SEND_MESSAGE_V2 å’Œ SEND_MESSAGEéƒ½æ˜¯å‘é€æ¶ˆæ¯
     public static final int PULL_MESSAGE = 11;
     public static final int QUERY_MESSAGE = 12;
     public static final int QUERY_BROKER_OFFSET = 13;
@@ -34,7 +34,7 @@ public class RequestCode {
     public static final int UPDATE_AND_CREATE_TOPIC = 17;
     public static final int GET_ALL_TOPIC_CONFIG = 21;
     /**
-     * Ôö¼Ó»ñÈ¡topicÅäÖÃÁĞ±í
+     * å¢åŠ è·å–topicé…ç½®åˆ—è¡¨
      */
     public static final int GET_TOPIC_CONFIG_LIST = 22;
     public static final int GET_TOPIC_NAME_LIST = 23;
@@ -49,7 +49,7 @@ public class RequestCode {
     public static final int VIEW_MESSAGE_BY_ID = 33;
     public static final int HEART_BEAT = 34;
     public static final int UNREGISTER_CLIENT = 35;
-    //Ïû·ÑÊ§°Ü£¬°ÑÏûÏ¢ÖØĞÂ´ò»ØbrokerÖĞ
+    //æ¶ˆè´¹å¤±è´¥ï¼ŒæŠŠæ¶ˆæ¯é‡æ–°æ‰“å›brokerä¸­
     public static final int CONSUMER_SEND_MSG_BACK = 36;
     public static final int END_TRANSACTION = 37;
     public static final int GET_CONSUMER_LIST_BY_GROUP = 38;

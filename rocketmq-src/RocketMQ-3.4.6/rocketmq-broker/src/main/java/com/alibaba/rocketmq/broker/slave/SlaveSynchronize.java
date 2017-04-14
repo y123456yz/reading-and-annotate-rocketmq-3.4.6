@@ -31,7 +31,7 @@ import java.io.IOException;
 
 
 /**
- * slave  brokerÓÃÓÚÖ÷´ÓÊı¾İÍ¬²½µÄÀà¡£
+ * slave  brokerç”¨äºä¸»ä»æ•°æ®åŒæ­¥çš„ç±»ã€‚
  *
  * @author shijia.wxr
  * @author manhong.yqd

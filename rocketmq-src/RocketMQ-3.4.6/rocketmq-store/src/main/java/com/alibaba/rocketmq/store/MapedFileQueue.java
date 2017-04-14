@@ -31,21 +31,21 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 
 /**
- *MapedFileQueue£º°üº¬ÁËºÜ¶àMapedFile£¬ÒÔ¼°Ã¿¸öMapedFileµÄÕæÊµ´óĞ¡£»
- MapedFile£º°üº¬ÁË¾ßÌåµÄÎÄ¼şĞÅÏ¢£¬°üÀ¨ÎÄ¼şÂ·¾¶£¬ÎÄ¼şÃû£¬ÎÄ¼şÆğÊ¼Æ«ÒÆ£¬Ğ´Î»ÒÆ£¬¶ÁÎ»ÒÆµÈµÈĞÅÏ¢£¬Í¬ÊÂÊ¹ÓÃÁËĞéÄâÄÚ´æÓ³ÉäÀ´Ìá¸ßIOĞ§ÂÊ£»
+ *MapedFileQueueï¼šåŒ…å«äº†å¾ˆå¤šMapedFileï¼Œä»¥åŠæ¯ä¸ªMapedFileçš„çœŸå®å¤§å°ï¼›
+ MapedFileï¼šåŒ…å«äº†å…·ä½“çš„æ–‡ä»¶ä¿¡æ¯ï¼ŒåŒ…æ‹¬æ–‡ä»¶è·¯å¾„ï¼Œæ–‡ä»¶åï¼Œæ–‡ä»¶èµ·å§‹åç§»ï¼Œå†™ä½ç§»ï¼Œè¯»ä½ç§»ç­‰ç­‰ä¿¡æ¯ï¼ŒåŒäº‹ä½¿ç”¨äº†è™šæ‹Ÿå†…å­˜æ˜ å°„æ¥æé«˜IOæ•ˆç‡ï¼›
  * @author shijia.wxr
- * ÎŞÂÛCommitLog£¬»¹ÊÇ ConsumeQueue£¬¶¼ÓĞÒ»¸ö¶ÔÓ¦µÄMappedFileQueue£¬Ò²¾ÍÊÇ¶ÔÓ¦µÄÄÚ´æÓ³ÉäÎÄ¼şµÄÁ´±í
- * ¶ÁĞ´Ê±£¬¸ù¾İoffset¶¨Î»µ½Á´±íÖĞ£¬¶ÔÓ¦µÄMappedFile£¬½øĞĞ¶ÁĞ´¡£Í¨¹ıMappedFile£¬¾ÍºÜºÃµÄ½â¾öÁË´óÎÄ¼şËæ»ú¶ÁµÄĞÔÄÜÎÊÌâ¡£
+ * æ— è®ºCommitLogï¼Œè¿˜æ˜¯ ConsumeQueueï¼Œéƒ½æœ‰ä¸€ä¸ªå¯¹åº”çš„MappedFileQueueï¼Œä¹Ÿå°±æ˜¯å¯¹åº”çš„å†…å­˜æ˜ å°„æ–‡ä»¶çš„é“¾è¡¨
+ * è¯»å†™æ—¶ï¼Œæ ¹æ®offsetå®šä½åˆ°é“¾è¡¨ä¸­ï¼Œå¯¹åº”çš„MappedFileï¼Œè¿›è¡Œè¯»å†™ã€‚é€šè¿‡MappedFileï¼Œå°±å¾ˆå¥½çš„è§£å†³äº†å¤§æ–‡ä»¶éšæœºè¯»çš„æ€§èƒ½é—®é¢˜ã€‚
  */
 public class MapedFileQueue {
     private static final Logger log = LoggerFactory.getLogger(LoggerName.StoreLoggerName);
     private static final Logger logError = LoggerFactory.getLogger(LoggerName.StoreErrorLoggerName);
     private static final int DeleteFilesBatchMax = 10;
     private final String storePath;
-    //commitlog Ä¬ÈÏÎª1024 * 1024 * 1024   consumequeueÄ¬ÈÏÎª30w*20
+    //commitlog é»˜è®¤ä¸º1024 * 1024 * 1024   consumequeueé»˜è®¤ä¸º30w*20
     private final int mapedFileSize;
-    //consumequeueÄ¿Â¼ÏÂµÄ¸÷¸ö´æ´¢commitlogµÄÎÄ¼şĞÅÏ¢¶¼¼ÓÈç¸ÃlistÖĞ£¬¼ûMapedFileQueue
-    //ÎÄ¼şÃû¼´ÊÇÏûÏ¢ÔÚ´ËÎÄ¼şµÄÖĞ³õÊ¼Æ«ÒÆÁ¿£¬ÅÅºÃĞòºó×é³ÉÁËÒ»¸öÁ¬ĞøµÄÏûÏ¢¶Ó
+    //consumequeueç›®å½•ä¸‹çš„å„ä¸ªå­˜å‚¨commitlogçš„æ–‡ä»¶ä¿¡æ¯éƒ½åŠ å¦‚è¯¥listä¸­ï¼Œè§MapedFileQueue
+    //æ–‡ä»¶åå³æ˜¯æ¶ˆæ¯åœ¨æ­¤æ–‡ä»¶çš„ä¸­åˆå§‹åç§»é‡ï¼Œæ’å¥½åºåç»„æˆäº†ä¸€ä¸ªè¿ç»­çš„æ¶ˆæ¯é˜Ÿ
     private final List<MapedFile> mapedFiles = new ArrayList<MapedFile>();
     private final ReadWriteLock readWriteLock = new ReentrantReadWriteLock();
     private final AllocateMapedFileService allocateMapedFileService;
@@ -54,9 +54,9 @@ public class MapedFileQueue {
 
     /***
      *
-     * @param storePath ÄÚ´æÓ³ÉäÎÄ¼şµÄ´æ´¢Â·¾¶¡£
-     * @param mapedFileSize nÄÚ´æÓ³ÉäÎÄ¼şµÄ´óĞ¡ £¬
-     * @param allocateMapedFileService ·ÖÅäÄÚ´æÓ³ÉäÎÄ¼şµÄ·şÎñ¡£
+     * @param storePath å†…å­˜æ˜ å°„æ–‡ä»¶çš„å­˜å‚¨è·¯å¾„ã€‚
+     * @param mapedFileSize nå†…å­˜æ˜ å°„æ–‡ä»¶çš„å¤§å° ï¼Œ
+     * @param allocateMapedFileService åˆ†é…å†…å­˜æ˜ å°„æ–‡ä»¶çš„æœåŠ¡ã€‚
      */
     public MapedFileQueue(final String storePath, int mapedFileSize,
             AllocateMapedFileService allocateMapedFileService) {
@@ -187,18 +187,18 @@ public class MapedFileQueue {
      5.8M    00000000000090000000
      5.8M    00000000000096000000
      3.6M    00000000000102000000
-     *  °Ñ´ÅÅÌÎÄ¼ş¼ÓÔØµ½ÄÚ´æ¡£
-     * @return  CommitLog.loadÖĞÖ´ĞĞ
+     *  æŠŠç£ç›˜æ–‡ä»¶åŠ è½½åˆ°å†…å­˜ã€‚
+     * @return  CommitLog.loadä¸­æ‰§è¡Œ
      */
     public boolean load() {
-        File dir = new File(this.storePath); //commitlogÂ·¾¶/root/store/commitlog ÕâÀïÃæ´æµÄÊÇÏû·Ñ¼ÇÂ¼£¬¼ÇÂ¼ÏûÏ¢ÊÇ·ñ±»Ïû·ÑµÈĞÅÏ¢
+        File dir = new File(this.storePath); //commitlogè·¯å¾„/root/store/commitlog è¿™é‡Œé¢å­˜çš„æ˜¯æ¶ˆè´¹è®°å½•ï¼Œè®°å½•æ¶ˆæ¯æ˜¯å¦è¢«æ¶ˆè´¹ç­‰ä¿¡æ¯
         File[] files = dir.listFiles();
         if (files != null) {
             // ascending order
-            Arrays.sort(files); //¶ÔconsumeÎÄ¼şÃû(Ò²¾ÍÊÇoffsetÆ«ÒÆ)ÅÅĞò
+            Arrays.sort(files); //å¯¹consumeæ–‡ä»¶å(ä¹Ÿå°±æ˜¯offsetåç§»)æ’åº
             for (File file : files) {
-                //??????? ÉÏÃæµÄ consumequeueÖĞ 00000000000102000000Ò²»¹Ã»µ½3.6M£¬²»Ò²ºöÂÔÁËÂğ£¿
-                if (file.length() != this.mapedFileSize) { //ÓĞÎÄ¼ş²»·ûºÏÔ¤ÉèµÄmapfile´óĞ¡ £¬Ö±½ÓºöÂÔµôºóÃæµÄÎÄ¼ş¡£
+                //??????? ä¸Šé¢çš„ consumequeueä¸­ 00000000000102000000ä¹Ÿè¿˜æ²¡åˆ°3.6Mï¼Œä¸ä¹Ÿå¿½ç•¥äº†å—ï¼Ÿ
+                if (file.length() != this.mapedFileSize) { //æœ‰æ–‡ä»¶ä¸ç¬¦åˆé¢„è®¾çš„mapfileå¤§å° ï¼Œç›´æ¥å¿½ç•¥æ‰åé¢çš„æ–‡ä»¶ã€‚
                     log.warn(file + "\t" + file.length()
                             + " length not matched message store config value, ignore it");
                     return true;
@@ -206,7 +206,7 @@ public class MapedFileQueue {
 
                 try {
                     MapedFile mapedFile = new MapedFile(file.getPath(), mapedFileSize);
-                    //ÎÄ¼ş´óĞ¡¾ÍÊÇmapfileĞ´ÈëºÍflushµÄÎ»ÖÃ¡£
+                    //æ–‡ä»¶å¤§å°å°±æ˜¯mapfileå†™å…¥å’Œflushçš„ä½ç½®ã€‚
                     mapedFile.setWrotePostion(this.mapedFileSize);
                     mapedFile.setCommittedPosition(this.mapedFileSize);
                     this.mapedFiles.add(mapedFile);
@@ -239,7 +239,7 @@ public class MapedFileQueue {
 
 
     /**
-     * ÆğÊ¼Î»µã´Ó0 ¿ªÊ¼´´½¨Ò»¸öMapfile .
+     * èµ·å§‹ä½ç‚¹ä»0 å¼€å§‹åˆ›å»ºä¸€ä¸ªMapfile .
      * @return
      */
     public MapedFile getLastMapedFile() {
@@ -247,14 +247,14 @@ public class MapedFileQueue {
     }
 
     /**
-     * ÓÃ¶ÁËø»ñÈ¡×îºóÒ»¸öMapfile ..
-     * Ã»ÓĞmapfile Ôò·µ»Ønull .
+     * ç”¨è¯»é”è·å–æœ€åä¸€ä¸ªMapfile ..
+     * æ²¡æœ‰mapfile åˆ™è¿”å›null .
      * @return
      */
     public MapedFile getLastMapedFileWithLock() {
         MapedFile mapedFileLast = null;
         this.readWriteLock.readLock().lock();
-        if (!this.mapedFiles.isEmpty()) { // ÒÑ¾­ÓĞmapfile.  ÔòÈ¡×îºóÒ»¸ö¡£
+        if (!this.mapedFiles.isEmpty()) { // å·²ç»æœ‰mapfile.  åˆ™å–æœ€åä¸€ä¸ªã€‚
             mapedFileLast = this.mapedFiles.get(this.mapedFiles.size() -  1);
         }
         this.readWriteLock.readLock().unlock();
@@ -268,11 +268,11 @@ public class MapedFileQueue {
     }
 
     /**
-     * ÊÇ·ñÒÔ´´½¨ĞÂµÄMapFileµÄ·½Ê½»ñÈ¡Ò»¸öĞÂµÄÎÄ¼ş¡£
-     * @param startOffset ¿ªÊ¼µÄÆğÊ¼Î»µã£¬
-     * @param needCreate ÊÇ·ñĞèÒª´´½¨ĞÂµÄmapfile .
-     * µ±ÏûÏ¢µ½´ïbrokerÊ±£¬ĞèÒª»ñÈ¡×îĞÂµÄMapedFileĞ´ÈëÊı¾İ£¬µ÷ÓÃMapedFileQueueµÄgetLastMapedFile»ñÈ¡£¬´Ëº¯ÊıÈç¹û¼¯ºÏÖĞÒ»¸ö
-     * Ò²Ã»ÓĞ´´½¨Ò»¸ö£¬Èç¹û×îºóÒ»¸öĞ´ÂúÁËÒ²´´½¨Ò»¸öĞÂµÄ¡£
+     * æ˜¯å¦ä»¥åˆ›å»ºæ–°çš„MapFileçš„æ–¹å¼è·å–ä¸€ä¸ªæ–°çš„æ–‡ä»¶ã€‚
+     * @param startOffset å¼€å§‹çš„èµ·å§‹ä½ç‚¹ï¼Œ
+     * @param needCreate æ˜¯å¦éœ€è¦åˆ›å»ºæ–°çš„mapfile .
+     * å½“æ¶ˆæ¯åˆ°è¾¾brokeræ—¶ï¼Œéœ€è¦è·å–æœ€æ–°çš„MapedFileå†™å…¥æ•°æ®ï¼Œè°ƒç”¨MapedFileQueueçš„getLastMapedFileè·å–ï¼Œæ­¤å‡½æ•°å¦‚æœé›†åˆä¸­ä¸€ä¸ª
+     * ä¹Ÿæ²¡æœ‰åˆ›å»ºä¸€ä¸ªï¼Œå¦‚æœæœ€åä¸€ä¸ªå†™æ»¡äº†ä¹Ÿåˆ›å»ºä¸€ä¸ªæ–°çš„ã€‚
      * @return
      */
     public MapedFile getLastMapedFile(final long startOffset, boolean needCreate) {
@@ -280,34 +280,34 @@ public class MapedFileQueue {
         MapedFile mapedFileLast = null;
         {
             this.readWriteLock.readLock().lock();
-            if (this.mapedFiles.isEmpty()) { // mapfileÎª¿ÕµÄÇé¿ö£¬Ôò´ÓstartOffset×öÎªcreate offset .
+            if (this.mapedFiles.isEmpty()) { // mapfileä¸ºç©ºçš„æƒ…å†µï¼Œåˆ™ä»startOffsetåšä¸ºcreate offset .
                 createOffset = startOffset - (startOffset % this.mapedFileSize);
             }
-            else {  //ÄÃµ½ÁË×îºóÒ»¸ömapfile .
+            else {  //æ‹¿åˆ°äº†æœ€åä¸€ä¸ªmapfile .
                 mapedFileLast = this.mapedFiles.get(this.mapedFiles.size() - 1);
             }
             this.readWriteLock.readLock().unlock();
         }
 
-        if (mapedFileLast != null && mapedFileLast.isFull()) { //ÄÃµ½ÁË×îºóÒ»¸ömapfile ²¢ÇÒÒÑ¾­Ğ´Âú,  ÄÇÃ´Createoffset
-            // ¾ÍÊÇ×îºóÒ»¸ömapfileµÄÎÄ¼şÃû£¨offset + ÎÄ¼ş´óĞ¡£© ¡£
+        if (mapedFileLast != null && mapedFileLast.isFull()) { //æ‹¿åˆ°äº†æœ€åä¸€ä¸ªmapfile å¹¶ä¸”å·²ç»å†™æ»¡,  é‚£ä¹ˆCreateoffset
+            // å°±æ˜¯æœ€åä¸€ä¸ªmapfileçš„æ–‡ä»¶åï¼ˆoffset + æ–‡ä»¶å¤§å°ï¼‰ ã€‚
             createOffset = mapedFileLast.getFileFromOffset() + this.mapedFileSize;
         }
 
         if (createOffset != -1 && needCreate) {
-            //´´½¨ÏÂÒ»¸ömapfileºÍÏÂÏÂ¸ömapfileµÄÂ·¾¶¡£
+            //åˆ›å»ºä¸‹ä¸€ä¸ªmapfileå’Œä¸‹ä¸‹ä¸ªmapfileçš„è·¯å¾„ã€‚
             String nextFilePath = this.storePath + File.separator + UtilAll.offset2FileName(createOffset);
             String nextNextFilePath =
                     this.storePath + File.separator
                             + UtilAll.offset2FileName(createOffset + this.mapedFileSize);
             MapedFile mapedFile = null;
 
-            if (this.allocateMapedFileService != null) { //ÓĞÒì²½·ÖÅäMapfileµÄ·şÎñ¡£
+            if (this.allocateMapedFileService != null) { //æœ‰å¼‚æ­¥åˆ†é…Mapfileçš„æœåŠ¡ã€‚
                 mapedFile =
                         this.allocateMapedFileService.putRequestAndReturnMapedFile(nextFilePath,
                             nextNextFilePath, this.mapedFileSize);
             }
-            else {//  Ã»ÓĞÒì²½·ÖÅäMapfileµÄ·şÎñ£¬ ¾Í´´½¨Ò»¸ö¡£
+            else {//  æ²¡æœ‰å¼‚æ­¥åˆ†é…Mapfileçš„æœåŠ¡ï¼Œ å°±åˆ›å»ºä¸€ä¸ªã€‚
                 try {
                     mapedFile = new MapedFile(nextFilePath, this.mapedFileSize);
                 }
@@ -316,7 +316,7 @@ public class MapedFileQueue {
                 }
             }
 
-            if (mapedFile != null) { //¼ÓĞ´Ëø£¬¼ÓÈëµ½mapfile¶ÓÁĞ¡£
+            if (mapedFile != null) { //åŠ å†™é”ï¼ŒåŠ å…¥åˆ°mapfileé˜Ÿåˆ—ã€‚
                 this.readWriteLock.writeLock().lock();
                 if (this.mapedFiles.isEmpty()) {
                     mapedFile.setFirstCreateInQueue(true);
@@ -398,17 +398,17 @@ public class MapedFileQueue {
                 MapedFile mapedFile = (MapedFile) mfs[i];
                 long liveMaxTimestamp = mapedFile.getLastModifiedTimestamp() + expiredTime;
                 if (System.currentTimeMillis() >= liveMaxTimestamp//
-                        || cleanImmediately) { //ÎÄ¼ş³¬¹ı¹ıÆÚÊ±¼ä»òÕß´ÅÅÌ¿Õ¼ä³¬¹ıÉè¶¨ãĞÖµ£¨Ä¬ÈÏ75%£© £¬ĞèÒª¿ªÊ¼Æô¶¯ÎÄ¼şÇåÀí¡£
-                    if (mapedFile.destroy(intervalForcibly)) { //ÇåÀíÎÄ¼şÊ±£¬ Èç¹ûÎÄ¼ş»¹ÔÚ±»Ïß³ÌÒıÓÃ£¬ ÔòÍ¨¹ıintervalForcibly
-                        //²ÎÊı¿ØÖÆÏÂÒ»´ÎÕæÕıÉ¾³ıÎÄ¼ş»¹Òª¼ä¸ô¶à³¤Ê±¼ä£¬Ä¬ÈÏ120s¡£
+                        || cleanImmediately) { //æ–‡ä»¶è¶…è¿‡è¿‡æœŸæ—¶é—´æˆ–è€…ç£ç›˜ç©ºé—´è¶…è¿‡è®¾å®šé˜ˆå€¼ï¼ˆé»˜è®¤75%ï¼‰ ï¼Œéœ€è¦å¼€å§‹å¯åŠ¨æ–‡ä»¶æ¸…ç†ã€‚
+                    if (mapedFile.destroy(intervalForcibly)) { //æ¸…ç†æ–‡ä»¶æ—¶ï¼Œ å¦‚æœæ–‡ä»¶è¿˜åœ¨è¢«çº¿ç¨‹å¼•ç”¨ï¼Œ åˆ™é€šè¿‡intervalForcibly
+                        //å‚æ•°æ§åˆ¶ä¸‹ä¸€æ¬¡çœŸæ­£åˆ é™¤æ–‡ä»¶è¿˜è¦é—´éš”å¤šé•¿æ—¶é—´ï¼Œé»˜è®¤120sã€‚
                         files.add(mapedFile);
                         deleteCount++;
 
-                        if (files.size() >= DeleteFilesBatchMax) { //Ò»´ÎÅúÁ¿É¾³ıµÄÎÄ¼şÊı²»³¬¹ı10
+                        if (files.size() >= DeleteFilesBatchMax) { //ä¸€æ¬¡æ‰¹é‡åˆ é™¤çš„æ–‡ä»¶æ•°ä¸è¶…è¿‡10
                             break;
                         }
 
-                        if (deleteFilesInterval > 0 && (i + 1) < mfsLength) { //Á½¸ömapfileÉ¾³ı²Ù×÷¼ä¼ä¸ô100ms .
+                        if (deleteFilesInterval > 0 && (i + 1) < mfsLength) { //ä¸¤ä¸ªmapfileåˆ é™¤æ“ä½œé—´é—´éš”100ms .
                             try {
                                 Thread.sleep(deleteFilesInterval);
                             }
@@ -440,10 +440,10 @@ public class MapedFileQueue {
             for (int i = 0; i < mfsLength; i++) {
                 boolean destroy = true;
                 MapedFile mapedFile = (MapedFile) mfs[i];
-                //ÕÒµ½Ïû·Ñ¶ÓÁĞµÄ×îºóÒ»¸öitem¡£
+                //æ‰¾åˆ°æ¶ˆè´¹é˜Ÿåˆ—çš„æœ€åä¸€ä¸ªitemã€‚
                 SelectMapedBufferResult result = mapedFile.selectMapedBuffer(this.mapedFileSize - unitSize);
                 if (result != null) {
-                    //Ïû·Ñ¶ÓÁĞ×îºóÒ»¸öitemÖ¸ÏòµÄcommitlogµÄÎïÀíÎ»µã±È offset±êÃ÷µÄcommitlogÎïÀíÎ»µã»¹Ğ¡£¬ËµÃ÷Õâ¸öÏû·Ñ¶ÓÁĞÒÑ¾­Ã»ÓÃÁË¡£¿ÉÒÔÉ¾³ı¡£
+                    //æ¶ˆè´¹é˜Ÿåˆ—æœ€åä¸€ä¸ªitemæŒ‡å‘çš„commitlogçš„ç‰©ç†ä½ç‚¹æ¯” offsetæ ‡æ˜çš„commitlogç‰©ç†ä½ç‚¹è¿˜å°ï¼Œè¯´æ˜è¿™ä¸ªæ¶ˆè´¹é˜Ÿåˆ—å·²ç»æ²¡ç”¨äº†ã€‚å¯ä»¥åˆ é™¤ã€‚
                     long maxOffsetInLogicQueue = result.getByteBuffer().getLong();
                     result.release();
                     destroy = (maxOffsetInLogicQueue < offset);
@@ -473,18 +473,18 @@ public class MapedFileQueue {
     }
 
     /**
-     * Ò»´Î×îÉÙË¢¼¸¸ö·ÖÒ³.
+     * ä¸€æ¬¡æœ€å°‘åˆ·å‡ ä¸ªåˆ†é¡µ.
      * @param flushLeastPages
      * @return
      */
     public boolean commit(final int flushLeastPages) {
         boolean result = true;
-        //°´commitlogÒÑ¾­Ğ´ÈëµÄÎ»µãÕÒµ½mapfile .²¢ÇÒÔÚÃ»ÓĞÕÒµ½Ê±£¬ µÃµ½µÚÒ»¸öMapfile¡£
+        //æŒ‰commitlogå·²ç»å†™å…¥çš„ä½ç‚¹æ‰¾åˆ°mapfile .å¹¶ä¸”åœ¨æ²¡æœ‰æ‰¾åˆ°æ—¶ï¼Œ å¾—åˆ°ç¬¬ä¸€ä¸ªMapfileã€‚
         MapedFile mapedFile = this.findMapedFileByOffset(this.committedWhere, true);
         if (mapedFile != null) {
             long tmpTimeStamp = mapedFile.getStoreTimestamp();
             int offset = mapedFile.commit(flushLeastPages);
-            //commit×öË¢ÅÌ´¦ÀíÒÔºó£¬where¾Í±ä³ÉÁËÒÑ¾­Ë¢ÅÌµ½ÄÄ¶ùµÄÎ»ÖÃ¡£
+            //commitåšåˆ·ç›˜å¤„ç†ä»¥åï¼Œwhereå°±å˜æˆäº†å·²ç»åˆ·ç›˜åˆ°å“ªå„¿çš„ä½ç½®ã€‚
             long where = mapedFile.getFileFromOffset() + offset;
             result = (where == this.committedWhere);
             this.committedWhere = where;
@@ -498,11 +498,11 @@ public class MapedFileQueue {
 
 
     /**
-     * ºÍµÚÒ»¸öMapfileÆğÊ¼ÎïÀíÎ»µãµÄ²îÖµ³ıÒÔmapfileÎÄ¼ş´óĞ¡,¾ÍµÃµ½ÁËµ±Ç°ÒªĞ´ÈëµÄmapfile.
+     * å’Œç¬¬ä¸€ä¸ªMapfileèµ·å§‹ç‰©ç†ä½ç‚¹çš„å·®å€¼é™¤ä»¥mapfileæ–‡ä»¶å¤§å°,å°±å¾—åˆ°äº†å½“å‰è¦å†™å…¥çš„mapfile.
      * @param offset
      * @param returnFirstOnNotFound
      * @return
-     */  //²éÕÒoffsetÔÚÄÇ¸öMapedFileÖĞ
+     */  //æŸ¥æ‰¾offsetåœ¨é‚£ä¸ªMapedFileä¸­
     public MapedFile findMapedFileByOffset(final long offset, final boolean returnFirstOnNotFound) {
         try {
             this.readWriteLock.readLock().lock();

@@ -28,9 +28,9 @@ import java.util.List;
 /**
  * Average Hashing queue algorithm
  *
- * @author manhong.yqd  Rebalance Ëã·¨ÊµÏÖ²ßÂÔ
- ** AllocateMessageQueueStrategyÊµÏÖÔÚÀà AllocateMessageQueueAveragely  AllocateMessageQueueByMachineRoom  AllocateMessageQueueByConfig
- * AllocateMessageQueueAveragelyByCircle  Rebalance Ëã·¨ÊµÏÖ²ßÂÔ
+ * @author manhong.yqd  Rebalance ç®—æ³•å®ç°ç­–ç•¥
+ ** AllocateMessageQueueStrategyå®ç°åœ¨ç±» AllocateMessageQueueAveragely  AllocateMessageQueueByMachineRoom  AllocateMessageQueueByConfig
+ * AllocateMessageQueueAveragelyByCircle  Rebalance ç®—æ³•å®ç°ç­–ç•¥
  */
 
 public class AllocateMessageQueueAveragely implements AllocateMessageQueueStrategy {
@@ -42,10 +42,10 @@ public class AllocateMessageQueueAveragely implements AllocateMessageQueueStrate
         return "AVG";
     }
 
-    /* ÏÂÃæÕâ¸öËã·¨µÄÄ¿µÄ¾ÍÊÇ¿´ÊôÓÚÍ¬Ò»Ïû·Ñ·Ö×éµÄÏû·ÑÔòÈçºÎÏû·ÑqueueÉÏÃæµÄÏûÏ¢
-     * ·µ»ØÖµ´æ·ÅÁË¸ÃcurrentCIDÓ¦¸ÃÏû·ÑµÄ¶ÓÁĞĞÅÏ¢£¬Ò²¾ÍÊÇcurrentCIDÓ¦¸ÃÏû·ÑlistÖĞ´æ·ÅµÄ¶ÓÁĞ
+    /* ä¸‹é¢è¿™ä¸ªç®—æ³•çš„ç›®çš„å°±æ˜¯çœ‹å±äºåŒä¸€æ¶ˆè´¹åˆ†ç»„çš„æ¶ˆè´¹åˆ™å¦‚ä½•æ¶ˆè´¹queueä¸Šé¢çš„æ¶ˆæ¯
+     * è¿”å›å€¼å­˜æ”¾äº†è¯¥currentCIDåº”è¯¥æ¶ˆè´¹çš„é˜Ÿåˆ—ä¿¡æ¯ï¼Œä¹Ÿå°±æ˜¯currentCIDåº”è¯¥æ¶ˆè´¹listä¸­å­˜æ”¾çš„é˜Ÿåˆ—
     */
-    @Override  //RebalanceImpl.rebalanceByTopicÖĞµ÷ÓÃ
+    @Override  //RebalanceImpl.rebalanceByTopicä¸­è°ƒç”¨
     public List<MessageQueue> allocate(String consumerGroup, String currentCID, List<MessageQueue> mqAll,
                                        List<String> cidAll) {
         if (currentCID == null || currentCID.length() < 1) {
@@ -67,12 +67,12 @@ public class AllocateMessageQueueAveragely implements AllocateMessageQueueStrate
             return result;
         }
 
-        /* ÏÂÃæÕâ¸öËã·¨µÄÄ¿µÄ¾ÍÊÇ¿´ÊôÓÚÍ¬Ò»Ïû·Ñ·Ö×éµÄÏû·ÑÔòÈçºÎÏû·ÑqueueÉÏÃæµÄÏûÏ¢ */
+        /* ä¸‹é¢è¿™ä¸ªç®—æ³•çš„ç›®çš„å°±æ˜¯çœ‹å±äºåŒä¸€æ¶ˆè´¹åˆ†ç»„çš„æ¶ˆè´¹åˆ™å¦‚ä½•æ¶ˆè´¹queueä¸Šé¢çš„æ¶ˆæ¯ */
 
-        int index = cidAll.indexOf(currentCID); //cidALLÁ´±íÖĞÄÚÈİÎªcurrentCIDµÄË÷Òı
+        int index = cidAll.indexOf(currentCID); //cidALLé“¾è¡¨ä¸­å†…å®¹ä¸ºcurrentCIDçš„ç´¢å¼•
         int mod = mqAll.size() % cidAll.size();
-        //Èç¹ûÏû·ÑÍ¬Ò»¸ötopicµÄÏàÍ¬Ïû·ÑÕßÊı´óÓÚ¶ÓÁĞÊı£¬ÔòaverageSize=1
-        //Èç¹ûÏû·ÑÕßÊıĞ¡ÓÚ¶ÓÁĞÊı£¬ÔòaverageSize=¶ÓÁĞÊı/Ïû·ÑÕßÊı
+        //å¦‚æœæ¶ˆè´¹åŒä¸€ä¸ªtopicçš„ç›¸åŒæ¶ˆè´¹è€…æ•°å¤§äºé˜Ÿåˆ—æ•°ï¼Œåˆ™averageSize=1
+        //å¦‚æœæ¶ˆè´¹è€…æ•°å°äºé˜Ÿåˆ—æ•°ï¼Œåˆ™averageSize=é˜Ÿåˆ—æ•°/æ¶ˆè´¹è€…æ•°
         int averageSize =
                 mqAll.size() <= cidAll.size() ? 1 : (mod > 0 && index < mod ? mqAll.size() / cidAll.size()
                         + 1 : mqAll.size() / cidAll.size());

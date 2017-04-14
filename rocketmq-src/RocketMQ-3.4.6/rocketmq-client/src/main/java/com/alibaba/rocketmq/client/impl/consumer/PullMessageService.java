@@ -25,14 +25,14 @@ import java.util.concurrent.*;
 
 
 /**
- * @author shijia.wxr   ´Órocket nameserver»òÕßbroke»ñÈ¡ÏûÏ¢
+ * @author shijia.wxr   ä»rocket nameserveræˆ–è€…brokeè·å–æ¶ˆæ¯
  */
 public class PullMessageService extends ServiceThread {
     private final Logger log = ClientLogger.getLog();
-    /*  À­È¡ÏûÏ¢µÄÇëÇóÈ«²¿·ÅÈë¸Ã¶ÓÁĞÖĞ,ÔÚ
-    updateProcessQueueTableInRebalance-> RebalancePushImpl.dispatchPullRequest->PullMessageService.executePullRequestImmediately ÖĞ¸üĞÂ,
-    PullMessageService.run ÖĞÍ¨¹ı¸Ã pullRequestQueue ÖĞµÄPullRequestÀ´À­È¡ÏûÏ¢ */
-    ////MQClientInstance.start(this.rebalanceService.start();)ÖĞ½øĞĞ¶ÓÁĞrebalance´¦ÀíµÄÊ±ºò»á¸üĞÂ¸Ã queue
+    /*  æ‹‰å–æ¶ˆæ¯çš„è¯·æ±‚å…¨éƒ¨æ”¾å…¥è¯¥é˜Ÿåˆ—ä¸­,åœ¨
+    updateProcessQueueTableInRebalance-> RebalancePushImpl.dispatchPullRequest->PullMessageService.executePullRequestImmediately ä¸­æ›´æ–°,
+    PullMessageService.run ä¸­é€šè¿‡è¯¥ pullRequestQueue ä¸­çš„PullRequestæ¥æ‹‰å–æ¶ˆæ¯ */
+    ////MQClientInstance.start(this.rebalanceService.start();)ä¸­è¿›è¡Œé˜Ÿåˆ—rebalanceå¤„ç†çš„æ—¶å€™ä¼šæ›´æ–°è¯¥ queue
     private final LinkedBlockingQueue<PullRequest> pullRequestQueue = new LinkedBlockingQueue<PullRequest>();
     private final MQClientInstance mQClientFactory;
     private final ScheduledExecutorService scheduledExecutorService = Executors
@@ -75,10 +75,10 @@ public class PullMessageService extends ServiceThread {
 
 
     /**
-     * »ñÈ¡pullrequestµÄÏû·ÑÕß·Ö×é¶ÔÓ¦µÄMQConsumerInner½øĞĞÏû·Ñ¡£
+     * è·å–pullrequestçš„æ¶ˆè´¹è€…åˆ†ç»„å¯¹åº”çš„MQConsumerInnerè¿›è¡Œæ¶ˆè´¹ã€‚
      * @param pullRequest
      */
-    private void pullMessage(final PullRequest pullRequest) { /* runÖĞÖ´ĞĞ£¬¾ÍÊÇ¸ù¾İÀ­È¡ÏûÏ¢µÄpullRequestÇëÇóÀ´´Ó´Ó·şÎñ¶Ë»ñÈ¡ÏûÏ¢ */
+    private void pullMessage(final PullRequest pullRequest) { /* runä¸­æ‰§è¡Œï¼Œå°±æ˜¯æ ¹æ®æ‹‰å–æ¶ˆæ¯çš„pullRequestè¯·æ±‚æ¥ä»ä»æœåŠ¡ç«¯è·å–æ¶ˆæ¯ */
         final MQConsumerInner consumer = this.mQClientFactory.selectConsumer(pullRequest.getConsumerGroup());
         if (consumer != null) {
             DefaultMQPushConsumerImpl impl = (DefaultMQPushConsumerImpl) consumer;
@@ -90,12 +90,12 @@ public class PullMessageService extends ServiceThread {
     }
 
     @Override  //ProxyServer.doSubscribe->consumer.start->mQClientFactory.start->this.pullMessageService.start()
-    public void run() { /* ˆÌĞĞstart¾Í•şß\ĞĞrun */
+    public void run() { /* åŸ·è¡Œstartå°±æœƒé‹è¡Œrun */
         log.info(this.getServiceName() + " service started");
 
         while (!this.isStoped()) {
             try {
-                PullRequest pullRequest = this.pullRequestQueue.take(); //À­È¡¶ÓÁĞpullRequestQueueÖĞÖ¸¶¨µÄÏûÏ¢ÇëÇó
+                PullRequest pullRequest = this.pullRequestQueue.take(); //æ‹‰å–é˜Ÿåˆ—pullRequestQueueä¸­æŒ‡å®šçš„æ¶ˆæ¯è¯·æ±‚
                 if (pullRequest != null) {
                     this.pullMessage(pullRequest);
                 }

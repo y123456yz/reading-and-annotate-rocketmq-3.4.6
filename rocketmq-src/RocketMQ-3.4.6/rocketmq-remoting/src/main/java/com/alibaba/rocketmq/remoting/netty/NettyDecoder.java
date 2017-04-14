@@ -28,21 +28,21 @@ import org.slf4j.LoggerFactory;
 import java.nio.ByteBuffer;
 
 
-/**  Ğ­Òé¸ñÊ½:<length> <header length> <header data> <bodydata>
- *ËùÓĞµÄÍ¨ĞÅĞ­ÒéÁĞ±í¼û RequestCode£¬Í¨¹ı createRequestCommand À´¹¹½¨Í¨ĞÅÄÚÈİ£¬È»ºóÍ¨¹ı NettyEncoder.encode ½øĞĞĞòÁĞ»¯£¬È»ºó·¢ËÍ
- *·şÎñ¶ËÊÕµ½ºóÍ¨¹ı NettyDecoder.decode·´ĞòÁĞºÅ£¬È»ºóNettyServerHandler¶ÁÈ¡·´ĞòÁĞºÅºóµÄ±¨ÎÄ£¬
- * Êı¾İÊÕ·¢ ÇëÇó Ó¦´ğ¶ÔÓ¦µÄ·ÖÖ§ÔÚ RemotingCommandType£¨NettyRemotingAbstract.processMessageReceived£©
- * ½ÓÊÕµ½ RemotingCommand ÔÚ NettyDecoder.decode ÖĞÉú³É
+/**  åè®®æ ¼å¼:<length> <header length> <header data> <bodydata>
+ *æ‰€æœ‰çš„é€šä¿¡åè®®åˆ—è¡¨è§ RequestCodeï¼Œé€šè¿‡ createRequestCommand æ¥æ„å»ºé€šä¿¡å†…å®¹ï¼Œç„¶åé€šè¿‡ NettyEncoder.encode è¿›è¡Œåºåˆ—åŒ–ï¼Œç„¶åå‘é€
+ *æœåŠ¡ç«¯æ”¶åˆ°åé€šè¿‡ NettyDecoder.decodeååºåˆ—å·ï¼Œç„¶åNettyServerHandlerè¯»å–ååºåˆ—å·åçš„æŠ¥æ–‡ï¼Œ
+ * æ•°æ®æ”¶å‘ è¯·æ±‚ åº”ç­”å¯¹åº”çš„åˆ†æ”¯åœ¨ RemotingCommandTypeï¼ˆNettyRemotingAbstract.processMessageReceivedï¼‰
+ * æ¥æ”¶åˆ° RemotingCommand åœ¨ NettyDecoder.decode ä¸­ç”Ÿæˆ
  *
- * @author shijia.wxr  RocketMq·şÎñÆ÷Óë¿Í»§¶ËÍ¨¹ı´«µİRemotingCommandÀ´½»»¥£¬Í¨¹ı NettyDecoder£¬¶ÔRemotingCommand½øĞĞĞ­ÒéµÄ±àÂëÓë½âÂë
+ * @author shijia.wxr  RocketMqæœåŠ¡å™¨ä¸å®¢æˆ·ç«¯é€šè¿‡ä¼ é€’RemotingCommandæ¥äº¤äº’ï¼Œé€šè¿‡ NettyDecoderï¼Œå¯¹RemotingCommandè¿›è¡Œåè®®çš„ç¼–ç ä¸è§£ç 
  *
  */
 /**
  * @author shijia.wxr
- * RocketMq·şÎñÆ÷Óë¿Í»§¶ËÍ¨¹ı´«µİ RemotingCommand À´½»»¥£¬Í¨¹ıNettyDecoder£¬¶ÔRemotingCommand½øĞĞĞ­ÒéµÄ±àÂëÓë½âÂë
+ * RocketMqæœåŠ¡å™¨ä¸å®¢æˆ·ç«¯é€šè¿‡ä¼ é€’ RemotingCommand æ¥äº¤äº’ï¼Œé€šè¿‡NettyDecoderï¼Œå¯¹RemotingCommandè¿›è¡Œåè®®çš„ç¼–ç ä¸è§£ç 
  *
- *  Êı¾İÊÕ·¢ ÇëÇó Ó¦´ğ¶ÔÓ¦µÄ·ÖÖ§ÔÚ RemotingCommandType£¨NettyRemotingAbstract.processMessageReceived£©
-//NettyRemotingClient ºÍ NettyRemotingServer ÖĞµÄinitChannelÖ´ĞĞ¸÷ÖÖÃüÁî»Øµ÷
+ *  æ•°æ®æ”¶å‘ è¯·æ±‚ åº”ç­”å¯¹åº”çš„åˆ†æ”¯åœ¨ RemotingCommandTypeï¼ˆNettyRemotingAbstract.processMessageReceivedï¼‰
+//NettyRemotingClient å’Œ NettyRemotingServer ä¸­çš„initChannelæ‰§è¡Œå„ç§å‘½ä»¤å›è°ƒ
 
  */
 public class NettyDecoder extends LengthFieldBasedFrameDecoder {
@@ -55,8 +55,8 @@ public class NettyDecoder extends LengthFieldBasedFrameDecoder {
         super(FRAME_MAX_LENGTH, 0, 4, 0, 4);
     }
 
-    //×îÖÕÔÚ RemotingCommand.decode ÖĞ½øĞĞ½âÎöÍ¨ĞÅ±¨ÎÄ£¬ encodeÎª×é¶ÔÓ¦µÄÍ¨ĞÅ±¨ÎÄ£¬
-    //ÕâÀï½âÎö³öµÄRemotingCommandÔÚ NettyRemotingServer.initChannel NettyRemotingClient.initChannelÖĞµÄÏà¹Øhandler»áÓÃµ½
+    //æœ€ç»ˆåœ¨ RemotingCommand.decode ä¸­è¿›è¡Œè§£æé€šä¿¡æŠ¥æ–‡ï¼Œ encodeä¸ºç»„å¯¹åº”çš„é€šä¿¡æŠ¥æ–‡ï¼Œ
+    //è¿™é‡Œè§£æå‡ºçš„RemotingCommandåœ¨ NettyRemotingServer.initChannel NettyRemotingClient.initChannelä¸­çš„ç›¸å…³handlerä¼šç”¨åˆ°
     @Override
     public Object decode(ChannelHandlerContext ctx, ByteBuf in) throws Exception {
         ByteBuf frame = null;
@@ -68,7 +68,7 @@ public class NettyDecoder extends LengthFieldBasedFrameDecoder {
 
             ByteBuffer byteBuffer = frame.nioBuffer();
 
-            //RemotingCommand µÄencodeºÍdecode½Ó¿ÚÍê³ÉÍ¨ĞÅ±¨ÎÄµÄĞòÁĞ»¯ºÍ·´ĞòÁĞ»¯
+            //RemotingCommand çš„encodeå’Œdecodeæ¥å£å®Œæˆé€šä¿¡æŠ¥æ–‡çš„åºåˆ—åŒ–å’Œååºåˆ—åŒ–
             return RemotingCommand.decode(byteBuffer);
         } catch (Exception e) {
             log.error("decode exception, " + RemotingHelper.parseChannelRemoteAddr(ctx.channel()), e);

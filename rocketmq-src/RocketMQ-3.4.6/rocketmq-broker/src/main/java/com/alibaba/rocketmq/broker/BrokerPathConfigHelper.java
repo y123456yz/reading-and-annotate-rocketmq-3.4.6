@@ -47,7 +47,7 @@ public class BrokerPathConfigHelper {
                 "writeQueueNums":10
         },
     * */
-    //root/store/config/topics.json  ÕâÀïÃæ´æ´¢µÄÊÇ¸÷ÖÖtopicĞÅÏ¢£¬ÈçÉÏ
+    //root/store/config/topics.json  è¿™é‡Œé¢å­˜å‚¨çš„æ˜¯å„ç§topicä¿¡æ¯ï¼Œå¦‚ä¸Š
     public static String getTopicConfigPath(final String rootDir) {
         return rootDir + File.separator + "config" + File.separator + "topics.json";
     }
@@ -56,7 +56,7 @@ public class BrokerPathConfigHelper {
     *  "topicyyz10@topicyyz10ConsumerGroup":{0:89897052,2:89897210,1:69860336,3:69857016
         },
 
-        /root/store/config/consumerOffset.json   Ã¿¸öÏû·Ñ·Ö×éÔÚtopicÉÏµÄÏû·ÑÎ»µãĞÅÏ¢
+        /root/store/config/consumerOffset.json   æ¯ä¸ªæ¶ˆè´¹åˆ†ç»„åœ¨topicä¸Šçš„æ¶ˆè´¹ä½ç‚¹ä¿¡æ¯
     * */
     public static String getConsumerOffsetPath(final String rootDir) {
         return rootDir + File.separator + "config" + File.separator + "consumerOffset.json";
@@ -73,7 +73,7 @@ public class BrokerPathConfigHelper {
             "retryQueueNums":1,
             "whichBrokerWhenConsumeSlowly":1
     },
-    * ¶©ÔÄÏû·Ñ·Ö×éĞÅÏ¢
+    * è®¢é˜…æ¶ˆè´¹åˆ†ç»„ä¿¡æ¯
     * /root/store/config/subscriptionGroup.json
     * */
     public static String getSubscriptionGroupPath(final String rootDir) {

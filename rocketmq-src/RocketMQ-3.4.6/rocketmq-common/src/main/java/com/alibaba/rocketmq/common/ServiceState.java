@@ -16,7 +16,7 @@
  */
 package com.alibaba.rocketmq.common;
 
-/** ·şÎñ×´Ì¬
+/** æœåŠ¡çŠ¶æ€
  * @author shijia.wxr
  */
 public enum ServiceState {

@@ -37,7 +37,7 @@ public class DefaultMessageFilter implements MessageFilter {
             return true;
         }
 
-        //ÕâÀïµÄÆ¥Åä»úÖÆºÜ¼òµ¥ £¬Ö»Òªtags µÄhashcodeÒ»ÖÂ£¬ ¾ÍÈÏÎªÆ¥Åä; È»ºó°ÑÏûÏ¢·¢ËÍµ½clientÒÔºó×ömsg tagµÄ¾«È·Æ¥Åä¡£
+        //è¿™é‡Œçš„åŒ¹é…æœºåˆ¶å¾ˆç®€å• ï¼Œåªè¦tags çš„hashcodeä¸€è‡´ï¼Œ å°±è®¤ä¸ºåŒ¹é…; ç„¶åæŠŠæ¶ˆæ¯å‘é€åˆ°clientä»¥ååšmsg tagçš„ç²¾ç¡®åŒ¹é…ã€‚
         return subscriptionData.getCodeSet().contains((int) tagsCode);
     }
 

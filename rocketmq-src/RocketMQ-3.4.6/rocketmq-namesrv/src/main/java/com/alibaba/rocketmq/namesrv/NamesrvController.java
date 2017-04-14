@@ -72,7 +72,7 @@ public class NamesrvController {
 
         this.registerProcessor();
 
-        /* ¼ì²é±¾µØ brokerLiveTable ÖĞµÄbrokerĞÅÏ¢ÊÇ·ñ¹ıÆÚ£¬¹ıÆÚÔò´ÓbrokerLiveTableÖĞÌŞ³ı */
+        /* æ£€æŸ¥æœ¬åœ° brokerLiveTable ä¸­çš„brokerä¿¡æ¯æ˜¯å¦è¿‡æœŸï¼Œè¿‡æœŸåˆ™ä»brokerLiveTableä¸­å‰”é™¤ */
         this.scheduledExecutorService.scheduleAtFixedRate(new Runnable() {
 
             @Override
@@ -100,7 +100,7 @@ public class NamesrvController {
         return true;
     }
 
-    //×¢²á¶ÁÏûÏ¢»Øµ÷´¦Àí
+    //æ³¨å†Œè¯»æ¶ˆæ¯å›è°ƒå¤„ç†
     private void registerProcessor() {
         if (namesrvConfig.isClusterTest()) {
             this.remotingServer.registerDefaultProcessor(new ClusterTestRequestProcessor(this, namesrvConfig.getProductEnvName()),
@@ -108,7 +108,7 @@ public class NamesrvController {
         }
         else {
             //NettyRemotingServer.registerDefaultProcessor
-            //×îÖÕ½ÓÊÕµ½ÏûÏ¢»áÖ´ĞĞ//DefaultRequestProcessor.processRequest
+            //æœ€ç»ˆæ¥æ”¶åˆ°æ¶ˆæ¯ä¼šæ‰§è¡Œ//DefaultRequestProcessor.processRequest
             this.remotingServer.registerDefaultProcessor(new DefaultRequestProcessor(this), this.remotingExecutor);
         }
     }

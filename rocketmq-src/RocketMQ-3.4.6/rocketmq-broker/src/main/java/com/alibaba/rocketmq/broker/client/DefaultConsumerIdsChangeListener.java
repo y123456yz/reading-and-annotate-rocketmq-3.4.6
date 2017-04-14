@@ -22,7 +22,7 @@ import io.netty.channel.Channel;
 import java.util.List;
 
 
-/**  ºÍ¿Í»§¶ËÏû·ÑµÄrebalance²Ù×÷ÓÐ¹Ø¡£Ïû·ÑÕß·Ö×éÖÐÓÐÏû·ÑÕßÔö¼ÓºÍÍË³ö£¬»òÕßtopicÓÐÉ¾³ýºÍÔö¼ÓÊ±£¬ Í¨Öªclient×örebalance .
+/**  å’Œå®¢æˆ·ç«¯æ¶ˆè´¹çš„rebalanceæ“ä½œæœ‰å…³ã€‚æ¶ˆè´¹è€…åˆ†ç»„ä¸­æœ‰æ¶ˆè´¹è€…å¢žåŠ å’Œé€€å‡ºï¼Œæˆ–è€…topicæœ‰åˆ é™¤å’Œå¢žåŠ æ—¶ï¼Œ é€šçŸ¥clientåšrebalance .
  * @author shijia.wxr
  */
 public class DefaultConsumerIdsChangeListener implements ConsumerIdsChangeListener {

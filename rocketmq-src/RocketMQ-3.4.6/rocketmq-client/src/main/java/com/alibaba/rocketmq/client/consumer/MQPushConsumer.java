@@ -25,7 +25,7 @@ import com.alibaba.rocketmq.client.exception.MQClientException;
 /**
  * Push consumer
  *
- * @author shijia.wxr   接口实现在DefaultMQPushConsumer
+ * @author shijia.wxr   鎺ュ彛瀹炵幇鍦―efaultMQPushConsumer
  */
 public interface MQPushConsumer extends MQConsumer {
     /**
@@ -75,10 +75,10 @@ public interface MQPushConsumer extends MQConsumer {
      *
      * @param topic
      * @param fullClassName
-     *            full class name，must extend
+     *            full class name锛宮ust extend
      *            com.alibaba.rocketmq.common.filter. MessageFilter
      * @param filterClassSource
-     *            class source code，used UTF-8 file encoding,must be responsible
+     *            class source code锛寀sed UTF-8 file encoding,must be responsible
      *            for your code safety
      * @throws MQClientException
      */

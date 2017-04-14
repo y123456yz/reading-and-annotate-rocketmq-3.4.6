@@ -33,15 +33,15 @@ import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 
 
-/**  Ğ­Òé¸ñÊ½:<length> <header length> <header data> <bodydata>
- *ËùÓĞµÄÍ¨ĞÅĞ­ÒéÁĞ±í¼û RequestCode£¬Í¨¹ı createRequestCommand À´¹¹½¨Í¨ĞÅÄÚÈİ£¬È»ºóÍ¨¹ı NettyEncoder.encode ½øĞĞĞòÁĞ»¯£¬È»ºó·¢ËÍ
- *·şÎñ¶ËÊÕµ½ºóÍ¨¹ı NettyDecoder.decode·´ĞòÁĞºÅ£¬È»ºóNettyServerHandler¶ÁÈ¡·´ĞòÁĞºÅºóµÄ±¨ÎÄ£¬
- * Êı¾İÊÕ·¢ ÇëÇó Ó¦´ğ¶ÔÓ¦µÄ·ÖÖ§ÔÚ RemotingCommandType£¨NettyRemotingAbstract.processMessageReceived£©
- * ½ÓÊÕµ½ RemotingCommand ÔÚ NettyDecoder.decode ÖĞÉú³É
+/**  åè®®æ ¼å¼:<length> <header length> <header data> <bodydata>
+ *æ‰€æœ‰çš„é€šä¿¡åè®®åˆ—è¡¨è§ RequestCodeï¼Œé€šè¿‡ createRequestCommand æ¥æ„å»ºé€šä¿¡å†…å®¹ï¼Œç„¶åé€šè¿‡ NettyEncoder.encode è¿›è¡Œåºåˆ—åŒ–ï¼Œç„¶åå‘é€
+ *æœåŠ¡ç«¯æ”¶åˆ°åé€šè¿‡ NettyDecoder.decodeååºåˆ—å·ï¼Œç„¶åNettyServerHandlerè¯»å–ååºåˆ—å·åçš„æŠ¥æ–‡ï¼Œ
+ * æ•°æ®æ”¶å‘ è¯·æ±‚ åº”ç­”å¯¹åº”çš„åˆ†æ”¯åœ¨ RemotingCommandTypeï¼ˆNettyRemotingAbstract.processMessageReceivedï¼‰
+ * æ¥æ”¶åˆ° RemotingCommand åœ¨ NettyDecoder.decode ä¸­ç”Ÿæˆ
  *
- * @author shijia.wxr  RocketMq·şÎñÆ÷Óë¿Í»§¶ËÍ¨¹ı´«µİRemotingCommandÀ´½»»¥£¬Í¨¹ı NettyDecoder£¬¶ÔRemotingCommand½øĞĞĞ­ÒéµÄ±àÂëÓë½âÂë
+ * @author shijia.wxr  RocketMqæœåŠ¡å™¨ä¸å®¢æˆ·ç«¯é€šè¿‡ä¼ é€’RemotingCommandæ¥äº¤äº’ï¼Œé€šè¿‡ NettyDecoderï¼Œå¯¹RemotingCommandè¿›è¡Œåè®®çš„ç¼–ç ä¸è§£ç 
  *
- */ //¸ÃÀàµÄencodeºÍdecodeÍê³ÉÍ¨ĞÅ±¨ÎÄµÄĞòÁĞ»¯ºÍ·´ĞòÁĞ»¯
+ */ //è¯¥ç±»çš„encodeå’Œdecodeå®Œæˆé€šä¿¡æŠ¥æ–‡çš„åºåˆ—åŒ–å’Œååºåˆ—åŒ–
 public class RemotingCommand {
     private static final Logger log = LoggerFactory.getLogger(RemotingHelper.RemotingLogName);
     public static String RemotingVersionKey = "rocketmq.remoting.version";
@@ -56,22 +56,22 @@ public class RemotingCommand {
     private static final int RPC_ONEWAY = 1; // 0, RPC
     // 1, Oneway
 
-    //ÔÚrocketMQProtocolEncodeÖĞ½øĞĞencode£¬È»ºó´«Êä¸ø¶Ô·½
-    private int code; //RequestCode.CONSUMER_SEND_MSG_BACK µÈ
+    //åœ¨rocketMQProtocolEncodeä¸­è¿›è¡Œencodeï¼Œç„¶åä¼ è¾“ç»™å¯¹æ–¹
+    private int code; //RequestCode.CONSUMER_SEND_MSG_BACK ç­‰
     private LanguageCode language = LanguageCode.JAVA;
     private int version = 0;
-    //×ötcpÁ¬½ÓÉÏµÄÏß³Ì¸´ÓÃ¡£
+    //åštcpè¿æ¥ä¸Šçš„çº¿ç¨‹å¤ç”¨ã€‚
     private int opaque = RequestId.getAndIncrement();
-    //¸Ã±¨ÎÄÇëÇó»¹ÊÇÓ¦´ğ  ½ÓÊÕ·ÖÖ§¼ûprocessMessageReceived  ÅĞ¶Ï¼û isResponseType
-    private int flag = 0; //header dataµÄflag:x Ö¸¶¨  ÔÚ getType ×ª»»Îª RemotingCommandType.RESPONSE_COMMAND »òÕß  REQUEST_COMMAND
+    //è¯¥æŠ¥æ–‡è¯·æ±‚è¿˜æ˜¯åº”ç­”  æ¥æ”¶åˆ†æ”¯è§processMessageReceived  åˆ¤æ–­è§ isResponseType
+    private int flag = 0; //header dataçš„flag:x æŒ‡å®š  åœ¨ getType è½¬æ¢ä¸º RemotingCommandType.RESPONSE_COMMAND æˆ–è€…  REQUEST_COMMAND
     private String remark;
-    //°ÑÏÂÃæcustomHeaderÖĞµÄĞÅÏ¢Ìî³äµ½ÕâÀï£¬¼û makeCustomHeaderToNet
+    //æŠŠä¸‹é¢customHeaderä¸­çš„ä¿¡æ¯å¡«å……åˆ°è¿™é‡Œï¼Œè§ makeCustomHeaderToNet
     //"extFields":{"topic":"yyztest2","queueId":"3","consumerGroup":"yyzGroup2","commitOffset":"28"}
     private HashMap<String, String> extFields;
 
-    //ÀıÈçCONSUMER_SEND_MSG_BACKÏûÏ¢£¬customHeaderÎªConsumerSendMsgBackRequestHeader Ìî³ä¼ûconsumerSendMessageBack
+    //ä¾‹å¦‚CONSUMER_SEND_MSG_BACKæ¶ˆæ¯ï¼ŒcustomHeaderä¸ºConsumerSendMsgBackRequestHeader å¡«å……è§consumerSendMessageBack
     //header data
-    private transient CommandCustomHeader customHeader; //ÀıÈçCONSUMER_SEND_MSG_BACKÏûÏ¢£¬customHeader Ìî³ä¼û MQClientAPIImpl.consumerSendMessageBack
+    private transient CommandCustomHeader customHeader; //ä¾‹å¦‚CONSUMER_SEND_MSG_BACKæ¶ˆæ¯ï¼ŒcustomHeader å¡«å……è§ MQClientAPIImpl.consumerSendMessageBack
 
     private static final Map<Class<? extends CommandCustomHeader>, Field[]> clazzFieldsCache =
             new HashMap<Class<? extends CommandCustomHeader>, Field[]>();
@@ -145,7 +145,7 @@ public class RemotingCommand {
         return cmd;
     }
 
-    //Class<? extends CommandCustomHeader> ·ºĞÍ£¬±íÊ¾classHeader²ÎÊı¿ÉÒÔÊÇ¼Ì³Ğ CommandCustomHeader ÀàµÄËùÓĞ×ÓÀà
+    //Class<? extends CommandCustomHeader> æ³›å‹ï¼Œè¡¨ç¤ºclassHeaderå‚æ•°å¯ä»¥æ˜¯ç»§æ‰¿ CommandCustomHeader ç±»çš„æ‰€æœ‰å­ç±»
     public static RemotingCommand createResponseCommand(Class<? extends CommandCustomHeader> classHeader) {
         RemotingCommand cmd = createResponseCommand(RemotingSysResponseCode.SYSTEM_ERROR, "not set any response code", classHeader);
 
@@ -198,20 +198,20 @@ public class RemotingCommand {
 
     public void makeCustomHeaderToNet() {
         if (this.customHeader != null) {
-            //´ÓheaderÖĞÈ¡³öÕâ¸öKey class¶ÔÓ¦µÄËùÓĞfiled
+            //ä»headerä¸­å–å‡ºè¿™ä¸ªKey classå¯¹åº”çš„æ‰€æœ‰filed
             Field[] fields = getClazzFields(customHeader.getClass());
             if (null == this.extFields) {
                 this.extFields = new HashMap<String, String>();
             }
 
-            for (Field field : fields) { //±éÀúfiledsÊı×é
+            for (Field field : fields) { //éå†filedsæ•°ç»„
                 if (!Modifier.isStatic(field.getModifiers())) {
-                    String name = field.getName(); //ÄÃµ½filedµÄname
+                    String name = field.getName(); //æ‹¿åˆ°filedçš„name
                     if (!name.startsWith("this")) {
                         Object value = null;
                         try {
                             field.setAccessible(true);
-                            //ÄÃµ½filedµÄvalue
+                            //æ‹¿åˆ°filedçš„value
                             value = field.get(this.customHeader);
                         }
                         catch (IllegalArgumentException e) {
@@ -219,7 +219,7 @@ public class RemotingCommand {
                         catch (IllegalAccessException e) {
                         }
 
-                        if (value != null) { //Ğ´Èëµ±Ç°RPCµÄextFields MApÖĞ
+                        if (value != null) { //å†™å…¥å½“å‰RPCçš„extFields MApä¸­
                             this.extFields.put(name, value.toString());
                         }
                     }
@@ -253,14 +253,14 @@ public class RemotingCommand {
     private static final String BooleanCanonicalName2 = boolean.class.getCanonicalName();//
 
 
-    // header data ÄÚÈİ:{"code":15,"extFields":{"topic":"yyztest2","queueId":"3","consumerGroup":"yyzGroup2","commitOffset":"28"},"flag":2,
+    // header data å†…å®¹:{"code":15,"extFields":{"topic":"yyztest2","queueId":"3","consumerGroup":"yyzGroup2","commitOffset":"28"},"flag":2,
     // "language":"JAVA","opaque":726,"serializeTypeCurrentRPC":"JSON","version":115}
 
-    //½âÎöheader dataÖĞextFieldsĞÅÏ¢µ½extFields
+    //è§£æheader dataä¸­extFieldsä¿¡æ¯åˆ°extFields
     public CommandCustomHeader decodeCommandCustomHeader(Class<? extends CommandCustomHeader> classHeader) throws RemotingCommandException {
         CommandCustomHeader objectHeader;
         try {
-            //ÀıÈçÈç¹û´«½øÀ´µÄ²ÎÊıÊÇ ConsumerSendMsgBackRequestHeader.class £¬ÔòÕâÀïnewÒ»¸ö ConsumerSendMsgBackRequestHeader ¶ÔÏó
+            //ä¾‹å¦‚å¦‚æœä¼ è¿›æ¥çš„å‚æ•°æ˜¯ ConsumerSendMsgBackRequestHeader.class ï¼Œåˆ™è¿™é‡Œnewä¸€ä¸ª ConsumerSendMsgBackRequestHeader å¯¹è±¡
             objectHeader = classHeader.newInstance();
         }
         catch (InstantiationException e) {
@@ -327,10 +327,10 @@ public class RemotingCommand {
 
 
     private byte[] headerEncode() {
-        //length + header length + header data  + body dataÖĞµÄheader dataĞ´ÈëextFields MApÖĞ
+        //length + header length + header data  + body dataä¸­çš„header dataå†™å…¥extFields MApä¸­
         this.makeCustomHeaderToNet();
         if (SerializeType.ROCKETMQ == serializeTypeCurrentRPC) {
-            //½Ó×Å°Ñ
+            //æ¥ç€æŠŠ
             return RocketMQSerializable.rocketMQProtocolEncode(this);
         }
         else {
@@ -338,15 +338,15 @@ public class RemotingCommand {
         }
     }
 
-    //header dataĞòÁĞ»¯½âÎö
+    //header dataåºåˆ—åŒ–è§£æ
     private static RemotingCommand headerDecode(byte[] headerData, SerializeType type) {
         switch (type) {
-        case JSON: //JSONĞòÁĞ»¯·½Ê½
-            //·´ĞòÁĞ»¯ header data ºÍ ÀàRemotingCommand
+        case JSON: //JSONåºåˆ—åŒ–æ–¹å¼
+            //ååºåˆ—åŒ– header data å’Œ ç±»RemotingCommand
             RemotingCommand resultJson = RemotingSerializable.decode(headerData, RemotingCommand.class);
             resultJson.setSerializeTypeCurrentRPC(type);
             return resultJson;
-        case ROCKETMQ: //·ÉJSON¸ñÊ½£¬ÔòÒ»¸ö
+        case ROCKETMQ: //é£JSONæ ¼å¼ï¼Œåˆ™ä¸€ä¸ª
             RemotingCommand resultRMQ = RocketMQSerializable.rocketMQProtocolDecode(headerData);
             resultRMQ.setSerializeTypeCurrentRPC(type);
             return resultRMQ;
@@ -358,10 +358,10 @@ public class RemotingCommand {
     }
 
     /*
-1¡¢length(×Ü³¤¶È£¬ÓÃ4¸ö×Ö½Ú´æ´¢)
-2¡¢header length £¨°üÍ·³¤¶È£© //header lengthÒ»¹²ËÄ×Ö½Ú£¬ÆäÖĞµÄµÚ1×Ö½ÚÓÃÀ´´æ´¢code±êÊ¶(SerializeType.JSON »òÕß SerializeType.ROCKETMQ)£¬¼û markProtocolType
-3¡¢header data(°üÍ·Êı¾İ)
-4¡¢body data(Êı¾İ°üÊı¾İ)
+1ã€length(æ€»é•¿åº¦ï¼Œç”¨4ä¸ªå­—èŠ‚å­˜å‚¨)
+2ã€header length ï¼ˆåŒ…å¤´é•¿åº¦ï¼‰ //header lengthä¸€å…±å››å­—èŠ‚ï¼Œå…¶ä¸­çš„ç¬¬1å­—èŠ‚ç”¨æ¥å­˜å‚¨codeæ ‡è¯†(SerializeType.JSON æˆ–è€… SerializeType.ROCKETMQ)ï¼Œè§ markProtocolType
+3ã€header data(åŒ…å¤´æ•°æ®)
+4ã€body data(æ•°æ®åŒ…æ•°æ®)
     * */
     public ByteBuffer encode() {
         // 1> header length size
@@ -381,7 +381,7 @@ public class RemotingCommand {
         // length
         result.putInt(length);
 
-        // header length //header lengthÒ»¹²ËÄ×Ö½Ú£¬ÆäÖĞµÄµÚ1×Ö½ÚÓÃÀ´´æ´¢code±êÊ¶(SerializeType.JSON »òÕß SerializeType.ROCKETMQ)£¬¼ûmarkProtocolType
+        // header length //header lengthä¸€å…±å››å­—èŠ‚ï¼Œå…¶ä¸­çš„ç¬¬1å­—èŠ‚ç”¨æ¥å­˜å‚¨codeæ ‡è¯†(SerializeType.JSON æˆ–è€… SerializeType.ROCKETMQ)ï¼Œè§markProtocolType
         result.put(markProtocolType(headerData.length, serializeTypeCurrentRPC));
 
         // header data
@@ -401,23 +401,23 @@ public class RemotingCommand {
         return encodeHeader(this.body != null ? this.body.length : 0);
     }
 
-    //header lengthÒ»¹²ËÄ×Ö½Ú£¬ÆäÖĞµÄµÚ1×Ö½ÚÓÃÀ´´æ´¢code±êÊ¶(SerializeType.JSON »òÕß SerializeType.ROCKETMQ)£¬¼ûmarkProtocolType
+    //header lengthä¸€å…±å››å­—èŠ‚ï¼Œå…¶ä¸­çš„ç¬¬1å­—èŠ‚ç”¨æ¥å­˜å‚¨codeæ ‡è¯†(SerializeType.JSON æˆ–è€… SerializeType.ROCKETMQ)ï¼Œè§markProtocolType
     //length + header length + header data  + body data
-    //½âÎö°üÍ· length + header length + header data
+    //è§£æåŒ…å¤´ length + header length + header data
     public ByteBuffer encodeHeader(final int bodyLength) {
         // 1> header length size
         int length = 4;
 
         // 2> header data length
         byte[] headerData;
-        headerData = this.headerEncode(); //header data×ª»»ÎªÍøÂç×Ö½ÚĞò
+        headerData = this.headerEncode(); //header dataè½¬æ¢ä¸ºç½‘ç»œå­—èŠ‚åº
 
         length += headerData.length;
 
         // 3> body data length
         length += bodyLength;
 
-        ByteBuffer result = ByteBuffer.allocate(4 + length - bodyLength); //length + header length + header data ²»°üÀ¨body
+        ByteBuffer result = ByteBuffer.allocate(4 + length - bodyLength); //length + header length + header data ä¸åŒ…æ‹¬body
 
         // length
         result.putInt(length);
@@ -434,10 +434,10 @@ public class RemotingCommand {
     }
 
     /*
-1¡¢length(×Ü³¤¶È£¬ÓÃ4¸ö×Ö½Ú´æ´¢)
-2¡¢header length £¨°üÍ·³¤¶È£© //header lengthÒ»¹²ËÄ×Ö½Ú£¬ÆäÖĞµÄµÚ1×Ö½ÚÓÃÀ´´æ´¢code±êÊ¶(SerializeType.JSON »òÕß SerializeType.ROCKETMQ)£¬¼ûmarkProtocolType
-3¡¢header data(°üÍ·Êı¾İ)
-4¡¢body data(Êı¾İ°üÊı¾İ)
+1ã€length(æ€»é•¿åº¦ï¼Œç”¨4ä¸ªå­—èŠ‚å­˜å‚¨)
+2ã€header length ï¼ˆåŒ…å¤´é•¿åº¦ï¼‰ //header lengthä¸€å…±å››å­—èŠ‚ï¼Œå…¶ä¸­çš„ç¬¬1å­—èŠ‚ç”¨æ¥å­˜å‚¨codeæ ‡è¯†(SerializeType.JSON æˆ–è€… SerializeType.ROCKETMQ)ï¼Œè§markProtocolType
+3ã€header data(åŒ…å¤´æ•°æ®)
+4ã€body data(æ•°æ®åŒ…æ•°æ®)
     * */
     public static RemotingCommand decode(final byte[] array) {
         ByteBuffer byteBuffer = ByteBuffer.wrap(array);
@@ -445,10 +445,10 @@ public class RemotingCommand {
     }
 
     /*
-1¡¢length(×Ü³¤¶È£¬ÓÃ4¸ö×Ö½Ú´æ´¢)
-2¡¢header length £¨°üÍ·³¤¶È£©//header lengthÒ»¹²ËÄ×Ö½Ú£¬ÆäÖĞµÄµÚ1×Ö½ÚÓÃÀ´´æ´¢code±êÊ¶(SerializeType.JSON »òÕß SerializeType.ROCKETMQ)£¬¼û markProtocolType
-3¡¢header data(°üÍ·Êı¾İ)
-4¡¢body data(Êı¾İ°üÊı¾İ)
+1ã€length(æ€»é•¿åº¦ï¼Œç”¨4ä¸ªå­—èŠ‚å­˜å‚¨)
+2ã€header length ï¼ˆåŒ…å¤´é•¿åº¦ï¼‰//header lengthä¸€å…±å››å­—èŠ‚ï¼Œå…¶ä¸­çš„ç¬¬1å­—èŠ‚ç”¨æ¥å­˜å‚¨codeæ ‡è¯†(SerializeType.JSON æˆ–è€… SerializeType.ROCKETMQ)ï¼Œè§ markProtocolType
+3ã€header data(åŒ…å¤´æ•°æ®)
+4ã€body data(æ•°æ®åŒ…æ•°æ®)
     * */
     public static RemotingCommand decode(final ByteBuffer byteBuffer) {
         int length = byteBuffer.limit();
@@ -458,7 +458,7 @@ public class RemotingCommand {
         byte[] headerData = new byte[headerLength];
         byteBuffer.get(headerData);
 
-        //·´ĞòÁĞ»¯½âÎöheader dataºÍRemotingCommandÀà
+        //ååºåˆ—åŒ–è§£æheader dataå’ŒRemotingCommandç±»
         RemotingCommand cmd = headerDecode(headerData, getProtocolType(oriHeaderLen));
 
         int bodyLength = length - 4 - headerLength;
@@ -467,12 +467,12 @@ public class RemotingCommand {
             bodyData = new byte[bodyLength];
             byteBuffer.get(bodyData);
         }
-        cmd.body = bodyData; //°Ñbody²¿·Ö»¹Ô­³öÀ´£¬Ò²¾ÍÊÇ°ÑÏûÏ¢ÄÚÈİ
+        cmd.body = bodyData; //æŠŠbodyéƒ¨åˆ†è¿˜åŸå‡ºæ¥ï¼Œä¹Ÿå°±æ˜¯æŠŠæ¶ˆæ¯å†…å®¹
 
         return cmd;
     }
 
-    //header lengthÒ»¹²ËÄ×Ö½Ú£¬ÆäÖĞµÄµÚ1×Ö½ÚÓÃÀ´´æ´¢code±êÊ¶(SerializeType.JSON »òÕß SerializeType.ROCKETMQ)£¬¼ûmarkProtocolType
+    //header lengthä¸€å…±å››å­—èŠ‚ï¼Œå…¶ä¸­çš„ç¬¬1å­—èŠ‚ç”¨æ¥å­˜å‚¨codeæ ‡è¯†(SerializeType.JSON æˆ–è€… SerializeType.ROCKETMQ)ï¼Œè§markProtocolType
     public static byte[] markProtocolType(int source, SerializeType type) {
         byte[] result = new byte[4];
         result[0] = type.getCode();

@@ -30,7 +30,7 @@ import java.util.concurrent.TimeUnit;
 
 
 /**
- * ¼àÌıÏû·ÑÕßºÍÉú²úÕßµÄnettyÊÂ¼ş¡£
+ * ç›‘å¬æ¶ˆè´¹è€…å’Œç”Ÿäº§è€…çš„nettyäº‹ä»¶ã€‚
  * @author shijia.wxr
  */
 public class ClientHousekeepingService implements ChannelEventListener {

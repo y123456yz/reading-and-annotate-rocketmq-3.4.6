@@ -25,22 +25,22 @@ import java.nio.ByteBuffer;
 
 
 /**
- * msgĞÅÏ¢
- * @author shijia.wxr  http://blog.csdn.net/xxxxxx91116/article/details/50333161 ¼ÇÂ¼ÁËÏûÏ¢´æ´¢¸ñÊ½
- * @author shijia.wxr  http://blog.csdn.net/xxxxxx91116/article/details/50333161 ¼ÇÂ¼ÁËÏûÏ¢´æ´¢¸ñÊ½
- * »òÕß²Î¿¼http://blog.csdn.net/chunlongyu/article/details/54576649
- * ´æ´¢ÖĞÓÃµ½µÄÏûÏ¢ÄÚÈİĞÅÏ¢
+ * msgä¿¡æ¯
+ * @author shijia.wxr  http://blog.csdn.net/xxxxxx91116/article/details/50333161 è®°å½•äº†æ¶ˆæ¯å­˜å‚¨æ ¼å¼
+ * @author shijia.wxr  http://blog.csdn.net/xxxxxx91116/article/details/50333161 è®°å½•äº†æ¶ˆæ¯å­˜å‚¨æ ¼å¼
+ * æˆ–è€…å‚è€ƒhttp://blog.csdn.net/chunlongyu/article/details/54576649
+ * å­˜å‚¨ä¸­ç”¨åˆ°çš„æ¶ˆæ¯å†…å®¹ä¿¡æ¯
  */
 public class MessageExt extends Message {
     private static final long serialVersionUID = 5720810158625748049L;
 
-    //ÒÔÏÂ³ÉÔ±¼¸ºõÔÚMessageDecoder.decode()ÖĞµ÷ÓÃ¸³Öµ
+    //ä»¥ä¸‹æˆå‘˜å‡ ä¹åœ¨MessageDecoder.decode()ä¸­è°ƒç”¨èµ‹å€¼
 
     private int queueId;
     private int storeSize;
-    //¸ÃÌõsmg¶ÔÓ¦ÔÚ¶ÓÁĞÖĞµÄoffset ´ÓProcessQueue.putMessage½Ó¿ÚÒ²¿ÉÒÔ¿´³ö
-    private long queueOffset; //MessageDecoder.decode()ÖĞµ÷ÓÃ¸³Öµ
-    private int sysFlag;//±êÃ÷ÊÇ·ñÊÂÎñ´¦ÀíµÈ
+    //è¯¥æ¡smgå¯¹åº”åœ¨é˜Ÿåˆ—ä¸­çš„offset ä»ProcessQueue.putMessageæ¥å£ä¹Ÿå¯ä»¥çœ‹å‡º
+    private long queueOffset; //MessageDecoder.decode()ä¸­è°ƒç”¨èµ‹å€¼
+    private int sysFlag;//æ ‡æ˜æ˜¯å¦äº‹åŠ¡å¤„ç†ç­‰
     private long bornTimestamp;
     private SocketAddress bornHost;
     private long storeTimestamp;
@@ -48,7 +48,7 @@ public class MessageExt extends Message {
     private String msgId;
     private long commitLogOffset;
     private int bodyCRC;
-    private int reconsumeTimes; //¸ÃÌõÏûÏ¢ÖØ¸´Ïû·ÑµÄ´ÎÊı£¬
+    private int reconsumeTimes; //è¯¥æ¡æ¶ˆæ¯é‡å¤æ¶ˆè´¹çš„æ¬¡æ•°ï¼Œ
 
     private long preparedTransactionOffset;
 
@@ -189,7 +189,7 @@ public class MessageExt extends Message {
         return queueOffset;
     }
 
-    //MessageDecoder.decode()ÖĞµ÷ÓÃ¸³Öµ
+    //MessageDecoder.decode()ä¸­è°ƒç”¨èµ‹å€¼
     public void setQueueOffset(long queueOffset) {
         this.queueOffset = queueOffset;
     }
@@ -223,12 +223,12 @@ public class MessageExt extends Message {
         return TopicFilterType.SINGLE_TAG;
     }
 
-    //ÔÚsendMessageBack½Ó¿ÚÊ¹ÓÃ DefaultMQPushConsumerImpl.sendMessageBack
+    //åœ¨sendMessageBackæ¥å£ä½¿ç”¨ DefaultMQPushConsumerImpl.sendMessageBack
     public int getReconsumeTimes() {
         return reconsumeTimes;
     }
 
-    //processConsumeResult»áµ÷ÓÃ¸³Öµ
+    //processConsumeResultä¼šè°ƒç”¨èµ‹å€¼
     public void setReconsumeTimes(int reconsumeTimes) {
         this.reconsumeTimes = reconsumeTimes;
     }

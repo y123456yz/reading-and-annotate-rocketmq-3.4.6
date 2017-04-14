@@ -1178,7 +1178,7 @@ public class AdminBrokerProcessor implements NettyRequestProcessor {
                 }
                 double consumeTps = this.brokerController.getBrokerStatsManager().tpsGroupGetNums(group, topic);
                 consumeTps += consumeStats.getConsumeTps();
-                consumeStats.setConsumeTps(consumeTps); //group消费所有topic的tps
+                consumeStats.setConsumeTps(consumeTps); //group娑堣垂鎵�鏈塼opic鐨則ps
                 totalDiff += consumeStats.computeTotalDiff();
                 consumeStatsList.add(consumeStats);
             }

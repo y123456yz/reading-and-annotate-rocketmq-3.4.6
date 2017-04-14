@@ -41,9 +41,9 @@ import java.util.List;
 
 
 /**
- * brokerµ÷ÓÃÍâ²¿µÄ½Ó¿Ú¡£
- * BrokerOuterAPI:ÊÇbrokerºÍ±ğµÄÄ£¿éÍ¨ĞÅµÄÀà£¬·â×°ÁËNettyRemotingClient¡£
- * MQClientImpl:ÊÇ¿Í»§¶ËºÍbrokerÓënameserverÍ¨ĞÅµÄÀà£¬Ò²·â×°ÁËNettyRemotingClient¡£
+ * brokerè°ƒç”¨å¤–éƒ¨çš„æ¥å£ã€‚
+ * BrokerOuterAPI:æ˜¯brokerå’Œåˆ«çš„æ¨¡å—é€šä¿¡çš„ç±»ï¼Œå°è£…äº†NettyRemotingClientã€‚
+ * MQClientImpl:æ˜¯å®¢æˆ·ç«¯å’Œbrokerä¸nameserveré€šä¿¡çš„ç±»ï¼Œä¹Ÿå°è£…äº†NettyRemotingClientã€‚
  * @author shijia.wxr
  * @author manhong.yqd
  */
@@ -108,7 +108,7 @@ public class BrokerOuterAPI {
 
 
     /**
-     * °Ñbroker×¢²áµ½nameserver.  Í¬Ê±°Ñbroker¹ÜÀíµÄtopicÅäÖÃĞÅÏ¢Ìá½»¸ønameserver½øĞĞÎ¬»¤¡£
+     * æŠŠbrokeræ³¨å†Œåˆ°nameserver.  åŒæ—¶æŠŠbrokerç®¡ç†çš„topicé…ç½®ä¿¡æ¯æäº¤ç»™nameserverè¿›è¡Œç»´æŠ¤ã€‚
      * @param namesrvAddr
      * @param clusterName
      * @param brokerAddr
@@ -186,15 +186,15 @@ public class BrokerOuterAPI {
 
 
     /**
-     * ÓĞtopicÅäÖÃĞÅÏ¢·¢Éú±ä»¯µÄÊ±ºò £¬ÍÆËÍµ½nameserver .
-     * @param clusterName broker¹éÊôµÄ¼¯Èº
-     * @param brokerAddr brokerµÄµØÖ·¡£
-     * @param brokerName brokerÃû³Æ£¬Àí½âÎªÒ»Ö÷¶à±¸×éºÏ¶ø³ÉµÄbrokerµ¥Ôª¡£
-     * @param brokerId broker±àºÅ£¬ ´óÓÚ0ÔòÎªslave  £¬Îª0ÔòÎªmaster .
-     * @param haServerAddr ÓÃÓÚÖ÷±¸¸´ÖÆµÄha µØÖ·¡£
-     * @param topicConfigWrapper topicÅäÖÃµÄ°ü×°Æ÷¡£
-     * @param filterServerList ¹ıÂË·şÎñÆ÷ÁĞ±í£¨Ò»¸öbroker¿ÉÒÔÓĞ¶à¸ö¹ıÂË·şÎñÆ÷ £¿£©
-     * @param oneway µ¥Ïòµ÷ÓÃ¡£
+     * æœ‰topicé…ç½®ä¿¡æ¯å‘ç”Ÿå˜åŒ–çš„æ—¶å€™ ï¼Œæ¨é€åˆ°nameserver .
+     * @param clusterName brokerå½’å±çš„é›†ç¾¤
+     * @param brokerAddr brokerçš„åœ°å€ã€‚
+     * @param brokerName brokeråç§°ï¼Œç†è§£ä¸ºä¸€ä¸»å¤šå¤‡ç»„åˆè€Œæˆçš„brokerå•å…ƒã€‚
+     * @param brokerId brokerç¼–å·ï¼Œ å¤§äº0åˆ™ä¸ºslave  ï¼Œä¸º0åˆ™ä¸ºmaster .
+     * @param haServerAddr ç”¨äºä¸»å¤‡å¤åˆ¶çš„ha åœ°å€ã€‚
+     * @param topicConfigWrapper topicé…ç½®çš„åŒ…è£…å™¨ã€‚
+     * @param filterServerList è¿‡æ»¤æœåŠ¡å™¨åˆ—è¡¨ï¼ˆä¸€ä¸ªbrokerå¯ä»¥æœ‰å¤šä¸ªè¿‡æ»¤æœåŠ¡å™¨ ï¼Ÿï¼‰
+     * @param oneway å•å‘è°ƒç”¨ã€‚
      * @return
      */
     public RegisterBrokerResult registerBrokerAll(//
@@ -211,7 +211,7 @@ public class BrokerOuterAPI {
 
         List<String> nameServerAddressList = this.remotingClient.getNameServerAddressList();
         if (nameServerAddressList != null) {
-            for (String namesrvAddr : nameServerAddressList) { //°ÑĞÅÏ¢Ğ´µ½¶à¸önameserverÈçºÎ±£Ö¤Êı¾İµÄÒ»ÖÂĞÔ¡£
+            for (String namesrvAddr : nameServerAddressList) { //æŠŠä¿¡æ¯å†™åˆ°å¤šä¸ªnameserverå¦‚ä½•ä¿è¯æ•°æ®çš„ä¸€è‡´æ€§ã€‚
                 try {
                     RegisterBrokerResult result =
                             this.registerBroker(namesrvAddr, clusterName, brokerAddr, brokerName, brokerId,

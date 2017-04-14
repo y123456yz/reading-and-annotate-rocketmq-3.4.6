@@ -22,19 +22,19 @@ import java.util.List;
 
 
 /**
- * @author shijia.wxr   PullResultExtÀà¼Ì³Ğ¸ÃÀà
+ * @author shijia.wxr   PullResultExtç±»ç»§æ‰¿è¯¥ç±»
  */
 public class PullResult {
     private final PullStatus pullStatus;
     private final long nextBeginOffset;
     private final long minOffset;
     private final long maxOffset;
-    //¿Í»§¶ËÀ­È¡µ½ÏûÏ¢ºóÔÚÍ¨¹ı PullAPIWrapper.processPullResult ÖĞ°Ñ½ÓÊÕµ½µÄÏûÏ¢¸³Öµ¸ømsgFoundList
-    //À­È¡µ½µÄÏûÏ¢£¬Æ¥Åätagºó´æÈëmsgFoundList   ¸³Öµ¼ûPullAPIWrapper.processPullResult
-    //À­È¡µ½ÏûÏ¢ºóÊ×ÏÈ´æÈëPullResult.msgFoundList£¬ÔÚDefaultMQPushConsumerImpl.pullMessageÈ»ºó½øĞĞ¹æÔòÆ¥Åä£¬Æ¥ÅäµÄmsg»á½øÒ»²½´æÈëProcessQueue.msgTreeMap
+    //å®¢æˆ·ç«¯æ‹‰å–åˆ°æ¶ˆæ¯ååœ¨é€šè¿‡ PullAPIWrapper.processPullResult ä¸­æŠŠæ¥æ”¶åˆ°çš„æ¶ˆæ¯èµ‹å€¼ç»™msgFoundList
+    //æ‹‰å–åˆ°çš„æ¶ˆæ¯ï¼ŒåŒ¹é…tagåå­˜å…¥msgFoundList   èµ‹å€¼è§PullAPIWrapper.processPullResult
+    //æ‹‰å–åˆ°æ¶ˆæ¯åé¦–å…ˆå­˜å…¥PullResult.msgFoundListï¼Œåœ¨DefaultMQPushConsumerImpl.pullMessageç„¶åè¿›è¡Œè§„åˆ™åŒ¹é…ï¼ŒåŒ¹é…çš„msgä¼šè¿›ä¸€æ­¥å­˜å…¥ProcessQueue.msgTreeMap
     private List<MessageExt> msgFoundList;
 
-    //MQClientAPIImpl.processPullResponseÖĞµ÷ÓÃ¸Ã½Ó¿Ú£¬²¢¸³ÖµÏà¹Ø³ÉÔ±±äÁ¿
+    //MQClientAPIImpl.processPullResponseä¸­è°ƒç”¨è¯¥æ¥å£ï¼Œå¹¶èµ‹å€¼ç›¸å…³æˆå‘˜å˜é‡
     public PullResult(PullStatus pullStatus, long nextBeginOffset, long minOffset, long maxOffset,
                       List<MessageExt> msgFoundList) {
         super();
@@ -70,8 +70,8 @@ public class PullResult {
         return msgFoundList;
     }
 
-    //¿Í»§¶ËÀ­È¡µ½ÏûÏ¢ºóÔÚÍ¨¹ı PullAPIWrapper.processPullResult ÖĞ°Ñ½ÓÊÕµ½µÄÏûÏ¢¸³Öµ¸ømsgFoundList
-    //È»ºóÔÚ DefaultMQPushConsumerImpl.pullMessage ÖĞÈ¡³öÏûÏ¢½øĞĞ GroovyScript Æ¥Åä
+    //å®¢æˆ·ç«¯æ‹‰å–åˆ°æ¶ˆæ¯ååœ¨é€šè¿‡ PullAPIWrapper.processPullResult ä¸­æŠŠæ¥æ”¶åˆ°çš„æ¶ˆæ¯èµ‹å€¼ç»™msgFoundList
+    //ç„¶ååœ¨ DefaultMQPushConsumerImpl.pullMessage ä¸­å–å‡ºæ¶ˆæ¯è¿›è¡Œ GroovyScript åŒ¹é…
     public void setMsgFoundList(List<MessageExt> msgFoundList) {
         this.msgFoundList = msgFoundList;
     }

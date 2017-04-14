@@ -27,12 +27,12 @@ import com.alibaba.rocketmq.common.message.MessageExt;
 import java.util.List;
 
 /*
-Í¶µİÏûÏ¢µ½broker£¬tcpdump×¥°ü
+æŠ•é€’æ¶ˆæ¯åˆ°brokerï¼ŒtcpdumpæŠ“åŒ…
 * ...5...%{"code":310,"extFields":{"f":"0","g":"1491978653614","d":"4","e":"0","b":"yyztest2","c":"TBW102","a":"yyzGroup2",
 * "j":"0","k":"false","h":"0","i":"TAGS\u0001TAG\u0002WAIT\u0001true\u0002KEYS\u0001ffff\u0002"},"flag":0,"language":"JAVA",
 * "opaque":3,"serializeTypeCurrentRPC":"JSON","version":115}yang ya zhou
 *
-* brokerÊÕµ½ºó£¬·¢ËÍÈçÏÂÓ¦´ğ£º
+* brokeræ”¶åˆ°åï¼Œå‘é€å¦‚ä¸‹åº”ç­”ï¼š
 * ........{"code":0,"extFields":{"queueId":"0","msgId":"0A02DFA500002A9F0000000163E60ADB","queueOffset":"37"},"flag":1,
 * "language":"JAVA","opaque":3,"serializeTypeCurrentRPC":"JSON","version":115}
 * */
@@ -46,12 +46,12 @@ public class PushConsumer {
 
         //consumer.subscribe("my-topic-2", "*", new GroovyScript(groovyScript));
         consumer.setConsumeFromWhere(ConsumeFromWhere.CONSUME_FROM_LAST_OFFSET);
-        consumer.setMessageModel(MessageModel.CLUSTERING);
+        //consumer.setMessageModel(MessageModel.CLUSTERING);
         consumer.subscribe("yyztest2", "*");
 
         consumer.registerMessageListener(new MessageListenerConcurrently() {
 
-            @Override  //consumeMessageÔÚConsumeMessageConcurrentlyServiceÖĞµÄ½Ó¿ÚconsumeMessageDirectlyÖĞˆÌĞĞÔ“º¯”µ
+            @Override  //consumeMessageåœ¨ConsumeMessageConcurrentlyServiceä¸­çš„æ¥å£consumeMessageDirectlyä¸­åŸ·è¡Œè©²å‡½æ•¸
             public ConsumeConcurrentlyStatus consumeMessage(List<MessageExt> msgs,
                     ConsumeConcurrentlyContext context) {
                 if(msgs == null || msgs.size() == 0){
@@ -66,8 +66,8 @@ public class PushConsumer {
                 for(MessageExt messageExt: msgs) {
                     System.out.println("recv msg with topic:" + messageExt.getTopic() + ",msgTag:" + messageExt.getTags() +  ", body:" + new String(messageExt.getBody()));
                 }
-                 /* Èç¹û·µ»Ø²»ÊÇ³É¹¦£¬Ôò¸ÃmsgsÏûÏ¢»áÔÚÄÚ´æÖĞ£¬offset»¹ÊÇÔÚÉÏ´ÎµÄÎ»ÖÃ */
-                //ÒµÎñ´¦ÀíÏûÏ¢ºó£¬¶Ô·µ»ØÖµµÄ¼ì²éÔÚConsumeRequest.run-> ConsumeMessageConcurrentlyService.processConsumeResult ÖĞ
+                 /* å¦‚æœè¿”å›ä¸æ˜¯æˆåŠŸï¼Œåˆ™è¯¥msgsæ¶ˆæ¯ä¼šåœ¨å†…å­˜ä¸­ï¼Œoffsetè¿˜æ˜¯åœ¨ä¸Šæ¬¡çš„ä½ç½® */
+                //ä¸šåŠ¡å¤„ç†æ¶ˆæ¯åï¼Œå¯¹è¿”å›å€¼çš„æ£€æŸ¥åœ¨ConsumeRequest.run-> ConsumeMessageConcurrentlyService.processConsumeResult ä¸­
                 return ConsumeConcurrentlyStatus.CONSUME_SUCCESS;
             }
         });

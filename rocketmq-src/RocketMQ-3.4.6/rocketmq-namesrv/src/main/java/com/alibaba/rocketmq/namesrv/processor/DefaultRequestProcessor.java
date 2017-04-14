@@ -71,10 +71,10 @@ public class DefaultRequestProcessor implements NettyRequestProcessor {
             return this.getKVConfig(ctx, request);
         case RequestCode.DELETE_KV_CONFIG:
             return this.deleteKVConfig(ctx, request);
-        /*×¢²ábrokerµ½nameserver. */
+        /*æ³¨å†Œbrokeråˆ°nameserver. */
         case RequestCode.REGISTER_BROKER:
             Version brokerVersion = MQVersion.value2Version(request.getVersion());
-            if (brokerVersion.ordinal() >= MQVersion.Version.V3_0_11.ordinal()) { //broker°æ±¾¸ßÓÚ3.0.11£¬ ÔòºÍ¹ıÂË·şÎñÆ÷Ò»Æğ×¢²á¡£
+            if (brokerVersion.ordinal() >= MQVersion.Version.V3_0_11.ordinal()) { //brokerç‰ˆæœ¬é«˜äº3.0.11ï¼Œ åˆ™å’Œè¿‡æ»¤æœåŠ¡å™¨ä¸€èµ·æ³¨å†Œã€‚
                 return this.registerBrokerWithFilterServer(ctx, request);
             }
             else {
@@ -82,7 +82,7 @@ public class DefaultRequestProcessor implements NettyRequestProcessor {
             }
         case RequestCode.UNREGISTER_BROKER:
             return this.unregisterBroker(ctx, request);
-        //»ñÈ¡topicÂ·ÓÉĞÅÏ¢¡£
+        //è·å–topicè·¯ç”±ä¿¡æ¯ã€‚
         case RequestCode.GET_ROUTEINTO_BY_TOPIC:
             return this.getRouteInfoByTopic(ctx, request);
         case RequestCode.GET_BROKER_CLUSTER_INFO:

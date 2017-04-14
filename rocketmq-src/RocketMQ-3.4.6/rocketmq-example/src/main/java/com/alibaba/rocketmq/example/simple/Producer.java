@@ -23,27 +23,27 @@ import com.alibaba.rocketmq.common.message.Message;
 
 
 /*
-Í¶µİÏûÏ¢µ½broker£¬tcpdump×¥°ü
+æŠ•é€’æ¶ˆæ¯åˆ°brokerï¼ŒtcpdumpæŠ“åŒ…
 * ...5...%{"code":310,"extFields":{"f":"0","g":"1491978653614","d":"4","e":"0","b":"yyztest2","c":"TBW102","a":"yyzGroup2",
 * "j":"0","k":"false","h":"0","i":"TAGS\u0001TAG\u0002WAIT\u0001true\u0002KEYS\u0001ffff\u0002"},"flag":0,"language":"JAVA",
 * "opaque":3,"serializeTypeCurrentRPC":"JSON","version":115}yang ya zhou
 *
-* brokerÊÕµ½ºó£¬·¢ËÍÈçÏÂÓ¦´ğ£º
+* brokeræ”¶åˆ°åï¼Œå‘é€å¦‚ä¸‹åº”ç­”ï¼š
 * ........{"code":0,"extFields":{"queueId":"0","msgId":"0A02DFA500002A9F0000000163E60ADB","queueOffset":"37"},"flag":1,
 * "language":"JAVA","opaque":3,"serializeTypeCurrentRPC":"JSON","version":115}
 *
-* Èç¹ûÊÇÉú²úÕß£¬¶Ï¿ªÁ¬½Óºó»á×¢Ïúproducer£¬×¥°üÈçÏÂ:
-*¿Í»§¶ËÏòbroker·¢ËÍ×¢Ïú yyzGroup2 Ïû·Ñ·Ö×éÇëÇó
+* å¦‚æœæ˜¯ç”Ÿäº§è€…ï¼Œæ–­å¼€è¿æ¥åä¼šæ³¨é”€producerï¼ŒæŠ“åŒ…å¦‚ä¸‹:
+*å®¢æˆ·ç«¯å‘brokerå‘é€æ³¨é”€ yyzGroup2 æ¶ˆè´¹åˆ†ç»„è¯·æ±‚
 * ........{"code":35,"extFields":{"clientID":"192.168.56.1@7644","producerGroup":"yyzGroup2"},"flag":0,
 * "language":"JAVA","opaque":12,"serializeTypeCurrentRPC":"JSON","version":115}
-* broker»áÓĞ×¢Ïú³É¹¦
+* brokerä¼šæœ‰æ³¨é”€æˆåŠŸ
 * ...s...o{"code":0,"extFields":{},"flag":1,"language":"JAVA","opaque":12,"serializeTypeCurrentRPC":"JSON","version":115}
 *
-*¿Í»§¶ËÏòbroker·¢ËÍ×¢Ïú CLIENT_INNER_PRODUCER Ïû·Ñ·Ö×éÇëÇó
+*å®¢æˆ·ç«¯å‘brokerå‘é€æ³¨é”€ CLIENT_INNER_PRODUCER æ¶ˆè´¹åˆ†ç»„è¯·æ±‚
 * ........{"code":35,"extFields":{"clientID":"192.168.56.1@7644","producerGroup":"CLIENT_INNER_PRODUCER"},"flag":0,"
 * language":"JAVA","opaque":20,"serializeTypeCurrentRPC":"JSON","version":115}
 *
-* broker»áÓĞ×¢Ïú³É¹¦
+* brokerä¼šæœ‰æ³¨é”€æˆåŠŸ
 * ...s...o{"code":0,"extFields":{},"flag":1,"language":"JAVA","opaque":20,"serializeTypeCurrentRPC":"JSON","version":115}
 * */
 public class Producer {
@@ -57,10 +57,10 @@ public class Producer {
 //            for (String item : array) {
             Message msg = new Message("yyztest2",// topic
                     "TAG",// tag
-                    "ffff",// ×¢Òâ£¬ msgkey¶Ô°ïÖúÒµÎñÅÅ²éÏûÏ¢Í¶µİÎÊÌâºÜÓĞ°ïÖú£¬ÇëÉèÖÃ³ÉºÍÏûÏ¢ÓĞ¹ØµÄÒµÎñÊôĞÔ£¬±ÈÈç¶©µ¥id ,ÉÌÆ·id .
-                    "yang ya zhou".getBytes());// body //Ä¬ÈÏ»áÉèÖÃµÈ´ıÏûÏ¢´æ´¢³É¹¦¡£
+                    "ffff",// æ³¨æ„ï¼Œ msgkeyå¯¹å¸®åŠ©ä¸šåŠ¡æ’æŸ¥æ¶ˆæ¯æŠ•é€’é—®é¢˜å¾ˆæœ‰å¸®åŠ©ï¼Œè¯·è®¾ç½®æˆå’Œæ¶ˆæ¯æœ‰å…³çš„ä¸šåŠ¡å±æ€§ï¼Œæ¯”å¦‚è®¢å•id ,å•†å“id .
+                    "yang ya zhou".getBytes());// body //é»˜è®¤ä¼šè®¾ç½®ç­‰å¾…æ¶ˆæ¯å­˜å‚¨æˆåŠŸã€‚
             SendResult sendResult = null;
-            try {//Í¬²½·¢ËÍÏûÏ¢ £¬²¢ÇÒµÈ´ıÏûÏ¢´æ´¢³É¹¦£¬³¬Ê±Ê±¼ä3s .
+            try {//åŒæ­¥å‘é€æ¶ˆæ¯ ï¼Œå¹¶ä¸”ç­‰å¾…æ¶ˆæ¯å­˜å‚¨æˆåŠŸï¼Œè¶…æ—¶æ—¶é—´3s .
                 System.out.println("send msg with msgKey:" + msg.getKeys());
                 sendResult = producer.send(msg);
             } catch (Exception e) {

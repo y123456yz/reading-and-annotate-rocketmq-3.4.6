@@ -67,7 +67,7 @@ public class QueryMsgByOffsetSubCommand implements SubCommand {
         return options;
     }
 
-    //sh mqadmin  queryMsgByOffset ÃüÁîÖ´ĞĞµ½ÕâÀï
+    //sh mqadmin  queryMsgByOffset å‘½ä»¤æ‰§è¡Œåˆ°è¿™é‡Œ
     @Override
     public void execute(CommandLine commandLine, Options options, RPCHook rpcHook) {
         DefaultMQAdminExt defaultMQAdminExt = new DefaultMQAdminExt(rpcHook);
@@ -77,7 +77,7 @@ public class QueryMsgByOffsetSubCommand implements SubCommand {
         defaultMQPullConsumer.setInstanceName(Long.toString(System.currentTimeMillis()));
 
         try {
-            //½âÎö sh mqadmin  queryMsgByOffset ÃüÁîĞ¯´øµÄ¸÷ÖÖ²ÎÊıĞÅÏ¢
+            //è§£æ sh mqadmin  queryMsgByOffset å‘½ä»¤æºå¸¦çš„å„ç§å‚æ•°ä¿¡æ¯
             String topic = commandLine.getOptionValue('t').trim();
             String brokerName = commandLine.getOptionValue('b').trim();
             String queueId = commandLine.getOptionValue('i').trim();

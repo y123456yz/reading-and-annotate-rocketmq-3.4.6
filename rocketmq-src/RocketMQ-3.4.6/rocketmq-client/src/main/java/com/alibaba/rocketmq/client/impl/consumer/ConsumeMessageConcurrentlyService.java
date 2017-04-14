@@ -47,14 +47,14 @@ public class ConsumeMessageConcurrentlyService implements ConsumeMessageService 
     private final DefaultMQPushConsumerImpl defaultMQPushConsumerImpl;
     private final DefaultMQPushConsumer defaultMQPushConsumer;
     private final MessageListenerConcurrently messageListener;
-    private final BlockingQueue<Runnable> consumeRequestQueue; //¹¤×÷ê ÁĞ
-    private final ThreadPoolExecutor consumeExecutor; //¾€³Ì³Ø
+    private final BlockingQueue<Runnable> consumeRequestQueue; //å·¥ä½œéšŠåˆ—
+    private final ThreadPoolExecutor consumeExecutor; //ç·šç¨‹æ± 
     private final String consumerGroup;
 
-    //´´½¨Ö»ÓĞÒ»ÌõÏß³ÌµÄÏß³Ì³Ø£¬Ëû¿ÉÒÔÔÚÖ¸¶¨ÑÓ³ÙºóÖ´ĞĞÏß³ÌÈÎÎñ  ScheduledExecutorService¶¨Ê±ÖÜÆÚÖ´ĞĞÖ¸¶¨µÄÈÎÎñ,Ïß³ÌÕæÕıÔËĞĞÔÚsubmitConsumeRequestLater
+    //åˆ›å»ºåªæœ‰ä¸€æ¡çº¿ç¨‹çš„çº¿ç¨‹æ± ï¼Œä»–å¯ä»¥åœ¨æŒ‡å®šå»¶è¿Ÿåæ‰§è¡Œçº¿ç¨‹ä»»åŠ¡  ScheduledExecutorServiceå®šæ—¶å‘¨æœŸæ‰§è¡ŒæŒ‡å®šçš„ä»»åŠ¡,çº¿ç¨‹çœŸæ­£è¿è¡Œåœ¨submitConsumeRequestLater
     private final ScheduledExecutorService scheduledExecutorService;
 
-    /* ¾€³Ì³Ø³õÊ¼»¯ */
+    /* ç·šç¨‹æ± åˆå§‹åŒ– */
     public ConsumeMessageConcurrentlyService(DefaultMQPushConsumerImpl defaultMQPushConsumerImpl,
             MessageListenerConcurrently messageListener) {
         this.defaultMQPushConsumerImpl = defaultMQPushConsumerImpl;
@@ -72,14 +72,14 @@ public class ConsumeMessageConcurrentlyService implements ConsumeMessageService 
             this.consumeRequestQueue,//
             new ThreadFactoryImpl("ConsumeMessageThread_"));
 
-        //´´½¨Ö»ÓĞÒ»ÌõÏß³ÌµÄÏß³Ì³Ø£¬Ëû¿ÉÒÔÔÚÖ¸¶¨ÑÓ³ÙºóÖ´ĞĞÏß³ÌÈÎÎñ  ScheduledExecutorService¶¨Ê±ÖÜÆÚÖ´ĞĞÖ¸¶¨µÄÈÎÎñ Ïß³ÌÕæÕıÔËĞĞsubmitConsumeRequestLater
+        //åˆ›å»ºåªæœ‰ä¸€æ¡çº¿ç¨‹çš„çº¿ç¨‹æ± ï¼Œä»–å¯ä»¥åœ¨æŒ‡å®šå»¶è¿Ÿåæ‰§è¡Œçº¿ç¨‹ä»»åŠ¡  ScheduledExecutorServiceå®šæ—¶å‘¨æœŸæ‰§è¡ŒæŒ‡å®šçš„ä»»åŠ¡ çº¿ç¨‹çœŸæ­£è¿è¡ŒsubmitConsumeRequestLater
         this.scheduledExecutorService =
                 Executors.newSingleThreadScheduledExecutor(new ThreadFactoryImpl(
                     "ConsumeMessageScheduledThread_"));
     }
 
 
-    public void start() { /* ¾€³Ìß\ĞĞŒëHÉÏÔÚÏÂÃæµÄî ConsumeRequest */
+    public void start() { /* ç·šç¨‹é‹è¡Œå¯¦éš›ä¸Šåœ¨ä¸‹é¢çš„é¡ ConsumeRequest */
     }
 
 
@@ -99,7 +99,7 @@ public class ConsumeMessageConcurrentlyService implements ConsumeMessageService 
         private final ProcessQueue processQueue;
         private final MessageQueue messageQueue;
 
-        //// ConsumeMessageConcurrentlyService.submitConsumeRequest  msgsÀ´Ô´ÔÚÕâÀï
+        //// ConsumeMessageConcurrentlyService.submitConsumeRequest  msgsæ¥æºåœ¨è¿™é‡Œ
         public ConsumeRequest(List<MessageExt> msgs, ProcessQueue processQueue, MessageQueue messageQueue) {
             this.msgs = msgs;
             this.processQueue = processQueue;
@@ -108,14 +108,14 @@ public class ConsumeMessageConcurrentlyService implements ConsumeMessageService 
 
 
         @Override
-        public void run() { ////ConsumeMessageConcurrentlyService.submitConsumeRequest ÖĞ´¥·¢Ö´ĞĞ
+        public void run() { ////ConsumeMessageConcurrentlyService.submitConsumeRequest ä¸­è§¦å‘æ‰§è¡Œ
             if (this.processQueue.isDropped()) {
                 log.info("the message queue not be able to consume, because it's dropped {}",
                     this.messageQueue);
                 return;
             }
 
-            /* ÕâÀïµÄlistenerÒ²¾ÍÊÇconsumer»òÕßproxyÖĞregisterMessageListenerµÄlister */
+            /* è¿™é‡Œçš„listenerä¹Ÿå°±æ˜¯consumeræˆ–è€…proxyä¸­registerMessageListenerçš„lister */
             MessageListenerConcurrently listener = ConsumeMessageConcurrentlyService.this.messageListener;
             ConsumeConcurrentlyContext context = new ConsumeConcurrentlyContext(messageQueue);
             ConsumeConcurrentlyStatus status = null;
@@ -135,10 +135,10 @@ public class ConsumeMessageConcurrentlyService implements ConsumeMessageService 
 
             long beginTimestamp = System.currentTimeMillis();
 
-            /* ÒµÎñÔÚÕâÀïÏû·ÑÏûÏ¢£¬²¢·µ»ØÏû·Ñ½á¹û£¬RECONSUME_OK,Ê§°Ü·µ»Ø RECONSUME_LATER */
+            /* ä¸šåŠ¡åœ¨è¿™é‡Œæ¶ˆè´¹æ¶ˆæ¯ï¼Œå¹¶è¿”å›æ¶ˆè´¹ç»“æœï¼ŒRECONSUME_OK,å¤±è´¥è¿”å› RECONSUME_LATER */
             try {
                 ConsumeMessageConcurrentlyService.this.resetRetryTopic(msgs);
-                //ÒµÎñÔÚÕâÀï¿ªÊ¼Ïû·ÑÏûÏ¢  ÀıÈç pullConsumerÀàÖĞµÄconsumer.registerMessageListener()»Øµ÷¾ÍÊÇÔÚÕâÀïÖ´ĞĞ
+                //ä¸šåŠ¡åœ¨è¿™é‡Œå¼€å§‹æ¶ˆè´¹æ¶ˆæ¯  ä¾‹å¦‚ pullConsumerç±»ä¸­çš„consumer.registerMessageListener()å›è°ƒå°±æ˜¯åœ¨è¿™é‡Œæ‰§è¡Œ
                 status = listener.consumeMessage(Collections.unmodifiableList(msgs), context);
             }
             catch (Throwable e) {
@@ -151,7 +151,7 @@ public class ConsumeMessageConcurrentlyService implements ConsumeMessageService 
 
             long consumeRT = System.currentTimeMillis() - beginTimestamp;
 
-            if (null == status) { //Èç¹ûÒµÎñconsumerµÄ·µ»ØÖµÎª¿Õ£¬ÔòÄ¬ÈÏĞèÒª¼ÌĞøÏû·Ñ
+            if (null == status) { //å¦‚æœä¸šåŠ¡consumerçš„è¿”å›å€¼ä¸ºç©ºï¼Œåˆ™é»˜è®¤éœ€è¦ç»§ç»­æ¶ˆè´¹
                 log.warn("consumeMessage return null, Group: {} Msgs: {} MQ: {}",//
                     ConsumeMessageConcurrentlyService.this.consumerGroup,//
                     msgs,//
@@ -170,7 +170,7 @@ public class ConsumeMessageConcurrentlyService implements ConsumeMessageService 
                 ConsumeMessageConcurrentlyService.this.consumerGroup, messageQueue.getTopic(), consumeRT);
 
             if (!processQueue.isDropped()) {
-                //¶ÔÒµÎñ´¦Àí·µ»ØµÄstatus CONSUME_SUCCESS»òÕßRECONSUME_LATER×öÏàÓ¦µÄ´¦Àí
+                //å¯¹ä¸šåŠ¡å¤„ç†è¿”å›çš„status CONSUME_SUCCESSæˆ–è€…RECONSUME_LATERåšç›¸åº”çš„å¤„ç†
                 ConsumeMessageConcurrentlyService.this.processConsumeResult(status, context, this);
             }
             else {
@@ -195,8 +195,8 @@ public class ConsumeMessageConcurrentlyService implements ConsumeMessageService 
         }
     }
 
-    //ConsumeMessageConcurrentlyService.processConsumeResultÖĞÖ´ĞĞ
-    //·¢ËÍÏûÏ¢µ½broker£¬ÀıÈç´æÈëÖØÊÔ¶ÓÁĞ
+    //ConsumeMessageConcurrentlyService.processConsumeResultä¸­æ‰§è¡Œ
+    //å‘é€æ¶ˆæ¯åˆ°brokerï¼Œä¾‹å¦‚å­˜å…¥é‡è¯•é˜Ÿåˆ—
     public boolean sendMessageBack(final MessageExt msg, final ConsumeConcurrentlyContext context) {
         int delayLevel = context.getDelayLevelWhenNextConsume();
 
@@ -216,20 +216,20 @@ public class ConsumeMessageConcurrentlyService implements ConsumeMessageService 
 
     /**
      *
-     * Õû¸öÕâ¶Î´úÂëµÄË¼Â·£º
-     * Èç¹ûConsumeConcurrentlyStatus ±êÊ¶µÄÒµÎñÏû·Ñ×´Ì¬ÊÇ³É¹¦£¬ÔòbrokerÉÏ¶ÓÁĞµÄoffsetÎ»µãÇ°ÒÆ£¨Ò»ÅúÏûÏ¢µÄ×î´óÎ»µã+1£©
-     * Èç¹ûÒµÎñÏû·ÑÊ§°Ü£¬Ôò°ÑÕâÅúÏûÏ¢ÖØĞÂÍ¶µİ»Øbroker £¨ÕâÅúÍ¶»ØÈ¥µÄÏûÏ¢»áÑÓ³ÙÍ¶µİ»ØÀ´£¬¼´ÓĞÒ»¸öbackoff»úÖÆ¡££©
-     * £¬ ÕâÀïÓÖ·Ö³ÉÁ½ÖÖÇé¿ö£º
-     * 1£© ÖØĞÂÍ¶µİ»ØÈ¥³É¹¦£¬ ¶ÓÁĞµÄoffsetÈÔÈ»Ç°ÒÆ¡£
-     * 2£© ÖØĞÂÍ¶µİ»ØÈ¥Ê§°Ü£¬ Ôò°ÑÕâÅúÖØÍ¶Ê§°ÜµÄÏûÏ¢¼ÌĞø½»¸øÒµÎñ´¦Àí£¬Óë´ËÍ¬Ê±£¬ ¶ÓÁĞµÄÎ»µã»áÔÚÖØÍ¶Ê§°ÜµÄÏûÏ¢ÖĞÑ¡ÔñÒ»¸öĞ¡µÄÎ»µã¡£
-     * ±ÈÈç1,2,3,4,5 ÖĞ2£¬3ÖØÍ¶Ê§°Ü£¬ÔòÎ»µã»á±ä³É2£¬ ÕâÀï¾Í´æÔÚÒ»¸öÖØ¸´Ïû·ÑµÄÎÊÌâ£¨±¾Éírocketmq²»±£Ö¤ÏûÏ¢²»ÖØ£¬ µ«Ò»¶¨²»¶ª¡££©
+     * æ•´ä¸ªè¿™æ®µä»£ç çš„æ€è·¯ï¼š
+     * å¦‚æœConsumeConcurrentlyStatus æ ‡è¯†çš„ä¸šåŠ¡æ¶ˆè´¹çŠ¶æ€æ˜¯æˆåŠŸï¼Œåˆ™brokerä¸Šé˜Ÿåˆ—çš„offsetä½ç‚¹å‰ç§»ï¼ˆä¸€æ‰¹æ¶ˆæ¯çš„æœ€å¤§ä½ç‚¹+1ï¼‰
+     * å¦‚æœä¸šåŠ¡æ¶ˆè´¹å¤±è´¥ï¼Œåˆ™æŠŠè¿™æ‰¹æ¶ˆæ¯é‡æ–°æŠ•é€’å›broker ï¼ˆè¿™æ‰¹æŠ•å›å»çš„æ¶ˆæ¯ä¼šå»¶è¿ŸæŠ•é€’å›æ¥ï¼Œå³æœ‰ä¸€ä¸ªbackoffæœºåˆ¶ã€‚ï¼‰
+     * ï¼Œ è¿™é‡Œåˆåˆ†æˆä¸¤ç§æƒ…å†µï¼š
+     * 1ï¼‰ é‡æ–°æŠ•é€’å›å»æˆåŠŸï¼Œ é˜Ÿåˆ—çš„offsetä»ç„¶å‰ç§»ã€‚
+     * 2ï¼‰ é‡æ–°æŠ•é€’å›å»å¤±è´¥ï¼Œ åˆ™æŠŠè¿™æ‰¹é‡æŠ•å¤±è´¥çš„æ¶ˆæ¯ç»§ç»­äº¤ç»™ä¸šåŠ¡å¤„ç†ï¼Œä¸æ­¤åŒæ—¶ï¼Œ é˜Ÿåˆ—çš„ä½ç‚¹ä¼šåœ¨é‡æŠ•å¤±è´¥çš„æ¶ˆæ¯ä¸­é€‰æ‹©ä¸€ä¸ªå°çš„ä½ç‚¹ã€‚
+     * æ¯”å¦‚1,2,3,4,5 ä¸­2ï¼Œ3é‡æŠ•å¤±è´¥ï¼Œåˆ™ä½ç‚¹ä¼šå˜æˆ2ï¼Œ è¿™é‡Œå°±å­˜åœ¨ä¸€ä¸ªé‡å¤æ¶ˆè´¹çš„é—®é¢˜ï¼ˆæœ¬èº«rocketmqä¸ä¿è¯æ¶ˆæ¯ä¸é‡ï¼Œ ä½†ä¸€å®šä¸ä¸¢ã€‚ï¼‰
      *
      *
      * @param status
      * @param context
      * @param consumeRequest
      */
-    public void processConsumeResult(//ConsumeRequest.runÖĞÖ´ĞĞ
+    public void processConsumeResult(//ConsumeRequest.runä¸­æ‰§è¡Œ
             final ConsumeConcurrentlyStatus status, //
             final ConsumeConcurrentlyContext context, //
             final ConsumeRequest consumeRequest//
@@ -246,7 +246,7 @@ public class ConsumeMessageConcurrentlyService implements ConsumeMessageService 
             }
             int ok = ackIndex + 1;
             int failed = consumeRequest.getMsgs().size() - ok;
-            /* ÒµÎñÏû·ÑÍêÏûÏ¢ºó×öÏàÓ¦µÄÍ³¼Æ */
+            /* ä¸šåŠ¡æ¶ˆè´¹å®Œæ¶ˆæ¯ååšç›¸åº”çš„ç»Ÿè®¡ */
             this.getConsumerStatsManager().incConsumeOKTPS(consumerGroup,
                 consumeRequest.getMessageQueue().getTopic(), ok);
             this.getConsumerStatsManager().incConsumeFailedTPS(consumerGroup,
@@ -269,24 +269,24 @@ public class ConsumeMessageConcurrentlyService implements ConsumeMessageService 
             }
             break;
         case CLUSTERING:
-            //ÏÂÃæÕâ¶Î´úÂëµÄÒâË¼ÊÇ£º Èç¹ûÒµÎñ·½ÏûÏ¢Ïû·ÑÊ§°Ü(ackIndex = -1) £¬ÄÇÃ´¾Í°ÑÕâÅúÒÑ¾­À­µ½µÄÏû·ÑÊ§°ÜµÄÏûÏ¢ÖØĞÂ´ò»Øbroker
+            //ä¸‹é¢è¿™æ®µä»£ç çš„æ„æ€æ˜¯ï¼š å¦‚æœä¸šåŠ¡æ–¹æ¶ˆæ¯æ¶ˆè´¹å¤±è´¥(ackIndex = -1) ï¼Œé‚£ä¹ˆå°±æŠŠè¿™æ‰¹å·²ç»æ‹‰åˆ°çš„æ¶ˆè´¹å¤±è´¥çš„æ¶ˆæ¯é‡æ–°æ‰“å›broker
             List<MessageExt> msgBackFailed = new ArrayList<MessageExt>(consumeRequest.getMsgs().size());
-            for (int i = ackIndex + 1; i < consumeRequest.getMsgs().size(); i++) { //×¢ÒâÕâÀïiÊÇ´ÓackIndex + 1¿ªÊ¼
+            for (int i = ackIndex + 1; i < consumeRequest.getMsgs().size(); i++) { //æ³¨æ„è¿™é‡Œiæ˜¯ä»ackIndex + 1å¼€å§‹
                 MessageExt msg = consumeRequest.getMsgs().get(i);
-                //°ÑÏû·ÑÊ§°ÜµÄÏûÏ¢ÖØĞÂ´ò»Øbroker . ´æÈëbrokerµÄÖØÊÔ¶ÓÁĞ
+                //æŠŠæ¶ˆè´¹å¤±è´¥çš„æ¶ˆæ¯é‡æ–°æ‰“å›broker . å­˜å…¥brokerçš„é‡è¯•é˜Ÿåˆ—
 
-                boolean result = this.sendMessageBack(msg, context); //×¢ÒâÕâÀïÃæ´ò»ØbrokerµÄÊ±ºòtopic±äÎª RETRY_GROUP_TOPIC_PREFIX + ConsumerGroup
+                boolean result = this.sendMessageBack(msg, context); //æ³¨æ„è¿™é‡Œé¢æ‰“å›brokerçš„æ—¶å€™topicå˜ä¸º RETRY_GROUP_TOPIC_PREFIX + ConsumerGroup
                 if (!result) {
-                    //ÕâÀïµÄ¸³ÖµÊµ¼ÊÉÏÔÚÉÏÃæµÄsendMessageBackÖĞ»áÓÃµ½
-                    msg.setReconsumeTimes(msg.getReconsumeTimes() + 1); //¸ÃmsgĞèÒª¿Í»§¶ËÔÙ´ÎÏû·Ñ£¬ µÚÒ»ÌõÏûÏ¢¼Ó1£¬µÚ¶şÌìÊ§°ÜµÄ¾ÍÊÇ+2,ÒÔ´ËÀàÍÆ
-                    msgBackFailed.add(msg); //´ò»ØbrokerÊ§°Ü£¬Ôò¼ÓÈëmsgBackFailedÁ´±í
+                    //è¿™é‡Œçš„èµ‹å€¼å®é™…ä¸Šåœ¨ä¸Šé¢çš„sendMessageBackä¸­ä¼šç”¨åˆ°
+                    msg.setReconsumeTimes(msg.getReconsumeTimes() + 1); //è¯¥msgéœ€è¦å®¢æˆ·ç«¯å†æ¬¡æ¶ˆè´¹ï¼Œ ç¬¬ä¸€æ¡æ¶ˆæ¯åŠ 1ï¼Œç¬¬äºŒå¤©å¤±è´¥çš„å°±æ˜¯+2,ä»¥æ­¤ç±»æ¨
+                    msgBackFailed.add(msg); //æ‰“å›brokerå¤±è´¥ï¼Œåˆ™åŠ å…¥msgBackFailedé“¾è¡¨
                 }
             }
-            //Èç¹ûÏû·ÑÊ§°ÜµÄÏûÏ¢ÖØĞÂ´ò»ØbrokerÈÔÈ»Ê§°Ü£¬Ôò°ÑÕâĞ©msgBackFailed´ÓmsgsÁ´±íÈ¥³ı£¬Í¬Ê±Ìá½»¸øÒ»¸öµ÷¶ÈÏß³Ì³Ø£¬ ¼ä¸ô5ÃëÒÔºó£¬ÔÙ´ÎÏûÏ¢¡£
+            //å¦‚æœæ¶ˆè´¹å¤±è´¥çš„æ¶ˆæ¯é‡æ–°æ‰“å›brokerä»ç„¶å¤±è´¥ï¼Œåˆ™æŠŠè¿™äº›msgBackFailedä»msgsé“¾è¡¨å»é™¤ï¼ŒåŒæ—¶æäº¤ç»™ä¸€ä¸ªè°ƒåº¦çº¿ç¨‹æ± ï¼Œ é—´éš”5ç§’ä»¥åï¼Œå†æ¬¡æ¶ˆæ¯ã€‚
             if (!msgBackFailed.isEmpty()) {
                 consumeRequest.getMsgs().removeAll(msgBackFailed);
 
-                //¹ı5sÖÓÔÙ´ÎÍÆËÍÕâĞ©´ò»ØbrokerÊ§°ÜµÄÏûÏ¢¸øÒµÎñÏû·Ñ£¬ÒòÎª
+                //è¿‡5sé’Ÿå†æ¬¡æ¨é€è¿™äº›æ‰“å›brokerå¤±è´¥çš„æ¶ˆæ¯ç»™ä¸šåŠ¡æ¶ˆè´¹ï¼Œå› ä¸º
                 this.submitConsumeRequestLater(msgBackFailed, consumeRequest.getProcessQueue(),
                     consumeRequest.getMessageQueue());
             }
@@ -295,18 +295,18 @@ public class ConsumeMessageConcurrentlyService implements ConsumeMessageService 
             break;
         }
 
-        //Èç¹ûÏû·ÑÊ§°ÜµÄÏûÏ¢ÖØĞÂ´ò»Øbroker ÈÔÈ»Ê§°Ü£¬ ¼´Ç°ÃæµÄmsgBackFailed ·Ç¿Õ£¬ÄÇÃ´removeMessage Õâ¸öº¯Êı
-        //µÃµ½µÄÎ»µãoffset¾ÍÊÇÒ»ÅúÏûÏ¢ÖĞ×îĞ¡µÄÄÇ¸öÎ»µã£¬¶øÈç¹ûmsgBackFailed Îª¿Õ£¬ÔòÕâÀïoffset ¾ÍÊÇÕâÅúÏûÏ¢µÄ×î´óÎ»µã+1
+        //å¦‚æœæ¶ˆè´¹å¤±è´¥çš„æ¶ˆæ¯é‡æ–°æ‰“å›broker ä»ç„¶å¤±è´¥ï¼Œ å³å‰é¢çš„msgBackFailed éç©ºï¼Œé‚£ä¹ˆremoveMessage è¿™ä¸ªå‡½æ•°
+        //å¾—åˆ°çš„ä½ç‚¹offsetå°±æ˜¯ä¸€æ‰¹æ¶ˆæ¯ä¸­æœ€å°çš„é‚£ä¸ªä½ç‚¹ï¼Œè€Œå¦‚æœmsgBackFailed ä¸ºç©ºï¼Œåˆ™è¿™é‡Œoffset å°±æ˜¯è¿™æ‰¹æ¶ˆæ¯çš„æœ€å¤§ä½ç‚¹+1
 
-        //getMsgs()»ñÈ¡µ½µÄmsgsÁ´±íÖĞ´æ´¢µÄÊÇÏû·ÑÊ§°Ü´ò»Øbroker³É¹¦µÄmsgºÍÏû·Ñ³É¹¦µÄmsg
+        //getMsgs()è·å–åˆ°çš„msgsé“¾è¡¨ä¸­å­˜å‚¨çš„æ˜¯æ¶ˆè´¹å¤±è´¥æ‰“å›brokeræˆåŠŸçš„msgå’Œæ¶ˆè´¹æˆåŠŸçš„msg
         long offset = consumeRequest.getProcessQueue().removeMessage(consumeRequest.getMsgs());
-        if (offset >= 0) { //Î»µã¸üĞÂ
+        if (offset >= 0) { //ä½ç‚¹æ›´æ–°
             this.defaultMQPushConsumerImpl.getOffsetStore().updateOffset(consumeRequest.getMessageQueue(),
                 offset, true);
         }
     }
 
-    //5msºóÔÙ´ÎÍÆÏûÏ¢¸øÒµÎñÏû·Ñ
+    //5msåå†æ¬¡æ¨æ¶ˆæ¯ç»™ä¸šåŠ¡æ¶ˆè´¹
     private void submitConsumeRequestLater(//
             final List<MessageExt> msgs, //
             final ProcessQueue processQueue, //
@@ -323,7 +323,7 @@ public class ConsumeMessageConcurrentlyService implements ConsumeMessageService 
         }, 5000, TimeUnit.MILLISECONDS);
     }
 
-    //DefaultMQPushConsumerImpl.pullMessage.PullCallback.onSuccessÖĞÖ´ĞĞ£¬ÕæÕıµÄ½Ó¿ÚÔÚ ConsumeMessageConcurrentlyService.submitConsumeRequest
+    //DefaultMQPushConsumerImpl.pullMessage.PullCallback.onSuccessä¸­æ‰§è¡Œï¼ŒçœŸæ­£çš„æ¥å£åœ¨ ConsumeMessageConcurrentlyService.submitConsumeRequest
     @Override
     public void submitConsumeRequest(//
             final List<MessageExt> msgs, //
@@ -331,11 +331,11 @@ public class ConsumeMessageConcurrentlyService implements ConsumeMessageService 
             final MessageQueue messageQueue, //
             final boolean dispatchToConsume) {
         final int consumeBatchSize = this.defaultMQPushConsumer.getConsumeMessageBatchMaxSize();
-        if (msgs.size() <= consumeBatchSize) { //Èç¹ûmsgÊıĞ¡ÓÚconsumeBatchSize£¬ÔòÒ»ÆğÏû·Ñ  ????? ÕâÀïÓ¦¸ÃÒª¼ÓÉÏmsgs.size() > 0
+        if (msgs.size() <= consumeBatchSize) { //å¦‚æœmsgæ•°å°äºconsumeBatchSizeï¼Œåˆ™ä¸€èµ·æ¶ˆè´¹  ????? è¿™é‡Œåº”è¯¥è¦åŠ ä¸Šmsgs.size() > 0
             ConsumeRequest consumeRequest = new ConsumeRequest(msgs, processQueue, messageQueue);
-            this.consumeExecutor.submit(consumeRequest);//Ïß³Ì³ØÖ´ĞĞ ConsumeRequest.run
+            this.consumeExecutor.submit(consumeRequest);//çº¿ç¨‹æ± æ‰§è¡Œ ConsumeRequest.run
         }
-        else { //³¬¹ıÒ»´Î×î´óÅúÁ¿Ïû·ÑµÄÏûÏ¢Êı£¬ Ôò·Ö³É¼¸Åú´¦Àí¡£
+        else { //è¶…è¿‡ä¸€æ¬¡æœ€å¤§æ‰¹é‡æ¶ˆè´¹çš„æ¶ˆæ¯æ•°ï¼Œ åˆ™åˆ†æˆå‡ æ‰¹å¤„ç†ã€‚
             for (int total = 0; total < msgs.size();) {
                 List<MessageExt> msgThis = new ArrayList<MessageExt>(consumeBatchSize);
                 for (int i = 0; i < consumeBatchSize; i++, total++) {
@@ -348,7 +348,7 @@ public class ConsumeMessageConcurrentlyService implements ConsumeMessageService 
                 }
                 //
                 ConsumeRequest consumeRequest = new ConsumeRequest(msgThis, processQueue, messageQueue);
-                this.consumeExecutor.submit(consumeRequest); //´¥·¢Ö´ĞĞ ConsumeRequest.run
+                this.consumeExecutor.submit(consumeRequest); //è§¦å‘æ‰§è¡Œ ConsumeRequest.run
             }
         }
     }

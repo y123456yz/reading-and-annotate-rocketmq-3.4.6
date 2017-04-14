@@ -91,7 +91,7 @@ public class UpdateSubGroupSubCommand implements SubCommand {
         return options;
     }
 
-    //brokerÅäÖÃÎÄ¼şÏà¹ØÅäÖÃÏî
+    //brokeré…ç½®æ–‡ä»¶ç›¸å…³é…ç½®é¡¹
     @Override
     public void execute(final CommandLine commandLine, final Options options, RPCHook rpcHook) {
         DefaultMQAdminExt defaultMQAdminExt = new DefaultMQAdminExt(rpcHook);

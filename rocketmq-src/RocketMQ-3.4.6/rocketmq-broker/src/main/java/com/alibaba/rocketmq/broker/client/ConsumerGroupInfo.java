@@ -21,10 +21,10 @@ import com.alibaba.rocketmq.common.consumer.ConsumeFromWhere;
 import com.alibaba.rocketmq.common.protocol.heartbeat.ConsumeType;
 import com.alibaba.rocketmq.common.protocol.heartbeat.MessageModel;
 import com.alibaba.rocketmq.common.protocol.heartbeat.SubscriptionData;
-import com.alibaba.rocketmq.common.script.GroovyScriptGenerator;
-import groovy.lang.Script;
+//import com.alibaba.rocketmq.common.script.GroovyScriptGenerator;
+//import groovy.lang.Script;
 import io.netty.channel.Channel;
-import org.codehaus.groovy.control.MultipleCompilationErrorsException;
+//import org.codehaus.groovy.control.MultipleCompilationErrorsException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -37,26 +37,26 @@ import java.util.concurrent.ConcurrentHashMap;
 
 
 /**
- * Ïû·ÑÕß·Ö×éĞÅÏ¢¡£
+ * æ¶ˆè´¹è€…åˆ†ç»„ä¿¡æ¯ã€‚
  * @author shijia.wxr
  */
 public class ConsumerGroupInfo {
     private static final Logger log = LoggerFactory.getLogger(LoggerName.BrokerLoggerName);
-    //Ïû·ÑÕß·Ö×éÃû³Æ
+    //æ¶ˆè´¹è€…åˆ†ç»„åç§°
     private final String groupName;
-    //¶©ÔÄµÄ¶à¸ötopicÒÔ¼°topicµÄÅäÖÃ¡£
+    //è®¢é˜…çš„å¤šä¸ªtopicä»¥åŠtopicçš„é…ç½®ã€‚
     private final ConcurrentHashMap<String/* Topic */, SubscriptionData> subscriptionTable =
             new ConcurrentHashMap<String, SubscriptionData>();
 
-    //¶©ÔÄµÄ¶à¸ötopic
-    //Ã¿Ò»¸öÏû·Ñ·Ö×éÏÂÃæµÄÏû·ÑÕß¼¯ºÏ¡£
+    //è®¢é˜…çš„å¤šä¸ªtopic
+    //æ¯ä¸€ä¸ªæ¶ˆè´¹åˆ†ç»„ä¸‹é¢çš„æ¶ˆè´¹è€…é›†åˆã€‚
     private final ConcurrentHashMap<Channel, ClientChannelInfo> channelInfoTable =
             new ConcurrentHashMap<Channel, ClientChannelInfo>(16);
-    //Ïû·ÑÀàĞÍ
+    //æ¶ˆè´¹ç±»å‹
     private volatile ConsumeType consumeType;
-    //Ïû·ÑÄ£ĞÍ¡£
+    //æ¶ˆè´¹æ¨¡å‹ã€‚
     private volatile MessageModel messageModel;
-    //Ïû·ÑÎ»µã´ÓÄÄ¶ù¿ªÊ¼¡£
+    //æ¶ˆè´¹ä½ç‚¹ä»å“ªå„¿å¼€å§‹ã€‚
     private volatile ConsumeFromWhere consumeFromWhere;
     private volatile long lastUpdateTimestamp = System.currentTimeMillis();
 
@@ -145,8 +145,8 @@ public class ConsumerGroupInfo {
         this.consumeFromWhere = consumeFromWhere;
 
         ClientChannelInfo infoOld = this.channelInfoTable.get(infoNew.getChannel());
-        if (null == infoOld) { //Ô­À´Ã»ÓĞ×¢²á¶ÔÓ¦µÄÍ¨µÀ¡£
-            //°ÑĞÂµÄÍ¨µÀ×¢²á½øÀ´ , ÏÈ½øÈëµÄÏß³ÌÄÜ¹»½øÈëif ·ÖÖ§¡£
+        if (null == infoOld) { //åŸæ¥æ²¡æœ‰æ³¨å†Œå¯¹åº”çš„é€šé“ã€‚
+            //æŠŠæ–°çš„é€šé“æ³¨å†Œè¿›æ¥ , å…ˆè¿›å…¥çš„çº¿ç¨‹èƒ½å¤Ÿè¿›å…¥if åˆ†æ”¯ã€‚
             ClientChannelInfo prev = this.channelInfoTable.put(infoNew.getChannel(), infoNew);
             if (null == prev) {
                 log.info("new consumer connected, group: {} {} {} channel: {}", this.groupName, consumeType,
@@ -156,14 +156,14 @@ public class ConsumerGroupInfo {
 
             infoOld = infoNew;
         }
-        else { //±ØĞëÊÇÏàÍ¬µÄclientid ²ÅÄÜ¸üĞÂÏû·ÑÕßÍ¨µÀĞÅÏ¢¡£
+        else { //å¿…é¡»æ˜¯ç›¸åŒçš„clientid æ‰èƒ½æ›´æ–°æ¶ˆè´¹è€…é€šé“ä¿¡æ¯ã€‚
             if (!infoOld.getClientId().equals(infoNew.getClientId())) {
                 log.error(
                     "[BUG] consumer channel exist in broker, but clientId not equal. GROUP: {} OLD: {} NEW: {} ",
                     this.groupName,//
                     infoOld.toString(),//
                     infoNew.toString());
-                this.channelInfoTable.put(infoNew.getChannel(), infoNew); //clientid²»Í¬µÄÊ±ºò £¬Ò²ÈÏÎªÊÇ¼ÓÈëĞÂµÄÏû·ÑÕßÍ¨µÀĞÅÏ¢¡£
+                this.channelInfoTable.put(infoNew.getChannel(), infoNew); //clientidä¸åŒçš„æ—¶å€™ ï¼Œä¹Ÿè®¤ä¸ºæ˜¯åŠ å…¥æ–°çš„æ¶ˆè´¹è€…é€šé“ä¿¡æ¯ã€‚
             }
         }
 
@@ -177,29 +177,29 @@ public class ConsumerGroupInfo {
 
 
 
-    /** ¸üĞÂÏû·ÑÕß·Ö×éµÄ¶©ÔÄÊı¾İ£¨SubscriptionData£©£¬ Ã¿Ò»¸öSubscriptionData ¶ÔÓ¦Ò»¸ötopic .
+    /** æ›´æ–°æ¶ˆè´¹è€…åˆ†ç»„çš„è®¢é˜…æ•°æ®ï¼ˆSubscriptionDataï¼‰ï¼Œ æ¯ä¸€ä¸ªSubscriptionData å¯¹åº”ä¸€ä¸ªtopic .
      *
-     *  Õâ¸ö·½·¨±È¶ÔÁËĞÂ¾ÉÁ½¸ötopicÁĞ±í£¬ ×öÁËÉ¾³ı£¬ ĞÂÔöºÍ¸üĞÂ²Ù×÷¡£
+     *  è¿™ä¸ªæ–¹æ³•æ¯”å¯¹äº†æ–°æ—§ä¸¤ä¸ªtopicåˆ—è¡¨ï¼Œ åšäº†åˆ é™¤ï¼Œ æ–°å¢å’Œæ›´æ–°æ“ä½œã€‚
      * @param subList
      * @return
      */
     public boolean updateSubscription(final Set<SubscriptionData> subList) {
         boolean updated = false;
 
-        //ÏÈ°ÑsublistÖĞĞÂÔö¼ÓµÄÔªËØºÍÒª¸üĞÂµÄÔªËØ´¦Àíµô¡£
+        //å…ˆæŠŠsublistä¸­æ–°å¢åŠ çš„å…ƒç´ å’Œè¦æ›´æ–°çš„å…ƒç´ å¤„ç†æ‰ã€‚
         for (SubscriptionData sub : subList) {
             SubscriptionData old = this.subscriptionTable.get(sub.getTopic());
-            if (old == null) { //Á½¸öÏß³Ì²¢·¢£¬Ö»ÓĞÒ»¸öprev == null
+            if (old == null) { //ä¸¤ä¸ªçº¿ç¨‹å¹¶å‘ï¼Œåªæœ‰ä¸€ä¸ªprev == null
                 SubscriptionData prev = this.subscriptionTable.put(sub.getTopic(), sub);
 //                this.updateGroovyScriptOfTopic(sub);
-                if (null == prev) { //µÚÒ»´ÎĞ´ÈëtopicµÄ¶©ÔÄÔªÊı¾İ¡£
+                if (null == prev) { //ç¬¬ä¸€æ¬¡å†™å…¥topicçš„è®¢é˜…å…ƒæ•°æ®ã€‚
                     updated = true;
                     log.info("subscription changed, add new topic, group: {} {}", this.groupName,
                         sub.toString());
                 }
             }
-            else if (sub.getSubVersion() > old.getSubVersion()) { //topicÒÑ¾­´æÔÚ£¬ Ôò±È½Ï°æ±¾ºÅ£¬Ö»ÓĞ¸ü´óµÄ°æ±¾ºÅÄÜĞ´Èë¡£
-                if (this.consumeType == ConsumeType.CONSUME_PASSIVELY) { //±»¶¯Ïû·Ñ·½Ê½ÏÂ £¬ÈÕÖ¾¼ÇÂ¼ĞÂ¾ÉÁ½¸ö¶©ÔÄÅäÖÃ.
+            else if (sub.getSubVersion() > old.getSubVersion()) { //topicå·²ç»å­˜åœ¨ï¼Œ åˆ™æ¯”è¾ƒç‰ˆæœ¬å·ï¼Œåªæœ‰æ›´å¤§çš„ç‰ˆæœ¬å·èƒ½å†™å…¥ã€‚
+                if (this.consumeType == ConsumeType.CONSUME_PASSIVELY) { //è¢«åŠ¨æ¶ˆè´¹æ–¹å¼ä¸‹ ï¼Œæ—¥å¿—è®°å½•æ–°æ—§ä¸¤ä¸ªè®¢é˜…é…ç½®.
                     log.info("subscription changed, group: {} OLD: {} NEW: {}", //
                         this.groupName,//
                         old.toString(),//
@@ -208,28 +208,28 @@ public class ConsumerGroupInfo {
                 }
 
                 this.subscriptionTable.put(sub.getTopic(), sub);
-                //½Å±¾¹ıÂË¸ÄÎªclient ´¦Àí£¬ ¼õÇá·şÎñÆ÷µÄÑ¹Á¦¡£
+                //è„šæœ¬è¿‡æ»¤æ”¹ä¸ºclient å¤„ç†ï¼Œ å‡è½»æœåŠ¡å™¨çš„å‹åŠ›ã€‚
 //                this.updateGroovyScriptOfTopic(sub);
 
 
             }
         }
 
-        //°Ñ²»ÔÚsublistÖĞµÄ¶©ÔÄtopicÉ¾³ıµô¡£
+        //æŠŠä¸åœ¨sublistä¸­çš„è®¢é˜…topicåˆ é™¤æ‰ã€‚
         Iterator<Entry<String, SubscriptionData>> it = this.subscriptionTable.entrySet().iterator();
-        while (it.hasNext()) {  //µü´úÃ¿Ò»¸ötopicµÄ¶©ÔÄÔªÊı¾İ¡£
+        while (it.hasNext()) {  //è¿­ä»£æ¯ä¸€ä¸ªtopicçš„è®¢é˜…å…ƒæ•°æ®ã€‚
             Entry<String, SubscriptionData> next = it.next();
             String oldTopic = next.getKey();
 
             boolean exist = false;
-            for (SubscriptionData sub : subList) { //ÅĞ¶ÏÀÏµÄtopicÔÚĞÂµÄtopic ¶©ÔÄÁĞ±íÖĞ´æÔÚ£¬
+            for (SubscriptionData sub : subList) { //åˆ¤æ–­è€çš„topicåœ¨æ–°çš„topic è®¢é˜…åˆ—è¡¨ä¸­å­˜åœ¨ï¼Œ
                 if (sub.getTopic().equals(oldTopic)) {
                     exist = true;
                     break;
                 }
             }
 
-            if (!exist) { //ÀÏµÄtopic ²»ÔÚĞÂµÄtopic¶©ÔÄÁĞ±íÖĞ£¬Ôò´ÓĞÂµÄ
+            if (!exist) { //è€çš„topic ä¸åœ¨æ–°çš„topicè®¢é˜…åˆ—è¡¨ä¸­ï¼Œåˆ™ä»æ–°çš„
                 log.warn("subscription changed, group: {} remove topic {} {}", //
                     this.groupName,//
                     oldTopic,//

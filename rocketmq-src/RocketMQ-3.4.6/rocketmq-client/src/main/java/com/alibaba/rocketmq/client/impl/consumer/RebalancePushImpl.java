@@ -34,9 +34,9 @@ import java.util.concurrent.TimeUnit;
 
 
 /**
- * //selectOneMessageQueue  messageQueueList ÊÇÍ¶µİÏûÏ¢µÄÊ±ºò¶ÔÓ¦µÄtopic¶ÓÁĞ£¬Ã¿´ÎÍ¶µİµÄÊ±ºòÂÒĞòÑ¡Ôñ¶ÓÁĞÍ¶µİ£¬¼ûROCKET¿ª·¢ÊÖ²á7.8½Ú
- //rebalanceÏà¹ØµÄÊÇÕë¶ÔÏû·Ñ£¬ÀıÈçÓĞ¶à¸öÏû·ÑÕßÏû·ÑÍ¬Ò»¸ötopic£¬¸ÃtopicÓĞ10¸ö¶ÓÁĞ£¬ÔòÏû·ÑÕß1Ïû·Ñ1-5¶ÓÁĞ£¬Ïû·ÑÕß2Ïû·Ñ6-10¶ÔÁË£¬¼ûROCKETMQ¿ª·¢ÊÖ²á7-5
- * @author shijia.wxr  ÕæÕıÊ¹ÓÃÔÚ DefaultMQPushConsumerImpl
+ * //selectOneMessageQueue  messageQueueList æ˜¯æŠ•é€’æ¶ˆæ¯çš„æ—¶å€™å¯¹åº”çš„topicé˜Ÿåˆ—ï¼Œæ¯æ¬¡æŠ•é€’çš„æ—¶å€™ä¹±åºé€‰æ‹©é˜Ÿåˆ—æŠ•é€’ï¼Œè§ROCKETå¼€å‘æ‰‹å†Œ7.8èŠ‚
+ //rebalanceç›¸å…³çš„æ˜¯é’ˆå¯¹æ¶ˆè´¹ï¼Œä¾‹å¦‚æœ‰å¤šä¸ªæ¶ˆè´¹è€…æ¶ˆè´¹åŒä¸€ä¸ªtopicï¼Œè¯¥topicæœ‰10ä¸ªé˜Ÿåˆ—ï¼Œåˆ™æ¶ˆè´¹è€…1æ¶ˆè´¹1-5é˜Ÿåˆ—ï¼Œæ¶ˆè´¹è€…2æ¶ˆè´¹6-10å¯¹äº†ï¼Œè§ROCKETMQå¼€å‘æ‰‹å†Œ7-5
+ * @author shijia.wxr  çœŸæ­£ä½¿ç”¨åœ¨ DefaultMQPushConsumerImpl
  */
 public class RebalancePushImpl extends RebalanceImpl {
     private final DefaultMQPushConsumerImpl defaultMQPushConsumerImpl;
@@ -55,8 +55,8 @@ public class RebalancePushImpl extends RebalanceImpl {
 
     //updateProcessQueueTableInRebalance-> RebalancePushImpl.dispatchPullRequest
 
-    //ÔÚ°´topic×örebalance²Ù×÷µÄÊ±ºòPullRequest±»·Ö·¢³öÈ¥, Ò»¸öPullRequest¶ÔÓ¦Ò»¸öÏû·ÑÕß·Ö×é¶ÔtopicµÄÄ³Ò»¸ö¶ÓÁĞµÄÏû·Ñ¡£
-    //Ò²¾ÍÊÇ´æÈë PullMessageService.pullRequestQueueÖĞ
+    //åœ¨æŒ‰topicåšrebalanceæ“ä½œçš„æ—¶å€™PullRequestè¢«åˆ†å‘å‡ºå», ä¸€ä¸ªPullRequestå¯¹åº”ä¸€ä¸ªæ¶ˆè´¹è€…åˆ†ç»„å¯¹topicçš„æŸä¸€ä¸ªé˜Ÿåˆ—çš„æ¶ˆè´¹ã€‚
+    //ä¹Ÿå°±æ˜¯å­˜å…¥ PullMessageService.pullRequestQueueä¸­
     @Override
     public void dispatchPullRequest(List<PullRequest> pullRequestList) {
         for (PullRequest pullRequest : pullRequestList) {
@@ -75,14 +75,14 @@ public class RebalancePushImpl extends RebalanceImpl {
         case CONSUME_FROM_LAST_OFFSET_AND_FROM_MIN_WHEN_BOOT_FIRST:
         case CONSUME_FROM_MIN_OFFSET:
         case CONSUME_FROM_MAX_OFFSET:
-        case CONSUME_FROM_LAST_OFFSET: { //´Óremote broker»ñÈ¡¶ÓÁĞµÄÏû·ÑÎ»µã¡£
+        case CONSUME_FROM_LAST_OFFSET: { //ä»remote brokerè·å–é˜Ÿåˆ—çš„æ¶ˆè´¹ä½ç‚¹ã€‚
             long lastOffset = offsetStore.readOffset(mq, ReadOffsetType.READ_FROM_STORE);
-            if (lastOffset >= 0) { //´ÓÆäËûÏû·ÑÕß´æ´¢µÄÄÇ¸öÎ»µã¿ªÊ¼¡£
+            if (lastOffset >= 0) { //ä»å…¶ä»–æ¶ˆè´¹è€…å­˜å‚¨çš„é‚£ä¸ªä½ç‚¹å¼€å§‹ã€‚
                 result = lastOffset;
             }
             // First start,no offset
-            else if (-1 == lastOffset) { //¼¯ÈºµÚÒ»´ÎÆô¶¯Ïû·ÑµÄÊ±ºò£¬´Óbroker¶ÁÈ¡²»µ½ÀúÊ·Î»µãÊ±£¬  Èç¹ûÊÇ·Ö×éµÄÖØÊÔtopic, ÔòÒª»ØËİµ½¿ªÊ¼Î»µã£¬
-                //·ñÔòÓÃ×îĞÂµÄÎ»µã¡£
+            else if (-1 == lastOffset) { //é›†ç¾¤ç¬¬ä¸€æ¬¡å¯åŠ¨æ¶ˆè´¹çš„æ—¶å€™ï¼Œä»brokerè¯»å–ä¸åˆ°å†å²ä½ç‚¹æ—¶ï¼Œ  å¦‚æœæ˜¯åˆ†ç»„çš„é‡è¯•topic, åˆ™è¦å›æº¯åˆ°å¼€å§‹ä½ç‚¹ï¼Œ
+                //å¦åˆ™ç”¨æœ€æ–°çš„ä½ç‚¹ã€‚
                 if (mq.getTopic().startsWith(MixAll.RETRY_GROUP_TOPIC_PREFIX)) {
                     result = 0L;
                 }
@@ -102,10 +102,10 @@ public class RebalancePushImpl extends RebalanceImpl {
         }
         case CONSUME_FROM_FIRST_OFFSET: {
             long lastOffset = offsetStore.readOffset(mq, ReadOffsetType.READ_FROM_STORE);
-            if (lastOffset >= 0) { //´Óbroker¶ÁÈ¡µ½ÁËÀúÊ·Î»µã£¬Ôò´ÓÀúÊ·Î»µã¿ªÊ¼¡£
+            if (lastOffset >= 0) { //ä»brokerè¯»å–åˆ°äº†å†å²ä½ç‚¹ï¼Œåˆ™ä»å†å²ä½ç‚¹å¼€å§‹ã€‚
                 result = lastOffset;
             }
-            else if (-1 == lastOffset) { //´Óbroker¶ÁÈ¡²»µ½ÀúÊ·Î»µã£¬Ôò´ÓÆğÊ¼Î»µã¿ªÊ¼¡£
+            else if (-1 == lastOffset) { //ä»brokerè¯»å–ä¸åˆ°å†å²ä½ç‚¹ï¼Œåˆ™ä»èµ·å§‹ä½ç‚¹å¼€å§‹ã€‚
                 result = 0L;
             }
             else {
@@ -130,10 +130,10 @@ public class RebalancePushImpl extends RebalanceImpl {
                 else {
                     try {
                         /**
-                         *  //´ÓÖ¸¶¨µÄÊ±¼ä´Á¿ªÊ¼½øĞĞÎ»µãÏû·Ñ£¬ Í¨¹ıÊ±¼ä´Á¶¨Î»Î»µãµÄ·½·¨ÈçÏÂ£º
-                         //ÏÈÍ¨¹ıconsume queueµÄmapfileµÄ×îºóĞŞ¸ÄÊ±¼ä£¨±È²éÕÒÊ±¼äÒª´ó£© ÕÒµ½mapfile,
-                         //È»ºó´ÓmapfileµÄÍ·¿ªÊ¼×ö¶ş·Ö²éÕÒ£¬ÓÃconsume queueµÄitemÕÒµ½commitlogÖĞµÄÏûÏ¢£¬
-                         //ÓÃÏûÏ¢µÄ´æ´¢Ê±¼äºÍ²éÑ¯Ê±¼ä×ö±È¶Ô£¬Ö±µ½¾«È·¶¨Î»£¬»òÕß¶¨Î»µ½¾àÀë²éÑ¯Ê±¼ä×îĞ¡µÄÄÇ¸öÏûÏ¢¡£
+                         *  //ä»æŒ‡å®šçš„æ—¶é—´æˆ³å¼€å§‹è¿›è¡Œä½ç‚¹æ¶ˆè´¹ï¼Œ é€šè¿‡æ—¶é—´æˆ³å®šä½ä½ç‚¹çš„æ–¹æ³•å¦‚ä¸‹ï¼š
+                         //å…ˆé€šè¿‡consume queueçš„mapfileçš„æœ€åä¿®æ”¹æ—¶é—´ï¼ˆæ¯”æŸ¥æ‰¾æ—¶é—´è¦å¤§ï¼‰ æ‰¾åˆ°mapfile,
+                         //ç„¶åä»mapfileçš„å¤´å¼€å§‹åšäºŒåˆ†æŸ¥æ‰¾ï¼Œç”¨consume queueçš„itemæ‰¾åˆ°commitlogä¸­çš„æ¶ˆæ¯ï¼Œ
+                         //ç”¨æ¶ˆæ¯çš„å­˜å‚¨æ—¶é—´å’ŒæŸ¥è¯¢æ—¶é—´åšæ¯”å¯¹ï¼Œç›´åˆ°ç²¾ç¡®å®šä½ï¼Œæˆ–è€…å®šä½åˆ°è·ç¦»æŸ¥è¯¢æ—¶é—´æœ€å°çš„é‚£ä¸ªæ¶ˆæ¯ã€‚
                          */
                         long timestamp =
                                 UtilAll.parseDate(
@@ -167,8 +167,8 @@ public class RebalancePushImpl extends RebalanceImpl {
 
     @Override
     public boolean removeUnnecessaryMessageQueue(MessageQueue mq, ProcessQueue pq) {
-        this.defaultMQPushConsumerImpl.getOffsetStore().persist(mq); //Ïû·ÑÎ»µãÍ¬²½µ½broker .
-        this.defaultMQPushConsumerImpl.getOffsetStore().removeOffset(mq); //ÇåÀí±¾µØ´æ´¢µÄ¶ÓÁĞÏû·ÑÎ»µã¡£
+        this.defaultMQPushConsumerImpl.getOffsetStore().persist(mq); //æ¶ˆè´¹ä½ç‚¹åŒæ­¥åˆ°broker .
+        this.defaultMQPushConsumerImpl.getOffsetStore().removeOffset(mq); //æ¸…ç†æœ¬åœ°å­˜å‚¨çš„é˜Ÿåˆ—æ¶ˆè´¹ä½ç‚¹ã€‚
         if (this.defaultMQPushConsumerImpl.isConsumeOrderly()
                 && MessageModel.CLUSTERING.equals(this.defaultMQPushConsumerImpl.messageModel())) {
             try {

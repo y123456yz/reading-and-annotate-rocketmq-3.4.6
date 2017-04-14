@@ -25,8 +25,8 @@ import java.net.UnknownHostException;
 
 
 /**
- * Ã¿Ò»¸öbroker Ö»ÊôÓÚÒ»¸öcluster ÏÂµÄÒ»¸öbrokername £¬ ²¢ÇÒÓĞÒ»¸öbroker id .
- * brokerid ´óÓÚ0 £¬ÔòÊÇslave .·ñÔòÊÇmaster.
+ * æ¯ä¸€ä¸ªbroker åªå±äºä¸€ä¸ªcluster ä¸‹çš„ä¸€ä¸ªbrokername ï¼Œ å¹¶ä¸”æœ‰ä¸€ä¸ªbroker id .
+ * brokerid å¤§äº0 ï¼Œåˆ™æ˜¯slave .å¦åˆ™æ˜¯master.
  *
  * @author shijia.wxr
  */
@@ -45,7 +45,7 @@ public class BrokerConfig {
     private String brokerClusterName = "DefaultCluster";
     @ImportantField
     private long brokerId = MixAll.MASTER_ID;
-    //¸ÃbrokerÊÇ·ñ¿É¶Á ¿ÉĞ´µÈ
+    //è¯¥brokeræ˜¯å¦å¯è¯» å¯å†™ç­‰
     private int brokerPermission = PermName.PERM_READ | PermName.PERM_WRITE;
     private int defaultTopicQueueNums = 8;
     @ImportantField

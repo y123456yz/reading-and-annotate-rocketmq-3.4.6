@@ -18,7 +18,7 @@ package com.alibaba.rocketmq.client.consumer.listener;
 
 /**
  * @author shijia.wxr
- * ÒµÎñ´¦ÀíÏûÏ¢ºó£¬¶Ô·µ»ØÖµµÄ¼ì²éÔÚConsumeRequest.run-> ConsumeMessageConcurrentlyService.processConsumeResult ÖĞ
+ * ä¸šåŠ¡å¤„ç†æ¶ˆæ¯åï¼Œå¯¹è¿”å›å€¼çš„æ£€æŸ¥åœ¨ConsumeRequest.run-> ConsumeMessageConcurrentlyService.processConsumeResult ä¸­
  */
 public enum ConsumeConcurrentlyStatus {
     /**
@@ -28,5 +28,5 @@ public enum ConsumeConcurrentlyStatus {
     /**
      * Failure consumption,later try to consume
      */
-    RECONSUME_LATER; /* ÒµÎñÏû·ÑÊ§°Ü£¬¸ÃÌõÏû·ÑÊ§°ÜµÄÏûÏ¢»á·ÅÈëÖØÊÔ¶ÓÁĞ£¬ĞèÒªÖØĞÂÏû·Ñ */
+    RECONSUME_LATER; /* ä¸šåŠ¡æ¶ˆè´¹å¤±è´¥ï¼Œè¯¥æ¡æ¶ˆè´¹å¤±è´¥çš„æ¶ˆæ¯ä¼šæ”¾å…¥é‡è¯•é˜Ÿåˆ—ï¼Œéœ€è¦é‡æ–°æ¶ˆè´¹ */
 }

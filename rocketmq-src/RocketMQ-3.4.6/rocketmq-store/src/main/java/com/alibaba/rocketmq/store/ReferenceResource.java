@@ -20,8 +20,8 @@ import java.util.concurrent.atomic.AtomicLong;
 
 
 /**
- * ÓÃrefcount×ö¶ÔÏóµÄÒıÓÃ ¼ÆÊı£¬
- * available ÅĞ¶Ï¶ÔÏóÊÇ·ñ¿ÉÒÔ±»»ñÈ¡¡£
+ * ç”¨refcountåšå¯¹è±¡çš„å¼•ç”¨ è®¡æ•°ï¼Œ
+ * available åˆ¤æ–­å¯¹è±¡æ˜¯å¦å¯ä»¥è¢«è·å–ã€‚
  *
  * Similar C++ smart pointer
  * @author shijia.wxr
@@ -32,7 +32,7 @@ public abstract class ReferenceResource {
     protected volatile boolean cleanupOver = false;
     private volatile long firstShutdownTimestamp = 0;
 
-    public synchronized boolean hold() { //ËùÓĞÕß³ÖÓĞ×ÊÔ´£¬¾ÍÏàµ±ÓÚÒıÓÃ¼ÆÊı+ 1¡¢
+    public synchronized boolean hold() { //æ‰€æœ‰è€…æŒæœ‰èµ„æºï¼Œå°±ç›¸å½“äºå¼•ç”¨è®¡æ•°+ 1ã€
         if (this.isAvailable()) {
             if (this.refCount.getAndIncrement() > 0) {
                 return true;
@@ -69,7 +69,7 @@ public abstract class ReferenceResource {
     }
 
     /**
-     * ¶Ô×ÊÔ´µÄÒıÓÃ¼ÆÊıÊÍ·Åµ½0£¬ ÔòÆô¶¯cleanup×ö×ÊÔ´ÇåÀí¡£
+     * å¯¹èµ„æºçš„å¼•ç”¨è®¡æ•°é‡Šæ”¾åˆ°0ï¼Œ åˆ™å¯åŠ¨cleanupåšèµ„æºæ¸…ç†ã€‚
      */
     public void release() {
         long value = this.refCount.decrementAndGet();

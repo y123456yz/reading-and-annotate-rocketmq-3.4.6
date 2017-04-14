@@ -54,15 +54,15 @@ import java.util.concurrent.ConcurrentHashMap;
 
 
 /**
- * @author shijia.wxr  Ò»¸öÏû·Ñ·Ö×é¶ÔÓ¦Ò»¸öMQConsumerInner£¬´æ´¢ÔÚMQClientInstance.consumerTable
+ * @author shijia.wxr  ä¸€ä¸ªæ¶ˆè´¹åˆ†ç»„å¯¹åº”ä¸€ä¸ªMQConsumerInnerï¼Œå­˜å‚¨åœ¨MQClientInstance.consumerTable
  */
 public class DefaultMQPullConsumerImpl implements MQConsumerInner {
     private final Logger log = ClientLogger.getLog();
     private final DefaultMQPullConsumer defaultMQPullConsumer;
     private ServiceState serviceState = ServiceState.CREATE_JUST;
 
-    /* start·½·¨ÖĞµ÷ÓÃthis.mQClientFactory = MQClientManager.getInstance().getAndCreateMQClientInstance(this.defaultMQPullConsumer, this.rpcHook);*/
-    private MQClientInstance mQClientFactory; //¸Ã¿Í»§¶Ëclientid¶ÔÓ¦µÄMQClientInstance
+    /* startæ–¹æ³•ä¸­è°ƒç”¨this.mQClientFactory = MQClientManager.getInstance().getAndCreateMQClientInstance(this.defaultMQPullConsumer, this.rpcHook);*/
+    private MQClientInstance mQClientFactory; //è¯¥å®¢æˆ·ç«¯clientidå¯¹åº”çš„MQClientInstance
     private PullAPIWrapper pullAPIWrapper;
     private OffsetStore offsetStore;
     private RebalanceImpl rebalanceImpl = new RebalancePullImpl(this);
@@ -490,18 +490,18 @@ public class DefaultMQPullConsumerImpl implements MQConsumerInner {
                 break;
             case RUNNING:
                 this.persistConsumerOffset();
-                /* Èç¹ûÊÇÉú²úÕß£¬¶Ï¿ªÁ¬½Óºó»á×¢Ïúproducer£¬×¥°üÈçÏÂ:
-                 *¿Í»§¶ËÏòbroker·¢ËÍ×¢Ïú yyzGroup2 Ïû·Ñ·Ö×éÇëÇó
+                /* å¦‚æœæ˜¯ç”Ÿäº§è€…ï¼Œæ–­å¼€è¿æ¥åä¼šæ³¨é”€producerï¼ŒæŠ“åŒ…å¦‚ä¸‹:
+                 *å®¢æˆ·ç«¯å‘brokerå‘é€æ³¨é”€ yyzGroup2 æ¶ˆè´¹åˆ†ç»„è¯·æ±‚
                  * ........{"code":35,"extFields":{"clientID":"192.168.56.1@7644","producerGroup":"yyzGroup2"},"flag":0,
                  * "language":"JAVA","opaque":12,"serializeTypeCurrentRPC":"JSON","version":115}
-                 * broker»áÓĞ×¢Ïú³É¹¦
+                 * brokerä¼šæœ‰æ³¨é”€æˆåŠŸ
                  * ...s...o{"code":0,"extFields":{},"flag":1,"language":"JAVA","opaque":12,"serializeTypeCurrentRPC":"JSON","version":115}
                  *
-                 *¿Í»§¶ËÏòbroker·¢ËÍ×¢Ïú CLIENT_INNER_PRODUCER Ïû·Ñ·Ö×éÇëÇó
+                 *å®¢æˆ·ç«¯å‘brokerå‘é€æ³¨é”€ CLIENT_INNER_PRODUCER æ¶ˆè´¹åˆ†ç»„è¯·æ±‚
                  * ........{"code":35,"extFields":{"clientID":"192.168.56.1@7644","producerGroup":"CLIENT_INNER_PRODUCER"},"flag":0,"
                  * language":"JAVA","opaque":20,"serializeTypeCurrentRPC":"JSON","version":115}
                  *
-                 * broker»áÓĞ×¢Ïú³É¹¦
+                 * brokerä¼šæœ‰æ³¨é”€æˆåŠŸ
                  * ...s...o{"code":0,"extFields":{},"flag":1,"language":"JAVA","opaque":20,"serializeTypeCurrentRPC":"JSON","version":115}
                   * */
                 this.mQClientFactory.unregisterConsumer(this.defaultMQPullConsumer.getConsumerGroup());

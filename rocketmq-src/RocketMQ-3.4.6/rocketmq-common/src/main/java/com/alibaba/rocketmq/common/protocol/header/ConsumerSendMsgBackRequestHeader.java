@@ -24,15 +24,15 @@ import com.alibaba.rocketmq.remoting.exception.RemotingCommandException;
 
 
 /**
- * @author shijia.wxr  Ò»°ã´Óheader dataÖĞ½âÎö³öÏà¹ØĞÅÏ¢: "extFields":{"topic":"yyztest2","queueId":"3","consumerGroup":"yyzGroup2","commitOffset":"28"}
- */ //CONSUMER_SEND_MSG_BACKÏûÏ¢µÄextFields²¿·ÖĞ¯´øÏà¹Ø³ÉÔ±ÄÚÈİ
+ * @author shijia.wxr  ä¸€èˆ¬ä»header dataä¸­è§£æå‡ºç›¸å…³ä¿¡æ¯: "extFields":{"topic":"yyztest2","queueId":"3","consumerGroup":"yyzGroup2","commitOffset":"28"}
+ */ //CONSUMER_SEND_MSG_BACKæ¶ˆæ¯çš„extFieldséƒ¨åˆ†æºå¸¦ç›¸å…³æˆå‘˜å†…å®¹
 public class ConsumerSendMsgBackRequestHeader implements CommandCustomHeader {
     @CFNotNull
-    private Long offset; //offsetÒ»°ãÔÚÍ¨ĞÅ±¨ÎÄÖĞµÄ extFields Ğ¯´øµ½¶Ô¶Ë
+    private Long offset; //offsetä¸€èˆ¬åœ¨é€šä¿¡æŠ¥æ–‡ä¸­çš„ extFields æºå¸¦åˆ°å¯¹ç«¯
     @CFNotNull
     private String group;
-    @CFNotNull //Ğ¡ÓÚ0»á·ÅÈëËÀĞÅ¶ÓÁĞ£¬¼ûconsumerSendMsgBack
-    private Integer delayLevel; //ÑÓ³ÙÏûÏ¢µÈ¼¶£¬0²»ÏûÏ¢²»ÑÓ³Ù   1£ºÑÓ³Ù1s  2:ÑÓ³Ù5s 3:ÑÓ³Ù10s ...... 50:ÑÓ³Ù30Ìì
+    @CFNotNull //å°äº0ä¼šæ”¾å…¥æ­»ä¿¡é˜Ÿåˆ—ï¼Œè§consumerSendMsgBack
+    private Integer delayLevel; //å»¶è¿Ÿæ¶ˆæ¯ç­‰çº§ï¼Œ0ä¸æ¶ˆæ¯ä¸å»¶è¿Ÿ   1ï¼šå»¶è¿Ÿ1s  2:å»¶è¿Ÿ5s 3:å»¶è¿Ÿ10s ...... 50:å»¶è¿Ÿ30å¤©
     private String originMsgId;
     private String originTopic;
     @CFNullable

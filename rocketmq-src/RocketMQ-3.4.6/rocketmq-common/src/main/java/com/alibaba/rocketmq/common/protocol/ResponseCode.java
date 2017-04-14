@@ -27,7 +27,7 @@ public class ResponseCode extends RemotingSysResponseCode {
     public static final int MESSAGE_ILLEGAL = 13;
     public static final int SERVICE_NOT_AVAILABLE = 14;
     public static final int VERSION_NOT_SUPPORTED = 15;
-    public static final int NO_PERMISSION = 16; //ÀıÈçÍ¶µİÏûÏ¢µ½¸Ãbroker£¬µ«ÊÇ¸ÄbrokerÈ´ÅäÖÃÎª²»¿ÉĞ´
+    public static final int NO_PERMISSION = 16; //ä¾‹å¦‚æŠ•é€’æ¶ˆæ¯åˆ°è¯¥brokerï¼Œä½†æ˜¯æ”¹brokerå´é…ç½®ä¸ºä¸å¯å†™
     public static final int TOPIC_NOT_EXIST = 17;
     public static final int TOPIC_EXIST_ALREADY = 18;
     public static final int PULL_NOT_FOUND = 19;

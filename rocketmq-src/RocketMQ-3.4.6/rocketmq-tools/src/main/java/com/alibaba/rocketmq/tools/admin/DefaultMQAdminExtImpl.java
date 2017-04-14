@@ -738,7 +738,7 @@ public class DefaultMQAdminExtImpl implements MQAdminExt, MQAdminExtInner {
             consumerGroup, clientId, msgId, timeoutMillis * 3);
     }
 
-    /* ÅÐ¶ÏÊôÓÚgroupÏû·Ñ·Ö×éÖÐµÄmsgÏûÏ¢ÊÇ·ñÒÑÏû·Ñ */
+    /* åˆ¤æ–­å±žäºŽgroupæ¶ˆè´¹åˆ†ç»„ä¸­çš„msgæ¶ˆæ¯æ˜¯å¦å·²æ¶ˆè´¹ */
     public boolean consumed(final MessageExt msg, final String group) throws RemotingException, MQClientException, InterruptedException,
             MQBrokerException {
         ConsumeStats cstats = this.examineConsumeStats(group);
@@ -754,7 +754,7 @@ public class DefaultMQAdminExtImpl implements MQAdminExt, MQAdminExtInner {
                 if (brokerData != null) {
                     String addr = brokerData.getBrokerAddrs().get(MixAll.MASTER_ID);
                     if (addr.equals(RemotingUtil.socketAddress2String(msg.getStoreHost()))) {
-                        /* ¼ì²émsgÊÇ·ñÒÑ¾­±»Ïû·Ñ£¬¸ù¾Ýoffset½øÐÐ±È½Ï */
+                        /* æ£€æŸ¥msgæ˜¯å¦å·²ç»è¢«æ¶ˆè´¹ï¼Œæ ¹æ®offsetè¿›è¡Œæ¯”è¾ƒ */
                     if (next.getValue().getConsumerOffset() > msg.getQueueOffset()) {
                         return true;
                     }
@@ -763,7 +763,7 @@ public class DefaultMQAdminExtImpl implements MQAdminExt, MQAdminExtInner {
             }
         }
 
-        /* »¹Ã»ÓÐ±»Ïû·Ñ */
+        /* è¿˜æ²¡æœ‰è¢«æ¶ˆè´¹ */
         return false;
     }
 
@@ -828,7 +828,7 @@ public class DefaultMQAdminExtImpl implements MQAdminExt, MQAdminExtInner {
                     continue;
                 }
 
-                if (ifConsumed) { /* ÒÑÏû·Ñ */
+                if (ifConsumed) { /* å·²æ¶ˆè´¹ */
                     mt.setTrackType(TrackType.CONSUMED);
 
                     Iterator<Entry<String, SubscriptionData>> it = cc.getSubscriptionTable().entrySet().iterator();
@@ -846,7 +846,7 @@ public class DefaultMQAdminExtImpl implements MQAdminExt, MQAdminExtInner {
                         }
                     }
                 }
-                else { /* »¹Î´Ïû·Ñ */
+                else { /* è¿˜æœªæ¶ˆè´¹ */
                     mt.setTrackType(TrackType.NOT_CONSUME_YET);
                 }
                 break;

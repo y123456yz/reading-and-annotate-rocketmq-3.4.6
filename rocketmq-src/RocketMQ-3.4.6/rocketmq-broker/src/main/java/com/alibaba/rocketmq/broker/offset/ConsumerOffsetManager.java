@@ -32,13 +32,13 @@ import java.util.concurrent.ConcurrentHashMap;
 
 /**
  *
- * @author shijia.wxr  ¼ÓÔØÏû·Ñ½ø¶Èconsumer offset µ½ offsetTable
+ * @author shijia.wxr  åŠ è½½æ¶ˆè´¹è¿›åº¦consumer offset åˆ° offsetTable
  */
 public class ConsumerOffsetManager extends ConfigManager {
     private static final Logger log = LoggerFactory.getLogger(LoggerName.BrokerLoggerName);
     private static final String TOPIC_GROUP_SEPARATOR = "@";
 
-    //¼ÇÂ¼ Ïû·ÑÕß·Ö×é¶Ôtopic µÄÄ³Ò»¸öqueueµÄÏû·ÑÎ»µã¡£ //°Ñ´Ó /root/store/config/consumerOffset.json ½âÎöµÄÄÚÈİĞòÁĞ»¯µ½ÕâÀï
+    //è®°å½• æ¶ˆè´¹è€…åˆ†ç»„å¯¹topic çš„æŸä¸€ä¸ªqueueçš„æ¶ˆè´¹ä½ç‚¹ã€‚ //æŠŠä» /root/store/config/consumerOffset.json è§£æçš„å†…å®¹åºåˆ—åŒ–åˆ°è¿™é‡Œ
     private ConcurrentHashMap<String/* topic@group */, ConcurrentHashMap<Integer /*queueid */, Long /*consumeoffset*/>> offsetTable =
             new ConcurrentHashMap<String, ConcurrentHashMap<Integer, Long>>(512);
 
@@ -93,7 +93,7 @@ public class ConsumerOffsetManager extends ConfigManager {
 
 
     /**
-     * »ñÈ¡Ïû·ÑÕß·Ö×éÏû·ÑµÄtopic;
+     * è·å–æ¶ˆè´¹è€…åˆ†ç»„æ¶ˆè´¹çš„topic;
      * @param group
      * @return
      */
@@ -179,8 +179,8 @@ public class ConsumerOffsetManager extends ConfigManager {
     }
 
 
-    @Override //°Ñ´Ó /root/store/config/consumerOffset.json ½âÎöµÄÅäÖÃÄÚÈİĞòÁĞ»¯µ½ ConsumerOffsetManager.offsetTable
-    public void decode(String jsonString) { //ConfigManager.configFilePathÖĞÖ´ĞĞ
+    @Override //æŠŠä» /root/store/config/consumerOffset.json è§£æçš„é…ç½®å†…å®¹åºåˆ—åŒ–åˆ° ConsumerOffsetManager.offsetTable
+    public void decode(String jsonString) { //ConfigManager.configFilePathä¸­æ‰§è¡Œ
         if (jsonString != null) {
             ConsumerOffsetManager obj = RemotingSerializable.fromJson(jsonString, ConsumerOffsetManager.class);
             if (obj != null) {
@@ -190,7 +190,7 @@ public class ConsumerOffsetManager extends ConfigManager {
     }
 
     @Override
-    public String configFilePath() {//ConfigManager.configFilePathÖĞÖ´ĞĞ
+    public String configFilePath() {//ConfigManager.configFilePathä¸­æ‰§è¡Œ
         return BrokerPathConfigHelper.getConsumerOffsetPath(this.brokerController.getMessageStoreConfig().getStorePathRootDir());
     }
 

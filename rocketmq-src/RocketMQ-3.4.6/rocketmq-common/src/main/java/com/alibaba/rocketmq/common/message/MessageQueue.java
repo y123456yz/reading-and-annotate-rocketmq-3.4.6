@@ -20,8 +20,8 @@ import java.io.Serializable;
 
 
 /**
- * @author shijia.wxr   ¸ÃtopicËùÔÚbroker£¬¼°Æä¶ÔÓ¦µÄqid        ´æ´¢ÔÚ TopicPublishInfo.messageQueueListÖĞ
- * //Ã¿Ò»¸öÏûÏ¢¶ÓÁĞ£¬¶ÔÓ¦Ò»¸ö´¦Àí¶ÓÁĞ¡£ RebalanceImpl.processQueueTable(MessageQueue----ProcessQueue)
+ * @author shijia.wxr   è¯¥topicæ‰€åœ¨brokerï¼ŒåŠå…¶å¯¹åº”çš„qid        å­˜å‚¨åœ¨ TopicPublishInfo.messageQueueListä¸­
+ * //æ¯ä¸€ä¸ªæ¶ˆæ¯é˜Ÿåˆ—ï¼Œå¯¹åº”ä¸€ä¸ªå¤„ç†é˜Ÿåˆ—ã€‚ RebalanceImpl.processQueueTable(MessageQueue----ProcessQueue)
  */
 public class MessageQueue implements Comparable<MessageQueue>, Serializable {
     private static final long serialVersionUID = 6191200464116433425L;

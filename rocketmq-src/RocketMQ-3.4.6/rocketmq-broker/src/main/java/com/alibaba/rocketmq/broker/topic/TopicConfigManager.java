@@ -42,7 +42,7 @@ import java.util.concurrent.locks.ReentrantLock;
 
 /**
  * @author shijia.wxr
- *  ¼ÓÔØtopicÅäÖÃ   /root/store/config/topics.json µ½ topicConfigTable
+ *  åŠ è½½topicé…ç½®   /root/store/config/topics.json åˆ° topicConfigTable
  * @author lansheng.zj
  */
 public class TopicConfigManager extends ConfigManager {
@@ -51,8 +51,8 @@ public class TopicConfigManager extends ConfigManager {
     private transient final Lock lockTopicConfigTable = new ReentrantLock();
     private transient BrokerController brokerController;
 
-    //°Ñ/root/store/config/topics.json ÖĞµÄ×Ö·û´®ĞòÁĞ»¯´æÈëtopicConfigTable£¬¼û TopicConfigManager.decode
-    private final ConcurrentHashMap<String, TopicConfig> topicConfigTable = //ËùÓĞµÄtopicĞÅÏ¢È«²¿´æÔÚ¸Ãtable±íÖĞ
+    //æŠŠ/root/store/config/topics.json ä¸­çš„å­—ç¬¦ä¸²åºåˆ—åŒ–å­˜å…¥topicConfigTableï¼Œè§ TopicConfigManager.decode
+    private final ConcurrentHashMap<String, TopicConfig> topicConfigTable = //æ‰€æœ‰çš„topicä¿¡æ¯å…¨éƒ¨å­˜åœ¨è¯¥tableè¡¨ä¸­
             new ConcurrentHashMap<String, TopicConfig>(1024);
     private final DataVersion dataVersion = new DataVersion();
 
@@ -231,10 +231,10 @@ public class TopicConfigManager extends ConfigManager {
 
 
     /**
-     * ´´½¨ÏûÏ¢ÖØÊÔtopic .
-     * @param topic Ö÷ÌâÃû³Æ
-     * @param clientDefaultTopicQueueNums ¶ÓÁĞÊıÁ¿¡£
-     * @param perm ¶ÓÁĞĞí¿É¡£ÊÇ·ñ¿É¶Á ¿ÉĞ´
+     * åˆ›å»ºæ¶ˆæ¯é‡è¯•topic .
+     * @param topic ä¸»é¢˜åç§°
+     * @param clientDefaultTopicQueueNums é˜Ÿåˆ—æ•°é‡ã€‚
+     * @param perm é˜Ÿåˆ—è®¸å¯ã€‚æ˜¯å¦å¯è¯» å¯å†™
      * @param topicSysFlag
      * @return
      */
@@ -244,7 +244,7 @@ public class TopicConfigManager extends ConfigManager {
             final int perm,//
             final int topicSysFlag) {
         TopicConfig topicConfig = this.topicConfigTable.get(topic);
-        if (topicConfig != null) //ÒÑ¾­´æÔÚ£¬Ö±½Ó·µ»Ø
+        if (topicConfig != null) //å·²ç»å­˜åœ¨ï¼Œç›´æ¥è¿”å›
             return topicConfig;
 
         boolean createNew = false;
@@ -257,19 +257,19 @@ public class TopicConfigManager extends ConfigManager {
                         return topicConfig;
 
 
-                    //ÉèÖÃ¶ÁĞ´¶ÓÁĞÊıÁ¿¡£ÒÔ¼°¶ÁĞ´Ğí¿É¡£
+                    //è®¾ç½®è¯»å†™é˜Ÿåˆ—æ•°é‡ã€‚ä»¥åŠè¯»å†™è®¸å¯ã€‚
                     topicConfig = new TopicConfig(topic);
                     topicConfig.setReadQueueNums(clientDefaultTopicQueueNums);
                     topicConfig.setWriteQueueNums(clientDefaultTopicQueueNums);
-                    topicConfig.setPerm(perm); //ÊÇ·ñ¿É¶Á ¿ÉĞ´
+                    topicConfig.setPerm(perm); //æ˜¯å¦å¯è¯» å¯å†™
                     topicConfig.setTopicSysFlag(topicSysFlag);
 
                     log.info("create new topic {}", topicConfig);
                     this.topicConfigTable.put(topic, topicConfig);
                     createNew = true;
                     this.dataVersion.nextVersion();
-                    this.persist(); //°Ñtopic¶©ÔÄĞÅÏ¢³Ö¾Ã»¯µ½ /root/store/config/subscriptionGroup.json
-                    /*¸ñÊ½ÈçÏÂ:
+                    this.persist(); //æŠŠtopicè®¢é˜…ä¿¡æ¯æŒä¹…åŒ–åˆ° /root/store/config/subscriptionGroup.json
+                    /*æ ¼å¼å¦‚ä¸‹:
                 {
                               "dataVersion":{
                     "counter":63,
@@ -307,7 +307,7 @@ public class TopicConfigManager extends ConfigManager {
             log.error("createTopicInSendMessageBackMethod exception", e);
         }
 
-        if (createNew) {  //ÓĞ´´½¨Ïû·ÑÕß·Ö×éµÄretry topic .
+        if (createNew) {  //æœ‰åˆ›å»ºæ¶ˆè´¹è€…åˆ†ç»„çš„retry topic .
             this.brokerController.registerBrokerAll(false, true);
         }
 
@@ -441,7 +441,7 @@ public class TopicConfigManager extends ConfigManager {
         return encode(false);
     }
 
-    //topicconfigTableĞòÁĞ»¯
+    //topicconfigTableåºåˆ—åŒ–
     public String encode(final boolean prettyFormat) {
         TopicConfigSerializeWrapper topicConfigSerializeWrapper = new TopicConfigSerializeWrapper();
         topicConfigSerializeWrapper.setTopicConfigTable(this.topicConfigTable);
@@ -450,8 +450,8 @@ public class TopicConfigManager extends ConfigManager {
     }
 
 
-    @Override //°Ñ/root/store/config/topics.json ÖĞµÄ×Ö·û´®ĞòÁĞ»¯´æÈëtopicConfigTable£¬
-    public void decode(String jsonString) { //ConfigManager.configFilePathÖĞÖ´ĞĞ
+    @Override //æŠŠ/root/store/config/topics.json ä¸­çš„å­—ç¬¦ä¸²åºåˆ—åŒ–å­˜å…¥topicConfigTableï¼Œ
+    public void decode(String jsonString) { //ConfigManager.configFilePathä¸­æ‰§è¡Œ
         if (jsonString != null) {
             TopicConfigSerializeWrapper topicConfigSerializeWrapper =
                     TopicConfigSerializeWrapper.fromJson(jsonString, TopicConfigSerializeWrapper.class);
@@ -471,9 +471,9 @@ public class TopicConfigManager extends ConfigManager {
         }
     }
 
-    //root/store/config/topics.json  ÕâÀïÃæ´æ´¢µÄÊÇ¸÷ÖÖtopicĞÅÏ¢
+    //root/store/config/topics.json  è¿™é‡Œé¢å­˜å‚¨çš„æ˜¯å„ç§topicä¿¡æ¯
     @Override
-    public String configFilePath() { //ConfigManager.configFilePathÖĞÖ´ĞĞ
+    public String configFilePath() { //ConfigManager.configFilePathä¸­æ‰§è¡Œ
         return BrokerPathConfigHelper.getTopicConfigPath(this.brokerController.getMessageStoreConfig()
             .getStorePathRootDir());
     }

@@ -163,7 +163,7 @@ public class MQAdminStartup {
                         System.setProperty(MixAll.NAMESRV_ADDR_PROPERTY, namesrvAddr);
                     }
 
-                    //¼û MQAdminStartup.initCommand  ÀıÈç UpdateTopicSubCommand ¶ÔÓ¦µÄÊÇupdateTopic ÃüÁî
+                    //è§ MQAdminStartup.initCommand  ä¾‹å¦‚ UpdateTopicSubCommand å¯¹åº”çš„æ˜¯updateTopic å‘½ä»¤
                     cmd.execute(commandLine, options, rpcHook); //SubCommand.execute
                 }
                 else {

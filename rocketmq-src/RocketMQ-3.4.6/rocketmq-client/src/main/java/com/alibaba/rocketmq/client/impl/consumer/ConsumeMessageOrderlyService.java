@@ -86,7 +86,7 @@ public class ConsumeMessageOrderlyService implements ConsumeMessageService {
     public void start() {
         if (MessageModel.CLUSTERING.equals(ConsumeMessageOrderlyService.this.defaultMQPushConsumerImpl
             .messageModel())) {
-            //¼¯ÈºÏû·ÑÄ£Ê½£¬Ã¿20s Ëø¶ÓÁĞ¡£
+            //é›†ç¾¤æ¶ˆè´¹æ¨¡å¼ï¼Œæ¯20s é”é˜Ÿåˆ—ã€‚
             this.scheduledExecutorService.scheduleAtFixedRate(new Runnable() {
                 @Override
                 public void run() {
@@ -150,7 +150,7 @@ public class ConsumeMessageOrderlyService implements ConsumeMessageService {
     }
 
     /**
-     * ±¾µØÊµ¼ÊÏû·ÑÏûÏ¢µÄÏß³Ì
+     * æœ¬åœ°å®é™…æ¶ˆè´¹æ¶ˆæ¯çš„çº¿ç¨‹
      */
     class ConsumeRequest implements Runnable {
         private final ProcessQueue processQueue;
@@ -178,9 +178,9 @@ public class ConsumeMessageOrderlyService implements ConsumeMessageService {
              */
             final Object objLock = messageQueueLock.fetchLockObject(this.messageQueue);
             synchronized (objLock) {
-                //¼¯ÈºÏû·Ñ £¬²¢ÇÒÊÇË³ĞòÏû·ÑÏûÏ¢£¬±ØĞëÔÚbrokerÉÏ¼ÓÉÏ¶ÓÁĞËø²ÅÄÜÏû·ÑÏûÏ¢¡£
-                //´ÓRebalanceServiceÀ´¿´£¬ ÕâÀï¶ÔĞÂ¹Ò½Ó¶ÓÁĞµÄ´¦Àí·½Ê½ÊÇÏÈ°Ñ¶ÓÁĞµÄÏûÏ¢´Óbroker PullÏÂÀ´£¬
-                //È»ºóÔÙ¿´Ïû·ÑÕßÓĞÃ»ÓĞÔÚbrokerÉÏ³ÖÓĞÕâ¸öÏû·Ñ¶ÓÁĞµÄËø, ÓĞËø²Å¼ÌĞøÏû·Ñ ¡£
+                //é›†ç¾¤æ¶ˆè´¹ ï¼Œå¹¶ä¸”æ˜¯é¡ºåºæ¶ˆè´¹æ¶ˆæ¯ï¼Œå¿…é¡»åœ¨brokerä¸ŠåŠ ä¸Šé˜Ÿåˆ—é”æ‰èƒ½æ¶ˆè´¹æ¶ˆæ¯ã€‚
+                //ä»RebalanceServiceæ¥çœ‹ï¼Œ è¿™é‡Œå¯¹æ–°æŒ‚æ¥é˜Ÿåˆ—çš„å¤„ç†æ–¹å¼æ˜¯å…ˆæŠŠé˜Ÿåˆ—çš„æ¶ˆæ¯ä»broker Pullä¸‹æ¥ï¼Œ
+                //ç„¶åå†çœ‹æ¶ˆè´¹è€…æœ‰æ²¡æœ‰åœ¨brokerä¸ŠæŒæœ‰è¿™ä¸ªæ¶ˆè´¹é˜Ÿåˆ—çš„é”, æœ‰é”æ‰ç»§ç»­æ¶ˆè´¹ ã€‚
                 if (MessageModel.BROADCASTING
                     .equals(ConsumeMessageOrderlyService.this.defaultMQPushConsumerImpl.messageModel())
                         || (this.processQueue.isLocked() && !this.processQueue.isLockExpired())) {
@@ -220,7 +220,7 @@ public class ConsumeMessageOrderlyService implements ConsumeMessageService {
                             break;
                         }
 
-                        //Ò»´ÎÅúÁ¿Ïû·ÑµÄÏûÏ¢¸öÊı¡£
+                        //ä¸€æ¬¡æ‰¹é‡æ¶ˆè´¹çš„æ¶ˆæ¯ä¸ªæ•°ã€‚
                         final int consumeBatchSize =
                                 ConsumeMessageOrderlyService.this.defaultMQPushConsumer
                                     .getConsumeMessageBatchMaxSize();

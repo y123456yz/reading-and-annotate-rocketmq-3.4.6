@@ -229,7 +229,7 @@ public class UtilAll {
     public static final int crc32(byte[] array, int offset, int length) {
         CRC32 crc32 = new CRC32();
         crc32.update(array, offset, length);
-        //¸ßÎ»ÖÃ0  ,±£Ö¤crc32Öµ²»Îª¸ºÊı
+        //é«˜ä½ç½®0  ,ä¿è¯crc32å€¼ä¸ä¸ºè´Ÿæ•°
         return (int) (crc32.getValue() & 0x7FFFFFFF);
     }
 

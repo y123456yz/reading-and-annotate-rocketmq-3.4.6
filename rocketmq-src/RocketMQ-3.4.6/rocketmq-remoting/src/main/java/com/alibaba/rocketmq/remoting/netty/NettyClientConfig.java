@@ -17,7 +17,7 @@
 package com.alibaba.rocketmq.remoting.netty;
 
 /**
- * @author shijia.wxr   ÍøÂçÒì²½´¦Àí¿ò¼ÜÅäÖÃ
+ * @author shijia.wxr   ç½‘ç»œå¼‚æ­¥å¤„ç†æ¡†æ¶é…ç½®
  */
 public class NettyClientConfig {
     /**

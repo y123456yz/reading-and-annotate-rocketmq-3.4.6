@@ -64,11 +64,11 @@ import java.util.*;
 
 
 /**
- * BrokerOuterAPI:ÊÇbrokerºÍ±ğµÄÄ£¿éÍ¨ĞÅµÄÀà£¬·â×°ÁËNettyRemotingClient¡£
- * MQClientImpl:ÊÇ¿Í»§¶ËºÍbrokerÓënameserverÍ¨ĞÅµÄÀà£¬Ò²·â×°ÁËNettyRemotingClient¡£
+ * BrokerOuterAPI:æ˜¯brokerå’Œåˆ«çš„æ¨¡å—é€šä¿¡çš„ç±»ï¼Œå°è£…äº†NettyRemotingClientã€‚
+ * MQClientImpl:æ˜¯å®¢æˆ·ç«¯å’Œbrokerä¸nameserveré€šä¿¡çš„ç±»ï¼Œä¹Ÿå°è£…äº†NettyRemotingClientã€‚
  *
- * ¸ºÔğclient¶ÔÍâ·¢ËÍcommand .
- * @author shijia.wxr     MQClientInstanceÀàÖĞ°üº¬¸ÃÀà¶ÔÏó
+ * è´Ÿè´£clientå¯¹å¤–å‘é€command .
+ * @author shijia.wxr     MQClientInstanceç±»ä¸­åŒ…å«è¯¥ç±»å¯¹è±¡
  */
 public class MQClientAPIImpl {
 
@@ -81,7 +81,7 @@ public class MQClientAPIImpl {
     private final RemotingClient remotingClient;//this.remotingClient = new NettyRemotingClient()
     private final TopAddressing topAddressing;
     private final ClientRemotingProcessor clientRemotingProcessor;
-    //fetchNameServerAddrÖĞ¶Ô±¾µØnameSrvAddr½øĞĞ¸üĞÂ
+    //fetchNameServerAddrä¸­å¯¹æœ¬åœ°nameSrvAddrè¿›è¡Œæ›´æ–°
     private String nameSrvAddr = null;
 
 
@@ -93,7 +93,7 @@ public class MQClientAPIImpl {
 
         this.remotingClient.registerRPCHook(rpcHook);
         /**
-         * ÕâĞ©RequestCodeÊÇClientÒª´¦ÀíµÄ£¬ Ò²¾ÍÊÇµ÷ÓÃ·½ÏòÊÇbroker-¡· client
+         * è¿™äº›RequestCodeæ˜¯Clientè¦å¤„ç†çš„ï¼Œ ä¹Ÿå°±æ˜¯è°ƒç”¨æ–¹å‘æ˜¯broker-ã€‹ client
          */
         this.remotingClient.registerProcessor(RequestCode.CHECK_TRANSACTION_STATE, this.clientRemotingProcessor, null);
 
@@ -121,12 +121,12 @@ public class MQClientAPIImpl {
 
     public String fetchNameServerAddr() {
         try {
-            //Í¨¹ıhttpĞ­Òé»ñÈ¡nameserverµØÖ·ÁĞ±í
+            //é€šè¿‡httpåè®®è·å–nameserveråœ°å€åˆ—è¡¨
             String addrs = this.topAddressing.fetchNSAddr();
             if (addrs != null) {
                 if (!addrs.equals(this.nameSrvAddr)) {
                     log.info("name server address changed, old: " + this.nameSrvAddr + " new: " + addrs);
-                    this.updateNameServerAddressList(addrs); //¸úĞÂ±¾µØnameserverµØÖ·ÁĞ±í
+                    this.updateNameServerAddressList(addrs); //è·Ÿæ–°æœ¬åœ°nameserveråœ°å€åˆ—è¡¨
                     this.nameSrvAddr = addrs;
                     return nameSrvAddr;
                 }
@@ -229,11 +229,11 @@ public class MQClientAPIImpl {
             SendMessageRequestHeaderV2 requestHeaderV2 = SendMessageRequestHeaderV2.createSendMessageRequestHeaderV2(requestHeader);
             request = RemotingCommand.createRequestCommand(RequestCode.SEND_MESSAGE_V2, requestHeaderV2);
         }
-        else { //×é×°Í·²¿ĞÅÏ¢
+        else { //ç»„è£…å¤´éƒ¨ä¿¡æ¯
             request = RemotingCommand.createRequestCommand(RequestCode.SEND_MESSAGE, requestHeader);
         }
 
-        request.setBody(msg.getBody()); //°üÌåbodyĞÅÏ¢¸³Öµ
+        request.setBody(msg.getBody()); //åŒ…ä½“bodyä¿¡æ¯èµ‹å€¼
 
         switch (communicationMode) {
         case ONEWAY:
@@ -355,7 +355,7 @@ public class MQClientAPIImpl {
         throw new MQBrokerException(response.getCode(), response.getRemark());
     }
 
-    //pullMessageÈç¹û²ÉÓÃÍ¬²½·½Ê½À­È¡ÏûÏ¢Ôòµ÷ÓÃpullMessageSync£¬Èç¹û²ÉÓÃÒì²½À­È¡ÏûÏ¢ÔòÍ¨¹ıpullMessageAsync
+    //pullMessageå¦‚æœé‡‡ç”¨åŒæ­¥æ–¹å¼æ‹‰å–æ¶ˆæ¯åˆ™è°ƒç”¨pullMessageSyncï¼Œå¦‚æœé‡‡ç”¨å¼‚æ­¥æ‹‰å–æ¶ˆæ¯åˆ™é€šè¿‡pullMessageAsync
     public PullResult pullMessage(//
             final String addr,//
             final PullMessageRequestHeader requestHeader,//
@@ -382,14 +382,14 @@ public class MQClientAPIImpl {
         return null;
     }
 
-    //pullMessageÈç¹û²ÉÓÃÍ¬²½·½Ê½À­È¡ÏûÏ¢Ôòµ÷ÓÃpullMessageSync£¬Èç¹û²ÉÓÃÒì²½À­È¡ÏûÏ¢ÔòÍ¨¹ıpullMessageAsync
+    //pullMessageå¦‚æœé‡‡ç”¨åŒæ­¥æ–¹å¼æ‹‰å–æ¶ˆæ¯åˆ™è°ƒç”¨pullMessageSyncï¼Œå¦‚æœé‡‡ç”¨å¼‚æ­¥æ‹‰å–æ¶ˆæ¯åˆ™é€šè¿‡pullMessageAsync
     private void pullMessageAsync(//
                                   final String addr,// 1
                                   final RemotingCommand request,//
                                   final long timeoutMillis,//
                                   final PullCallback pullCallback//
     ) throws RemotingException, InterruptedException {
-        //this.remotingClient = new NettyRemotingClient()£¬ÕâÀïÊµ¼ÊÖ´ĞĞ NettyRemotingClient.invokeAsync
+        //this.remotingClient = new NettyRemotingClient()ï¼Œè¿™é‡Œå®é™…æ‰§è¡Œ NettyRemotingClient.invokeAsync
         this.remotingClient.invokeAsync(addr, request, timeoutMillis, new InvokeCallback() {
             @Override
             public void operationComplete(ResponseFuture responseFuture) {
@@ -399,7 +399,7 @@ public class MQClientAPIImpl {
                     try {
                         PullResult pullResult = MQClientAPIImpl.this.processPullResponse(response);
                         assert pullResult != null;
-                        //DefaultMQPushConsumerImpl.pullMessage(pullCallback.onSuccess)ÖĞµÄ»Øµ÷Ö´ĞĞ
+                        //DefaultMQPushConsumerImpl.pullMessage(pullCallback.onSuccess)ä¸­çš„å›è°ƒæ‰§è¡Œ
                         pullCallback.onSuccess(pullResult);
                     }
                     catch (Exception e) {
@@ -450,7 +450,7 @@ public class MQClientAPIImpl {
             responseHeader.getMaxOffset(), null, responseHeader.getSuggestWhichBrokerId(), response.getBody());
     }
 
-    //pullMessageÈç¹û²ÉÓÃÍ¬²½·½Ê½À­È¡ÏûÏ¢Ôòµ÷ÓÃpullMessageSync£¬Èç¹û²ÉÓÃÒì²½À­È¡ÏûÏ¢ÔòÍ¨¹ıpullMessageAsync
+    //pullMessageå¦‚æœé‡‡ç”¨åŒæ­¥æ–¹å¼æ‹‰å–æ¶ˆæ¯åˆ™è°ƒç”¨pullMessageSyncï¼Œå¦‚æœé‡‡ç”¨å¼‚æ­¥æ‹‰å–æ¶ˆæ¯åˆ™é€šè¿‡pullMessageAsync
     private PullResult pullMessageSync(//
             final String addr,// 1
             final RemotingCommand request,// 2
@@ -531,7 +531,7 @@ public class MQClientAPIImpl {
         throw new MQBrokerException(response.getCode(), response.getRemark());
     }
 
-    //»ñÈ¡Ïû·Ñ¸ÃtopicµÄËùÓĞconsumerÏû·Ñ·Ö×é,findConsumerIdListÖĞµ÷ÓÃ
+    //è·å–æ¶ˆè´¹è¯¥topicçš„æ‰€æœ‰consumeræ¶ˆè´¹åˆ†ç»„,findConsumerIdListä¸­è°ƒç”¨
     public List<String> getConsumerIdListByGroup(//
             final String addr, //
             final String consumerGroup, //
@@ -747,8 +747,8 @@ public class MQClientAPIImpl {
         return response.getCode() == ResponseCode.SUCCESS;
     }
 
-    //SendMessageProcessor.consumerSendMsgBack(·şÎñ¶ËbrokerÊÕ) ºÍ MQClientAPIImpl.consumerSendMessageBack(¿Í»§¶Ë·¢) ¶ÔÓ¦
-    //Ïû·ÑÊ§°Ü£¬ÖØĞÂ°ÑÏûÏ¢´ò»Øbroker Ö´ĞĞ¼ûDefaultMQPushConsumerImpl.sendMessageBack
+    //SendMessageProcessor.consumerSendMsgBack(æœåŠ¡ç«¯brokeræ”¶) å’Œ MQClientAPIImpl.consumerSendMessageBack(å®¢æˆ·ç«¯å‘) å¯¹åº”
+    //æ¶ˆè´¹å¤±è´¥ï¼Œé‡æ–°æŠŠæ¶ˆæ¯æ‰“å›broker æ‰§è¡Œè§DefaultMQPushConsumerImpl.sendMessageBack
     public void consumerSendMessageBack(//
             final String addr, //
             final MessageExt msg,//
@@ -757,7 +757,7 @@ public class MQClientAPIImpl {
             final long timeoutMillis//
     ) throws RemotingException, MQBrokerException, InterruptedException {
         ConsumerSendMsgBackRequestHeader requestHeader = new ConsumerSendMsgBackRequestHeader();
-        //ÏûÏ¢ÀàĞÍÎªCONSUMER_SEND_MSG_BACK
+        //æ¶ˆæ¯ç±»å‹ä¸ºCONSUMER_SEND_MSG_BACK
         RemotingCommand request = RemotingCommand.createRequestCommand(RequestCode.CONSUMER_SEND_MSG_BACK, requestHeader);
 
         requestHeader.setGroup(consumerGroup);

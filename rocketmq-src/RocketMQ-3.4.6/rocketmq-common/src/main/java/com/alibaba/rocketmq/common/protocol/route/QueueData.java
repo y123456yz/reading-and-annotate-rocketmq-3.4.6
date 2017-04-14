@@ -21,8 +21,8 @@
 package com.alibaba.rocketmq.common.protocol.route;
 
 /**
- * Õâ¸öQueueDataÀàÊÇtopicÔÚÄ³Ò»¸öbrokernameÏÂÃæµÄ¶ÓÁĞÔªÊı¾İ
- * £¬ ÆäÖĞ°üº¬ÁËbrokername(Ò»Ö÷¶à±¸×é³ÉµÄbrokerµ¥Ôª£© £¬ ¶ÁĞ´¶ÓÁĞµÄÊıÁ¿£¬¶ÓÁĞµÄ¶ÁĞ´È¨ÏŞ
+ * è¿™ä¸ªQueueDataç±»æ˜¯topicåœ¨æŸä¸€ä¸ªbrokernameä¸‹é¢çš„é˜Ÿåˆ—å…ƒæ•°æ®
+ * ï¼Œ å…¶ä¸­åŒ…å«äº†brokername(ä¸€ä¸»å¤šå¤‡ç»„æˆçš„brokerå•å…ƒï¼‰ ï¼Œ è¯»å†™é˜Ÿåˆ—çš„æ•°é‡ï¼Œé˜Ÿåˆ—çš„è¯»å†™æƒé™
  */
 public class QueueData implements Comparable<QueueData> {
     private String brokerName;

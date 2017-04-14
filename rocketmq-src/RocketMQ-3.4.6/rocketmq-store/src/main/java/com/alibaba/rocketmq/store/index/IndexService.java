@@ -57,7 +57,7 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
  401M    20170405125237370
  117M    20170407110209375
  [root@s10-2-X-5 index]#
- * @author shijia.wxr   IndexServiceÓÃÓÚ´´½¨Ë÷ÒıÎÄ¼ş¼¯ºÏ£¬µ±ÓÃ»§ÏëÒª²éÑ¯Ä³¸ötopicÏÂÄ³¸ökeyµÄÏûÏ¢Ê±£¬ÄÜ¹»¿ìËÙÏìÓ¦  Ö÷ÒªÓÃÓÚ²éÑ¯ÏûÏ¢ÓÃµÄ£¬ÀıÈç¸ü¼Ómsgid»òÕßtopic+key»ñÈ¡ÏûÏ¢
+ * @author shijia.wxr   IndexServiceç”¨äºåˆ›å»ºç´¢å¼•æ–‡ä»¶é›†åˆï¼Œå½“ç”¨æˆ·æƒ³è¦æŸ¥è¯¢æŸä¸ªtopicä¸‹æŸä¸ªkeyçš„æ¶ˆæ¯æ—¶ï¼Œèƒ½å¤Ÿå¿«é€Ÿå“åº”  ä¸»è¦ç”¨äºæŸ¥è¯¢æ¶ˆæ¯ç”¨çš„ï¼Œä¾‹å¦‚æ›´åŠ msgidæˆ–è€…topic+keyè·å–æ¶ˆæ¯
  */
 public class IndexService {
     private static final Logger log = LoggerFactory.getLogger(LoggerName.StoreLoggerName);
@@ -100,7 +100,7 @@ public class IndexService {
 117M    20170407110209375
 [root@s10-2-30-5 index]#
     * */
-    //¼ÓÔØ /root/store/indexÄ¿Â¼ÏÂÃæµÄÎÄ¼şµ½
+    //åŠ è½½ /root/store/indexç›®å½•ä¸‹é¢çš„æ–‡ä»¶åˆ°
     public boolean load(final boolean lastExitOK) {
         File dir = new File(this.storePath);
         File[] files = dir.listFiles();

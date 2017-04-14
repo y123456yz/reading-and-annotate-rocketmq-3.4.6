@@ -40,31 +40,31 @@ import java.util.concurrent.ConcurrentHashMap;
 /**
  *
  *
- *  ÕâÀïÑÓ³ÙÏûÏ¢µÄ´¦Àí·½Ê½ÊÇÕâÑùµÄ£º
- *  Ê×ÏÈÏµÍ³Ô¤ÉèÁË "1s 5s 10s 30s 1m 2m 3m 4m 5m 6m 7m 8m 9m 10m 20m 30m 1h 2h" ÕâÑùÈô¸É¸öÑÓ³Ùlevel;
- *  È»ºó brokerÉÏ´´½¨ÁËÒ»¸öÓÃÓÚÑÓ³ÙÏûÏ¢Í¶µİµÄtopic£º SCHEDULE_TOPIC_XXXX£¬  Õâ¸ötopicÓĞÈô¸É¶ÓÁĞ£¬ Ã¿Ò»¸ö¶ÓÁĞ¶ÔÓ¦ÁËÒ»¸öÑÓ³Ùlevel £¬
+ *  è¿™é‡Œå»¶è¿Ÿæ¶ˆæ¯çš„å¤„ç†æ–¹å¼æ˜¯è¿™æ ·çš„ï¼š
+ *  é¦–å…ˆç³»ç»Ÿé¢„è®¾äº† "1s 5s 10s 30s 1m 2m 3m 4m 5m 6m 7m 8m 9m 10m 20m 30m 1h 2h" è¿™æ ·è‹¥å¹²ä¸ªå»¶è¿Ÿlevel;
+ *  ç„¶å brokerä¸Šåˆ›å»ºäº†ä¸€ä¸ªç”¨äºå»¶è¿Ÿæ¶ˆæ¯æŠ•é€’çš„topicï¼š SCHEDULE_TOPIC_XXXXï¼Œ  è¿™ä¸ªtopicæœ‰è‹¥å¹²é˜Ÿåˆ—ï¼Œ æ¯ä¸€ä¸ªé˜Ÿåˆ—å¯¹åº”äº†ä¸€ä¸ªå»¶è¿Ÿlevel ï¼Œ
  *
- *  Í¶µİÕßÍ¶µİÏûÏ¢ÒÔºó£¬broker»á¸ù¾İÏûÏ¢µÄdelay level £¬Ğ´Èë SCHEDULE_TOPIC_XXXX ¶ÔÓ¦µÄ¶ÓÁĞ£¬Í¬Ê±ÔÚcommitlogµÄÏûÏ¢ÖĞÔö¼ÓÕæÕıµÄtopicºÍ
- *  ¶ÓÁĞIdÊôĞÔ¡£ SCHEDULE_TOPIC_XXXX µÄÃ¿Ò»¸ö¶ÓÁĞ¶ÔÓ¦ÁËÒ»¸ötimer , ¶¨Ê±Í¨¹ı¶ÓÁĞ(consume queue£©Ë÷ÒıÏî»ñÈ¡commitlog µÄÏûÏ¢ £¬
- *  Èç¹ûµ½ÁËÑÓ³ÙÍ¶µİÊ±¼ä£¬ÔòĞ´ÈëÕæÊµtopicµÄ¶ÓÁĞ¡£
+ *  æŠ•é€’è€…æŠ•é€’æ¶ˆæ¯ä»¥åï¼Œbrokerä¼šæ ¹æ®æ¶ˆæ¯çš„delay level ï¼Œå†™å…¥ SCHEDULE_TOPIC_XXXX å¯¹åº”çš„é˜Ÿåˆ—ï¼ŒåŒæ—¶åœ¨commitlogçš„æ¶ˆæ¯ä¸­å¢åŠ çœŸæ­£çš„topicå’Œ
+ *  é˜Ÿåˆ—Idå±æ€§ã€‚ SCHEDULE_TOPIC_XXXX çš„æ¯ä¸€ä¸ªé˜Ÿåˆ—å¯¹åº”äº†ä¸€ä¸ªtimer , å®šæ—¶é€šè¿‡é˜Ÿåˆ—(consume queueï¼‰ç´¢å¼•é¡¹è·å–commitlog çš„æ¶ˆæ¯ ï¼Œ
+ *  å¦‚æœåˆ°äº†å»¶è¿ŸæŠ•é€’æ—¶é—´ï¼Œåˆ™å†™å…¥çœŸå®topicçš„é˜Ÿåˆ—ã€‚
  *
  *
- *  Ò»¾ä»°£¬ ¾ÍÊÇÏÈ°ÑÏûÏ¢Í¶µİµ½delay topicÔİ´æ£¬È»ºóÍ¨¹ı¶¨Ê±Æ÷°Ñdelay topicÔİ´æµÄÏûÏ¢Í¶µİµ½ÕæÊµµÄtopic.
+ *  ä¸€å¥è¯ï¼Œ å°±æ˜¯å…ˆæŠŠæ¶ˆæ¯æŠ•é€’åˆ°delay topicæš‚å­˜ï¼Œç„¶åé€šè¿‡å®šæ—¶å™¨æŠŠdelay topicæš‚å­˜çš„æ¶ˆæ¯æŠ•é€’åˆ°çœŸå®çš„topic.
  *
  *
  *
  * @author shijia.wxr
  */
 public class ScheduleMessageService extends ConfigManager {
-    public static final String SCHEDULE_TOPIC = "SCHEDULE_TOPIC_XXXX"; //ÑÓ³ÙÏûÏ¢TOPIC
+    public static final String SCHEDULE_TOPIC = "SCHEDULE_TOPIC_XXXX"; //å»¶è¿Ÿæ¶ˆæ¯TOPIC
     private static final Logger log = LoggerFactory.getLogger(LoggerName.StoreLoggerName);
     private static final long FIRST_DELAY_TIME = 1000L;
     private static final long DELAY_FOR_A_WHILE = 100L;
     private static final long DELAY_FOR_A_PERIOD = 10000L;
-    //¼ÇÂ¼Ã¿Ò»¸öÑÓ³ÙlevelµÄÑÓ³ÙºÁÃë, level´Ó1¿ªÊ¼¡£
+    //è®°å½•æ¯ä¸€ä¸ªå»¶è¿Ÿlevelçš„å»¶è¿Ÿæ¯«ç§’, levelä»1å¼€å§‹ã€‚
     private final ConcurrentHashMap<Integer /* level */, Long/* delay timeMillis */> delayLevelTable =
             new ConcurrentHashMap<Integer, Long>(32);
-    //¼ÇÂ¼Ã¿Ò»¸öÑÓ³Ùlevel¶ÔÓ¦µÄ consume queue(Ïû·Ñ¶ÓÁĞ£©µÄÂß¼­Î»µã¡£
+    //è®°å½•æ¯ä¸€ä¸ªå»¶è¿Ÿlevelå¯¹åº”çš„ consume queue(æ¶ˆè´¹é˜Ÿåˆ—ï¼‰çš„é€»è¾‘ä½ç‚¹ã€‚
     private final ConcurrentHashMap<Integer /* level */, Long/* offset */> offsetTable =
             new ConcurrentHashMap<Integer, Long>(32);
     private final Timer timer = new Timer("ScheduleMessageTimerThread", true);
@@ -165,9 +165,9 @@ public class ScheduleMessageService extends ConfigManager {
         return delayOffsetSerializeWrapper.toJson(prettyFormat);
     }
 
-    //½âÎöÎÄ¼ş root/store/config/delayOffset.json ÖĞµÄÄÚÈİµ½ ScheduleMessageService.offsetTable
+    //è§£ææ–‡ä»¶ root/store/config/delayOffset.json ä¸­çš„å†…å®¹åˆ° ScheduleMessageService.offsetTable
     @Override
-    public void decode(String jsonString) { //ConfigManager.configFilePathÖĞÖ´ĞĞ
+    public void decode(String jsonString) { //ConfigManager.configFilePathä¸­æ‰§è¡Œ
         if (jsonString != null) {
             DelayOffsetSerializeWrapper delayOffsetSerializeWrapper =
                     DelayOffsetSerializeWrapper.fromJson(jsonString, DelayOffsetSerializeWrapper.class);
@@ -182,13 +182,13 @@ public class ScheduleMessageService extends ConfigManager {
     * */
     //root/store/config/delayOffset.json
     @Override
-    public String configFilePath() { //ConfigManager.configFilePathÖĞÖ´ĞĞ
+    public String configFilePath() { //ConfigManager.configFilePathä¸­æ‰§è¡Œ
         return StorePathConfigHelper.getDelayOffsetStorePath(this.defaultMessageStore.getMessageStoreConfig()
             .getStorePathRootDir());
     }
 
 
-    public boolean load() { //DefaultMessageStore.load    configFilePath(//root/store/config/delayOffset.json) ÖĞÖ´ĞĞ
+    public boolean load() { //DefaultMessageStore.load    configFilePath(//root/store/config/delayOffset.json) ä¸­æ‰§è¡Œ
         boolean result = super.load();
         result = result && this.parseDelayLevel();
         return result;
@@ -202,14 +202,14 @@ public class ScheduleMessageService extends ConfigManager {
         timeUnitTable.put("h", 1000L * 60 * 60);
         timeUnitTable.put("d", 1000L * 60 * 60 * 24);
 
-        //Ä¬ÈÏÅäÖÃ "1s 5s 10s 30s 1m 2m 3m 4m 5m 6m 7m 8m 9m 10m 20m 30m 1h 2h"
+        //é»˜è®¤é…ç½® "1s 5s 10s 30s 1m 2m 3m 4m 5m 6m 7m 8m 9m 10m 20m 30m 1h 2h"
         String levelString = this.defaultMessageStore.getMessageStoreConfig().getMessageDelayLevel();
         try {
             String[] levelArray = levelString.split(" ");
             for (int i = 0; i < levelArray.length; i++) {
                 String value = levelArray[i];
-                String ch = value.substring(value.length() - 1); //Ê±¼äµ¥Î»£º s, m , h , d
-                Long tu = timeUnitTable.get(ch); //°ÑÊ±¼äµ¥Î»»»Ëã³ÉºÁÃë £»
+                String ch = value.substring(value.length() - 1); //æ—¶é—´å•ä½ï¼š s, m , h , d
+                Long tu = timeUnitTable.get(ch); //æŠŠæ—¶é—´å•ä½æ¢ç®—æˆæ¯«ç§’ ï¼›
 
                 int level = i + 1;
                 if (level > this.maxDelayLevel) {
@@ -255,9 +255,9 @@ public class ScheduleMessageService extends ConfigManager {
 
         private long correctDeliverTimestamp(final long now, final long deliverTimestamp) {
             long result = deliverTimestamp;
-            //×î³ÙÍ¶µİÊ±¼ä¡£
+            //æœ€è¿ŸæŠ•é€’æ—¶é—´ã€‚
             long maxTimestamp = now + ScheduleMessageService.this.delayLevelTable.get(this.delayLevel);
-            if (deliverTimestamp > maxTimestamp) { //ÒÑ¾­µ½ÁË×î³ÙÍ¶µİÊ±¼ä£¬Ôò°ÑÍ¶µİÊ±¼äĞŞÕıÎªµ±Ç°Ê±¼ä¡£
+            if (deliverTimestamp > maxTimestamp) { //å·²ç»åˆ°äº†æœ€è¿ŸæŠ•é€’æ—¶é—´ï¼Œåˆ™æŠŠæŠ•é€’æ—¶é—´ä¿®æ­£ä¸ºå½“å‰æ—¶é—´ã€‚
                 result = now;
             }
 
@@ -289,7 +289,7 @@ public class ScheduleMessageService extends ConfigManager {
                             nextOffset = offset + (i / ConsumeQueue.CQStoreUnitSize);
 
                             long countdown = deliverTimestamp - now;
-                            if (countdown <= 0) { //µ½ÁËÍ¶µİÊ±¼ä£¬ Ôò°ÑÏûÏ¢Ğ´ÈëÕæÊµtopicµÄ¶ÓÁĞ¡£
+                            if (countdown <= 0) { //åˆ°äº†æŠ•é€’æ—¶é—´ï¼Œ åˆ™æŠŠæ¶ˆæ¯å†™å…¥çœŸå®topicçš„é˜Ÿåˆ—ã€‚
                                 MessageExt msgExt =
                                         ScheduleMessageService.this.defaultMessageStore.lookMessageByOffset(
                                             offsetPy, sizePy);
@@ -324,7 +324,7 @@ public class ScheduleMessageService extends ConfigManager {
                                     }
                                 }
                             }
-                            else { //Ã»µ½ÏûÏ¢Í¶µİÊ±¼ä£¬ÔòÌá½»Ò»¸öÑÓ³ÙÈÎÎñ£¨ µ½Ö¸¶¨µÄÊ±¼ä¼ä¸ô£º deliverTimestamp - now £© ×ö¡£
+                            else { //æ²¡åˆ°æ¶ˆæ¯æŠ•é€’æ—¶é—´ï¼Œåˆ™æäº¤ä¸€ä¸ªå»¶è¿Ÿä»»åŠ¡ï¼ˆ åˆ°æŒ‡å®šçš„æ—¶é—´é—´éš”ï¼š deliverTimestamp - now ï¼‰ åšã€‚
                                 ScheduleMessageService.this.timer.schedule(
                                     new DeliverDelayedMessageTimerTask(this.delayLevel, nextOffset),
                                     countdown);
@@ -332,7 +332,7 @@ public class ScheduleMessageService extends ConfigManager {
                                 return;
                             }
                         }
-                        //Ò»´ÎÀ­µ½µÄÒ»ÅúÏûÏ¢¶¼±»Í¶µİµ½ÁËÕæÊµµÄtopicµÄ¶ÓÁĞ£¬ÔòÇ°ÒÆÂß¼­Î»µã²¢³Ö¾Ã»¯µ½brokerµÄjsonÎÄ¼ş£¬ È»ºó¼ÌĞøÏÂÒ»´ÎÈÎÎñ¡£
+                        //ä¸€æ¬¡æ‹‰åˆ°çš„ä¸€æ‰¹æ¶ˆæ¯éƒ½è¢«æŠ•é€’åˆ°äº†çœŸå®çš„topicçš„é˜Ÿåˆ—ï¼Œåˆ™å‰ç§»é€»è¾‘ä½ç‚¹å¹¶æŒä¹…åŒ–åˆ°brokerçš„jsonæ–‡ä»¶ï¼Œ ç„¶åç»§ç»­ä¸‹ä¸€æ¬¡ä»»åŠ¡ã€‚
                         nextOffset = offset + (i / ConsumeQueue.CQStoreUnitSize);
                         ScheduleMessageService.this.timer.schedule(new DeliverDelayedMessageTimerTask(
                             this.delayLevel, nextOffset), DELAY_FOR_A_WHILE);

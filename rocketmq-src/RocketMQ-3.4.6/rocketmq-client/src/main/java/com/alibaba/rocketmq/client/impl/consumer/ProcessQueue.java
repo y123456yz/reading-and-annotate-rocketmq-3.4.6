@@ -34,9 +34,9 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 
 /**
- * ¶ÓÁĞÏû·Ñ¿ìÕÕ£¬ ÓÃÓÚclient´¦ÀíÏû·Ñ¶ÓÁĞ¡£
+ * é˜Ÿåˆ—æ¶ˆè´¹å¿«ç…§ï¼Œ ç”¨äºclientå¤„ç†æ¶ˆè´¹é˜Ÿåˆ—ã€‚
  * Queue consumption snapshot
- * //Ã¿Ò»¸öÏûÏ¢¶ÓÁĞ£¬¶ÔÓ¦Ò»¸ö´¦Àí¶ÓÁĞ¡£ RebalanceImpl.processQueueTable(MessageQueue----ProcessQueue)
+ * //æ¯ä¸€ä¸ªæ¶ˆæ¯é˜Ÿåˆ—ï¼Œå¯¹åº”ä¸€ä¸ªå¤„ç†é˜Ÿåˆ—ã€‚ RebalanceImpl.processQueueTable(MessageQueue----ProcessQueue)
  * @author shijia.wxr
  */
 public class ProcessQueue {
@@ -47,17 +47,17 @@ public class ProcessQueue {
 
     private final Logger log = ClientLogger.getLog();
     private final ReadWriteLock lockTreeMap = new ReentrantReadWriteLock();
-    //DefaultMQPushConsumerImpl.pullMessage->PullCallback.onSuccess->ProcessQueue.putMessageÖĞ°Ñ»ñÈ¡µ½µÄmsg´æÈëµ½msgTreeMapÖĞ
-    //queueOffset<-->MessageExt  ´ÓbrokerÀ­È¡µÄÏûÏ¢´æµ½±¾µØ£¬Ò²¾ÍÊÇ´æÈëmsgTreeMap   ½ÓÊÕµ½µÄÏûÏ¢×ö¹æÔòÆ¥ÅäÂú×ãºó£¬»á¼ÓÈëµ½ProcessQueue.msgTreeMap
-    //À­È¡µ½ÏûÏ¢ºóÊ×ÏÈ´æÈëPullResult.msgFoundList£¬È»ºó½øĞĞ¹æÔòÆ¥Åä£¬Æ¥ÅäµÄmsg»á½øÒ»²½´æÈëProcessQueue.msgTreeMap,
-    // µ±ÒµÎñÏû·Ñmsg½á¹û´ò»Øbrokerºó£¬¶¼»áÒÆ³ı¸Ãmsg£¬¼ûremoveMessage£¬Èç¹ûÏû·Ñmsg½á¹û´ò»ØbrokerÊ§°Ü£¬ÔòÕâĞ©msg»¹ÊÇ»áÁôÔÚ±¾µØmsgTreeMap,½øĞĞÖØĞÂ·¢ËÍ£¬¼ûprocessConsumeResult.submitConsumeRequestLater
+    //DefaultMQPushConsumerImpl.pullMessage->PullCallback.onSuccess->ProcessQueue.putMessageä¸­æŠŠè·å–åˆ°çš„msgå­˜å…¥åˆ°msgTreeMapä¸­
+    //queueOffset<-->MessageExt  ä»brokeræ‹‰å–çš„æ¶ˆæ¯å­˜åˆ°æœ¬åœ°ï¼Œä¹Ÿå°±æ˜¯å­˜å…¥msgTreeMap   æ¥æ”¶åˆ°çš„æ¶ˆæ¯åšè§„åˆ™åŒ¹é…æ»¡è¶³åï¼Œä¼šåŠ å…¥åˆ°ProcessQueue.msgTreeMap
+    //æ‹‰å–åˆ°æ¶ˆæ¯åé¦–å…ˆå­˜å…¥PullResult.msgFoundListï¼Œç„¶åè¿›è¡Œè§„åˆ™åŒ¹é…ï¼ŒåŒ¹é…çš„msgä¼šè¿›ä¸€æ­¥å­˜å…¥ProcessQueue.msgTreeMap,
+    // å½“ä¸šåŠ¡æ¶ˆè´¹msgç»“æœæ‰“å›brokeråï¼Œéƒ½ä¼šç§»é™¤è¯¥msgï¼Œè§removeMessageï¼Œå¦‚æœæ¶ˆè´¹msgç»“æœæ‰“å›brokerå¤±è´¥ï¼Œåˆ™è¿™äº›msgè¿˜æ˜¯ä¼šç•™åœ¨æœ¬åœ°msgTreeMap,è¿›è¡Œé‡æ–°å‘é€ï¼Œè§processConsumeResult.submitConsumeRequestLater
     private final TreeMap<Long, MessageExt> msgTreeMap = new TreeMap<Long, MessageExt>();
-    /* Ã¿´Óbroker»ñÈ¡µ½ÏûÏ¢£¬¾ÍÒªÒÆ¶¯¸Ãoffset£¬Ò²¾ÍÊÇ´ÓbrokerÀ­È¡µ½ÏûÏ¢µÄ×î´óÎ»µã */
+    /* æ¯ä»brokerè·å–åˆ°æ¶ˆæ¯ï¼Œå°±è¦ç§»åŠ¨è¯¥offsetï¼Œä¹Ÿå°±æ˜¯ä»brokeræ‹‰å–åˆ°æ¶ˆæ¯çš„æœ€å¤§ä½ç‚¹ */
     private volatile long queueOffsetMax = 0L;
-    /* ¸ÃProcessQueueÖĞÓĞĞ§µÄmsgÊı,¼û±¾ÀàµÄ putMessage ½Ó¿Ú */
+    /* è¯¥ProcessQueueä¸­æœ‰æ•ˆçš„msgæ•°,è§æœ¬ç±»çš„ putMessage æ¥å£ */
     private final AtomicLong msgCount = new AtomicLong();
-    //ÀıÈçÖ®Ç°Ä³¸öÄ³¸ötopicxxÔÚbroker-AºÍbroker-BÉÏÃæ¶¼ÓĞ´´½¨topicxx£¬ÏÖÔÚ°Ñbroker-AÏÂÏß»òÕßÅäÖÃÎªÖ»Ïû·ÑÄ£Ê½£¬Ôòbroker-AÉÏÃæµÄtopicxx¶ÔÓ¦µÄqueue¶ÓÁĞ»á±»±ê¼ÇÎªdropped
-    //RebalanceImpl.updateProcessQueueTableInRebalance ÖĞ¸üĞÂ¸Ã±ê¼Ç
+    //ä¾‹å¦‚ä¹‹å‰æŸä¸ªæŸä¸ªtopicxxåœ¨broker-Aå’Œbroker-Bä¸Šé¢éƒ½æœ‰åˆ›å»ºtopicxxï¼Œç°åœ¨æŠŠbroker-Aä¸‹çº¿æˆ–è€…é…ç½®ä¸ºåªæ¶ˆè´¹æ¨¡å¼ï¼Œåˆ™broker-Aä¸Šé¢çš„topicxxå¯¹åº”çš„queueé˜Ÿåˆ—ä¼šè¢«æ ‡è®°ä¸ºdropped
+    //RebalanceImpl.updateProcessQueueTableInRebalance ä¸­æ›´æ–°è¯¥æ ‡è®°
     private volatile boolean dropped = false;
     private volatile long lastPullTimestamp = System.currentTimeMillis();
     private final static long PullMaxIdleTime = Long.parseLong(System.getProperty(
@@ -72,7 +72,7 @@ public class ProcessQueue {
     private volatile boolean consuming = false;
     private final TreeMap<Long, MessageExt> msgTreeMapTemp = new TreeMap<Long, MessageExt>();
     private final AtomicLong tryUnlockTimes = new AtomicLong(0);
-    /* broker¶ÓÁĞ»ıÑ¹µÄÏûÏ¢Êı£¬¸³Öµ¼ûProcessQueue.putMessage */
+    /* brokeré˜Ÿåˆ—ç§¯å‹çš„æ¶ˆæ¯æ•°ï¼Œèµ‹å€¼è§ProcessQueue.putMessage */
     private volatile long msgAccCnt = 0;
 
 
@@ -87,8 +87,8 @@ public class ProcessQueue {
         return result;
     }
 
-    //DefaultMQPushConsumerImpl.pullMessage->PullCallback.onSuccess->ProcessQueue.putMessageÖĞ°Ñ»ñÈ¡µ½µÄmsg´æÈëµ½msgTreeMapÖĞ
-    //Æ¥ÅäµÄmsg»á´æÈëµ½ ProcessQueue.msgTreeMap¶ÓÁĞ
+    //DefaultMQPushConsumerImpl.pullMessage->PullCallback.onSuccess->ProcessQueue.putMessageä¸­æŠŠè·å–åˆ°çš„msgå­˜å…¥åˆ°msgTreeMapä¸­
+    //åŒ¹é…çš„msgä¼šå­˜å…¥åˆ° ProcessQueue.msgTreeMapé˜Ÿåˆ—
     public boolean putMessage(final List<MessageExt> msgs) {
         boolean dispatchToConsume = false;
         try {
@@ -96,15 +96,15 @@ public class ProcessQueue {
             try {
                 int validMsgCnt = 0;
                 for (MessageExt msg : msgs) {
-                    //°ÑÀ­È¡µ½µÄÏûÏ¢´æÈëmsgTreeMapÖĞ
+                    //æŠŠæ‹‰å–åˆ°çš„æ¶ˆæ¯å­˜å…¥msgTreeMapä¸­
                     MessageExt old = msgTreeMap.put(msg.getQueueOffset(), msg);
                     if (null == old) {
                         validMsgCnt++;
-                        /* ¸üĞÂ¶ÓÁĞqueueoffset */
+                        /* æ›´æ–°é˜Ÿåˆ—queueoffset */
                         this.queueOffsetMax = msg.getQueueOffset();
                     }
                 }
-                //msgÊıÔö¼ÓvalidMsgCnt
+                //msgæ•°å¢åŠ validMsgCnt
                 msgCount.addAndGet(validMsgCnt);
 
                 if (!msgTreeMap.isEmpty() && !this.consuming) {
@@ -113,12 +113,12 @@ public class ProcessQueue {
                 }
 
                 if (!msgs.isEmpty()) {
-                    MessageExt messageExt = msgs.get(msgs.size() - 1); //»ñÈ¡×îºóÒ»ÌõÏûÏ¢
+                    MessageExt messageExt = msgs.get(msgs.size() - 1); //è·å–æœ€åä¸€æ¡æ¶ˆæ¯
                     String property = messageExt.getProperty(MessageConst.PROPERTY_MAX_OFFSET);
                     if (property != null) {
-                        //ÔÚÏûÏ¢ÊôĞÔPROPERTY_MAX_OFFSETÖĞ¼ÇÂ¼ÁË¶ÓÁĞµÄ×î´óÎ»µã£¬ ºÍµ±Ç°À­È¡µ½µÄ×îºóÒ»ÌõÏûÏ¢
-                        //µÄÎ»µã×ö²îÖµ£¬¾ÍÊÇbrokerÕâ¸ö¶ÓÁĞ»¹¶Ñ»ıÁË¶àÉÙÏûÏ¢Î´Ïû·Ñ¡£¡£  messageExt.getQueueOffset()±íÊ¾´Ó¶ÓÁĞÖĞÈ¡µ½µÄ×îºóÒ»ÌõÏûÏ¢
-                        //¸ÃgetQueueOffset¶ÔÓ¦µÄ¾ÍÊÇ´Ó¶ÓÁĞÖĞÀ­È¡µ½µÄ×îºóÒ»ÌõÏûÏ¢µÄoffset£¬Ò²¾ÍÊÇ¸ÃÏû·Ñ·Ö×éÏû·Ñµ½¶ÓÁĞÖĞµÄÄÇÌõoffset×î´óµÄÏûÏ¢
+                        //åœ¨æ¶ˆæ¯å±æ€§PROPERTY_MAX_OFFSETä¸­è®°å½•äº†é˜Ÿåˆ—çš„æœ€å¤§ä½ç‚¹ï¼Œ å’Œå½“å‰æ‹‰å–åˆ°çš„æœ€åä¸€æ¡æ¶ˆæ¯
+                        //çš„ä½ç‚¹åšå·®å€¼ï¼Œå°±æ˜¯brokerè¿™ä¸ªé˜Ÿåˆ—è¿˜å †ç§¯äº†å¤šå°‘æ¶ˆæ¯æœªæ¶ˆè´¹ã€‚ã€‚  messageExt.getQueueOffset()è¡¨ç¤ºä»é˜Ÿåˆ—ä¸­å–åˆ°çš„æœ€åä¸€æ¡æ¶ˆæ¯
+                        //è¯¥getQueueOffsetå¯¹åº”çš„å°±æ˜¯ä»é˜Ÿåˆ—ä¸­æ‹‰å–åˆ°çš„æœ€åä¸€æ¡æ¶ˆæ¯çš„offsetï¼Œä¹Ÿå°±æ˜¯è¯¥æ¶ˆè´¹åˆ†ç»„æ¶ˆè´¹åˆ°é˜Ÿåˆ—ä¸­çš„é‚£æ¡offsetæœ€å¤§çš„æ¶ˆæ¯
                         long accTotal = Long.parseLong(property) - messageExt.getQueueOffset();
                         if (accTotal > 0) {
                             this.msgAccCnt = accTotal;
@@ -139,7 +139,7 @@ public class ProcessQueue {
 
 
     /**
-     * ±¾µØÏûÏ¢´¦Àí¶ÓÁĞÖĞ×î´óºÍ×îĞ¡Î»µãµÄ²îÖµ ¡£Ò²¾ÍÊÇ»ıÑ¹ÔÚ±¾µØµÄmsgÊı
+     * æœ¬åœ°æ¶ˆæ¯å¤„ç†é˜Ÿåˆ—ä¸­æœ€å¤§å’Œæœ€å°ä½ç‚¹çš„å·®å€¼ ã€‚ä¹Ÿå°±æ˜¯ç§¯å‹åœ¨æœ¬åœ°çš„msgæ•°
      * @return
      */
     public long getMaxSpan() {
@@ -161,9 +161,9 @@ public class ProcessQueue {
         return 0;
     }
 
-    //Èç¹ûÏû·ÑÊ§°ÜµÄÏûÏ¢ÖØĞÂ´ò»Øbroker ÈÔÈ»Ê§°Ü£¬ ¼´Ç°ÃæµÄmsgBackFailed ·Ç¿Õ£¬ÄÇÃ´removeMessage Õâ¸öº¯Êı
-    //µÃµ½µÄÎ»µãoffset¾ÍÊÇÒ»ÅúÏûÏ¢ÖĞ×îĞ¡µÄÄÇ¸öÎ»µã£¬¶øÈç¹ûmsgBackFailed Îª¿Õ£¬ÔòÕâÀïoffset ¾ÍÊÇÕâÅúÏûÏ¢µÄ×î´óÎ»µã+1
-    //µ±ÒµÎñÏû·Ñmsg³É¹¦»òÕßÏû·ÑÊ§°ÜÖØĞÂ´ò»ØbrokerÖØÊÔ¶ÓÁĞ£¬¶¼»áÒÆ³ı¸Ãmsg£¬ÔÚConsumeMessageConcurrentlyService.processConsumeResult
+    //å¦‚æœæ¶ˆè´¹å¤±è´¥çš„æ¶ˆæ¯é‡æ–°æ‰“å›broker ä»ç„¶å¤±è´¥ï¼Œ å³å‰é¢çš„msgBackFailed éç©ºï¼Œé‚£ä¹ˆremoveMessage è¿™ä¸ªå‡½æ•°
+    //å¾—åˆ°çš„ä½ç‚¹offsetå°±æ˜¯ä¸€æ‰¹æ¶ˆæ¯ä¸­æœ€å°çš„é‚£ä¸ªä½ç‚¹ï¼Œè€Œå¦‚æœmsgBackFailed ä¸ºç©ºï¼Œåˆ™è¿™é‡Œoffset å°±æ˜¯è¿™æ‰¹æ¶ˆæ¯çš„æœ€å¤§ä½ç‚¹+1
+    //å½“ä¸šåŠ¡æ¶ˆè´¹msgæˆåŠŸæˆ–è€…æ¶ˆè´¹å¤±è´¥é‡æ–°æ‰“å›brokeré‡è¯•é˜Ÿåˆ—ï¼Œéƒ½ä¼šç§»é™¤è¯¥msgï¼Œåœ¨ConsumeMessageConcurrentlyService.processConsumeResult
     public long removeMessage(final List<MessageExt> msgs) {
         long result = -1;
         final long now = System.currentTimeMillis();
@@ -171,19 +171,19 @@ public class ProcessQueue {
             this.lockTreeMap.writeLock().lockInterruptibly();
             this.lastConsumeTimestamp = now;
             try {
-                /* ÕâÀïµÄmsgTreeMapÊÇ´ÓbrokerÖĞÀ­È¡µ½µÄËùÓĞÏûÏ¢£¬ÕâÀïÒÆ³ıµÄmsgÊÇÏû·ÑºóÍ¨Öªbroker³É¹¦µÄÏûÏ¢£¬ÔòÒÆ³ıÕâĞ©msgºó¾ÍÊÇÍ¨ÖªbrokerÊ§°ÜµÄÏûÏ¢ */
+                /* è¿™é‡Œçš„msgTreeMapæ˜¯ä»brokerä¸­æ‹‰å–åˆ°çš„æ‰€æœ‰æ¶ˆæ¯ï¼Œè¿™é‡Œç§»é™¤çš„msgæ˜¯æ¶ˆè´¹åé€šçŸ¥brokeræˆåŠŸçš„æ¶ˆæ¯ï¼Œåˆ™ç§»é™¤è¿™äº›msgåå°±æ˜¯é€šçŸ¥brokerå¤±è´¥çš„æ¶ˆæ¯ */
                 if (!msgTreeMap.isEmpty()) {
-                    result = this.queueOffsetMax + 1; //Ä¬ÈÏÊÇ´ÓbrokerÀ­È¡µ½µÄÕâÅúÏûÏ¢ÖĞ×î´óÎ»µã+1
+                    result = this.queueOffsetMax + 1; //é»˜è®¤æ˜¯ä»brokeræ‹‰å–åˆ°çš„è¿™æ‰¹æ¶ˆæ¯ä¸­æœ€å¤§ä½ç‚¹+1
                     int removedCnt = 0;
                     for (MessageExt msg : msgs) {
                         MessageExt prev = msgTreeMap.remove(msg.getQueueOffset());
-                        if (prev != null) { //Ã¿ÒÆ³ıÒ»¸ömsg£¬ÔòremovedCnt¼õ1£¬removedCntÄ¬ÈÏÖµÎª0£¬Ã¿È¡³öÒ»¸ö¾Í-1³ÉÎª¸ºÊı
+                        if (prev != null) { //æ¯ç§»é™¤ä¸€ä¸ªmsgï¼Œåˆ™removedCntå‡1ï¼ŒremovedCnté»˜è®¤å€¼ä¸º0ï¼Œæ¯å–å‡ºä¸€ä¸ªå°±-1æˆä¸ºè´Ÿæ•°
                             removedCnt--;
                         }
                     }
-                    msgCount.addAndGet(removedCnt); //¼õÈ¥ÒÆ³ıµÄmsg
+                    msgCount.addAndGet(removedCnt); //å‡å»ç§»é™¤çš„msg
 
-                    if (!msgTreeMap.isEmpty()) { //»ñÈ¡µÚÒ»¸ömsgµÄoffset£¬Ò²¾ÍÊÇÕâÅúmsgÊı¾İµÄ×îĞ¡offset
+                    if (!msgTreeMap.isEmpty()) { //è·å–ç¬¬ä¸€ä¸ªmsgçš„offsetï¼Œä¹Ÿå°±æ˜¯è¿™æ‰¹msgæ•°æ®çš„æœ€å°offset
                         result = msgTreeMap.firstKey();
                     }
                 }
@@ -209,12 +209,12 @@ public class ProcessQueue {
         return msgCount;
     }
 
-    //ÀıÈçÖ®Ç°Ä³¸öÄ³¸ötopicxxÔÚbroker-AºÍbroker-BÉÏÃæ¶¼ÓĞ´´½¨topicxx£¬ÏÖÔÚ°Ñbroker-AÏÂÏß»òÕßÅäÖÃÎªÖ»Ïû·ÑÄ£Ê½£¬Ôòbroker-AÉÏÃæµÄtopicxx¶ÔÓ¦µÄqueue¶ÓÁĞ»á±»±ê¼ÇÎªdropped
+    //ä¾‹å¦‚ä¹‹å‰æŸä¸ªæŸä¸ªtopicxxåœ¨broker-Aå’Œbroker-Bä¸Šé¢éƒ½æœ‰åˆ›å»ºtopicxxï¼Œç°åœ¨æŠŠbroker-Aä¸‹çº¿æˆ–è€…é…ç½®ä¸ºåªæ¶ˆè´¹æ¨¡å¼ï¼Œåˆ™broker-Aä¸Šé¢çš„topicxxå¯¹åº”çš„queueé˜Ÿåˆ—ä¼šè¢«æ ‡è®°ä¸ºdropped
     public boolean isDropped() {
         return dropped;
     }
 
-    //RebalanceImpl.updateProcessQueueTableInRebalance ÖĞµ÷ÓÃ
+    //RebalanceImpl.updateProcessQueueTableInRebalance ä¸­è°ƒç”¨
     public void setDropped(boolean dropped) {
         this.dropped = dropped;
     }

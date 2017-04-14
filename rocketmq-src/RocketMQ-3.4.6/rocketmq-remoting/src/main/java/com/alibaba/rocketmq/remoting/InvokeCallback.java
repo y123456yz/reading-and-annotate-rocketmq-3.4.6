@@ -23,6 +23,6 @@ import com.alibaba.rocketmq.remoting.netty.ResponseFuture;
  * @author shijia.wxr
  */
 public interface InvokeCallback {
-    //在其他接口或者类中通过new InvokeCallback()来实现该接口，可以搜索new InvokeCallback
+    //鍦ㄥ叾浠栨帴鍙ｆ垨鑰呯被涓�氳繃new InvokeCallback()鏉ュ疄鐜拌鎺ュ彛锛屽彲浠ユ悳绱ew InvokeCallback
     void operationComplete(final ResponseFuture responseFuture);
 }

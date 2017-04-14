@@ -25,21 +25,21 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 
 /**
- * @author shijia.wxr   ¸ÃÀàÖ÷ÒªÊÇÍ¨¹ıgetAndCreateMQClientInstanceÉú³ÉMQClientInstance£¬
- * Í¬Ê±°ÑclientidºÍÕâ¸öQClientInstance½øĞĞhashmap´æÈëfactoryTable
+ * @author shijia.wxr   è¯¥ç±»ä¸»è¦æ˜¯é€šè¿‡getAndCreateMQClientInstanceç”ŸæˆMQClientInstanceï¼Œ
+ * åŒæ—¶æŠŠclientidå’Œè¿™ä¸ªQClientInstanceè¿›è¡Œhashmapå­˜å…¥factoryTable
  */
 public class MQClientManager {
     private static MQClientManager instance = new MQClientManager();
     /**
-     * ÊµÀıÎ¨Ò»id  Éú³ÉÆ÷¡£
+     * å®ä¾‹å”¯ä¸€id  ç”Ÿæˆå™¨ã€‚
      */
     private AtomicInteger factoryIndexGenerator = new AtomicInteger();
-    /* clientidºÍMQClientInstanceÊµÀıµÄhashmap´æÈëMQClientManager.factoryTable */
+    /* clientidå’ŒMQClientInstanceå®ä¾‹çš„hashmapå­˜å…¥MQClientManager.factoryTable */
     private ConcurrentHashMap<String/* clientId */, MQClientInstance> factoryTable =
             new ConcurrentHashMap<String, MQClientInstance>();
 
     /**
-     * ¹¹Ôìº¯ÊıË½ÓĞ»¯£¬¾²Ì¬ÊµÀı±äÁ¿×öµ¥Àı¡£
+     * æ„é€ å‡½æ•°ç§æœ‰åŒ–ï¼Œé™æ€å®ä¾‹å˜é‡åšå•ä¾‹ã€‚
      */
     private MQClientManager() {
 
@@ -51,12 +51,12 @@ public class MQClientManager {
     }
 
     /*
-    * Í¨¹ıgetAndCreateMQClientInstanceÉú³ÉMQClientInstance£¬
-    * Í¬Ê±°ÑclientidºÍÕâ¸öQClientInstance½øĞĞhashmap´æÈëthis.factoryTable
+    * é€šè¿‡getAndCreateMQClientInstanceç”ŸæˆMQClientInstanceï¼Œ
+    * åŒæ—¶æŠŠclientidå’Œè¿™ä¸ªQClientInstanceè¿›è¡Œhashmapå­˜å…¥this.factoryTable
     * */
     public MQClientInstance getAndCreateMQClientInstance(final ClientConfig clientConfig, RPCHook rpcHook) {
         String clientId = clientConfig.buildMQClientId();
-        MQClientInstance instance = this.factoryTable.get(clientId); // Ä¬ÈÏÒ»¸ö½ø³ÌÒ»¸ö MQClientInstance
+        MQClientInstance instance = this.factoryTable.get(clientId); // é»˜è®¤ä¸€ä¸ªè¿›ç¨‹ä¸€ä¸ª MQClientInstance
         if (null == instance) {
             instance =
                     new MQClientInstance(clientConfig.cloneClientConfig(),

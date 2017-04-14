@@ -33,7 +33,7 @@ import java.util.concurrent.locks.ReentrantLock;
 
 
 /**
- * ¹ÜÀíÉú²úÕß·Ö×é¡£
+ * ç®¡ç†ç”Ÿäº§è€…åˆ†ç»„ã€‚
  * @author shijia.wxr
  */
 public class ProducerManager {
@@ -41,7 +41,7 @@ public class ProducerManager {
     private static final long LockTimeoutMillis = 3000;
     private static final long ChannelExpiredTimeout = 1000 * 120;
     private final Lock groupChannelLock = new ReentrantLock();
-    //°´Éú²úÕß·Ö×é¶ÔÉú²úÕß½øĞĞ¹ÜÀí¡£
+    //æŒ‰ç”Ÿäº§è€…åˆ†ç»„å¯¹ç”Ÿäº§è€…è¿›è¡Œç®¡ç†ã€‚
     private final HashMap<String /* group name */, HashMap<Channel, ClientChannelInfo>> groupChannelTable =
             new HashMap<String, HashMap<Channel, ClientChannelInfo>>();
 

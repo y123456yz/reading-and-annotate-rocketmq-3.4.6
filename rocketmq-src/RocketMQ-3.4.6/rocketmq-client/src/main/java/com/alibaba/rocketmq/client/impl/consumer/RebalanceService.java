@@ -25,8 +25,8 @@ import com.alibaba.rocketmq.common.ServiceThread;
 
 /**
  * Rebalance Service
- * //selectOneMessageQueue  messageQueueList ÊÇÍ¶µİÏûÏ¢µÄÊ±ºò¶ÔÓ¦µÄtopic¶ÓÁĞ£¬Ã¿´ÎÍ¶µİµÄÊ±ºòÂÒĞòÑ¡Ôñ¶ÓÁĞÍ¶µİ£¬¼ûROCKET¿ª·¢ÊÖ²á7.8½Ú
- //rebalanceÏà¹ØµÄÊÇÕë¶ÔÏû·Ñ£¬ÀıÈçÓĞ¶à¸öÏû·ÑÕßÏû·ÑÍ¬Ò»¸ötopic£¬¸ÃtopicÓĞ10¸ö¶ÓÁĞ£¬ÔòÏû·ÑÕß1Ïû·Ñ1-5¶ÓÁĞ£¬Ïû·ÑÕß2Ïû·Ñ6-10¶ÔÁË£¬¼ûROCKETMQ¿ª·¢ÊÖ²á7-5
+ * //selectOneMessageQueue  messageQueueList æ˜¯æŠ•é€’æ¶ˆæ¯çš„æ—¶å€™å¯¹åº”çš„topicé˜Ÿåˆ—ï¼Œæ¯æ¬¡æŠ•é€’çš„æ—¶å€™ä¹±åºé€‰æ‹©é˜Ÿåˆ—æŠ•é€’ï¼Œè§ROCKETå¼€å‘æ‰‹å†Œ7.8èŠ‚
+ //rebalanceç›¸å…³çš„æ˜¯é’ˆå¯¹æ¶ˆè´¹ï¼Œä¾‹å¦‚æœ‰å¤šä¸ªæ¶ˆè´¹è€…æ¶ˆè´¹åŒä¸€ä¸ªtopicï¼Œè¯¥topicæœ‰10ä¸ªé˜Ÿåˆ—ï¼Œåˆ™æ¶ˆè´¹è€…1æ¶ˆè´¹1-5é˜Ÿåˆ—ï¼Œæ¶ˆè´¹è€…2æ¶ˆè´¹6-10å¯¹äº†ï¼Œè§ROCKETMQå¼€å‘æ‰‹å†Œ7-5
  * @author shijia.wxr
  */
 public class RebalanceService extends ServiceThread {
@@ -38,17 +38,17 @@ public class RebalanceService extends ServiceThread {
         this.mqClientFactory = mqClientFactory;
     }
 
-    private static long WaitInterval = 1000 * 10; //¶à¾Ã×öÒ»´Îrebalance
+    private static long WaitInterval = 1000 * 10; //å¤šä¹…åšä¸€æ¬¡rebalance
 
-    @Override //MQClientInstance.start(this.rebalanceService.start();)ÖĞÖ´ĞĞ
+    @Override //MQClientInstance.start(this.rebalanceService.start();)ä¸­æ‰§è¡Œ
     public void run() {
         log.info(this.getServiceName() + " service started");
 
-        //rebalanceÏß³ÌÑ­»·´¦Àí
-        while (!this.isStoped()) { //Ã¿10ÃëÖÓ×öÒ»´Îrebalance·şÎñ: Õâ¸örebalance·şÎñ°´ÕÕtopic×örebalance ,
-            //µ±clientÔÚÖ¸¶¨µÄÏû·Ñ·Ö×éÖĞĞèÒªĞÂÔö¶ÔtopicµÄ¶ÓÁĞµÄÏû·ÑÊ±£¬ÔòÌá½»Ò»¸ö pull request¸øPullMessageService
+        //rebalanceçº¿ç¨‹å¾ªç¯å¤„ç†
+        while (!this.isStoped()) { //æ¯10ç§’é’Ÿåšä¸€æ¬¡rebalanceæœåŠ¡: è¿™ä¸ªrebalanceæœåŠ¡æŒ‰ç…§topicåšrebalance ,
+            //å½“clientåœ¨æŒ‡å®šçš„æ¶ˆè´¹åˆ†ç»„ä¸­éœ€è¦æ–°å¢å¯¹topicçš„é˜Ÿåˆ—çš„æ¶ˆè´¹æ—¶ï¼Œåˆ™æäº¤ä¸€ä¸ª pull requestç»™PullMessageService
 
-            this.waitForRunning(WaitInterval); //ÑÓÊ±
+            this.waitForRunning(WaitInterval); //å»¶æ—¶
             this.mqClientFactory.doRebalance();
         }
 

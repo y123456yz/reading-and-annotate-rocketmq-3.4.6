@@ -55,7 +55,7 @@ import java.util.Map.Entry;
 import java.util.concurrent.ConcurrentHashMap;
 
 
-/** ¸ºÔğ·şÎñÆ÷¸øclient·¢ËÍÇëÇó¡£
+/** è´Ÿè´£æœåŠ¡å™¨ç»™clientå‘é€è¯·æ±‚ã€‚
  * @author shijia.wxr
  */
 public class Broker2Client {

@@ -47,10 +47,10 @@ public class AllocateMapedFileService extends ServiceThread {
 
 
     /**
-     * Ìá½»mapfileµÄ´´½¨ÇëÇó ¡£ °üº¬ÏÂÒ»¸ö ºÍÏÂÏÂ¸ömapfile .
-     * @param nextFilePath ÏÂÒ»¸öÎÄ¼şµÄÂ·¾¶
-     * @param nextNextFilePath ÏÂÏÂ¸öÎÄ¼şµÄÂ·¾¶¡£
-     * @param fileSize ÎÄ¼ş´óĞ¡¡£
+     * æäº¤mapfileçš„åˆ›å»ºè¯·æ±‚ ã€‚ åŒ…å«ä¸‹ä¸€ä¸ª å’Œä¸‹ä¸‹ä¸ªmapfile .
+     * @param nextFilePath ä¸‹ä¸€ä¸ªæ–‡ä»¶çš„è·¯å¾„
+     * @param nextNextFilePath ä¸‹ä¸‹ä¸ªæ–‡ä»¶çš„è·¯å¾„ã€‚
+     * @param fileSize æ–‡ä»¶å¤§å°ã€‚
      * @return
      */
     public MapedFile putRequestAndReturnMapedFile(String nextFilePath, String nextNextFilePath, int fileSize) {
@@ -81,7 +81,7 @@ public class AllocateMapedFileService extends ServiceThread {
         AllocateRequest result = this.requestTable.get(nextFilePath);
         try {
             if (result != null) {
-                //Í¨¹ıcountdownlatch×èÈûµÈ´ımapfile´´½¨ÇëÇó½á¹û¡£
+                //é€šè¿‡countdownlatché˜»å¡ç­‰å¾…mapfileåˆ›å»ºè¯·æ±‚ç»“æœã€‚
                 boolean waitOK = result.getCountDownLatch().await(WaitTimeOut, TimeUnit.MILLISECONDS);
                 if (!waitOK) {
                     log.warn("create mmap timeout " + result.getFilePath() + " " + result.getFileSize());
@@ -141,7 +141,7 @@ public class AllocateMapedFileService extends ServiceThread {
 
 
     /**
-     * Òì²½µÄ´Ó¶ÓÁĞÖĞÈ¡³ömapfileµÄ´´½¨ÇëÇó £¬×öÎÄ¼şÄÚ´æÓ³Éä¡£
+     * å¼‚æ­¥çš„ä»é˜Ÿåˆ—ä¸­å–å‡ºmapfileçš„åˆ›å»ºè¯·æ±‚ ï¼Œåšæ–‡ä»¶å†…å­˜æ˜ å°„ã€‚
      * Only interrupted by the external thread, will return false
      */
     private boolean mmapOperation() {
@@ -155,7 +155,7 @@ public class AllocateMapedFileService extends ServiceThread {
                         + req.getFileSize());
                 return true;
             }
-            if (expectedRequest != req) { // È¡³öÀ´µÄÒ»¶¨ÒªÊÇreq
+            if (expectedRequest != req) { // å–å‡ºæ¥çš„ä¸€å®šè¦æ˜¯req
                 log.warn("never expected here,  maybe cause timeout " + req.getFilePath() + " "
                         + req.getFileSize() + ", req:" + req + ", expectedRequest:" + expectedRequest);
                 return true;
@@ -165,7 +165,7 @@ public class AllocateMapedFileService extends ServiceThread {
                 long beginTime = System.currentTimeMillis();
                 MapedFile mapedFile = new MapedFile(req.getFilePath(), req.getFileSize());
                 long eclipseTime = UtilAll.computeEclipseTimeMilliseconds(beginTime);
-                if (eclipseTime > 10) { //mapÎÄ¼şÊ±¼ä³¬¹ı10ºÁÃë¡£
+                if (eclipseTime > 10) { //mapæ–‡ä»¶æ—¶é—´è¶…è¿‡10æ¯«ç§’ã€‚
                     int queueSize = this.requestQueue.size();
                     log.warn("create mapedFile spent time(ms) " + eclipseTime + " queue size " + queueSize
                             + " " + req.getFilePath() + " " + req.getFileSize());
@@ -176,7 +176,7 @@ public class AllocateMapedFileService extends ServiceThread {
                     .getMapedFileSizeCommitLog() //
                         && //
                         this.messageStore.getMessageStoreConfig().isWarmMapedFileEnable()) {
-                    //ÇëÇó´´½¨µÄmapfile³¬¹ı1G ¡£
+                    //è¯·æ±‚åˆ›å»ºçš„mapfileè¶…è¿‡1G ã€‚
                     mapedFile.warmMappedFile(this.messageStore.getMessageStoreConfig().getFlushDiskType(),
                         this.messageStore.getMessageStoreConfig().getFlushLeastPagesWhenWarmMapedFile());
                 }
@@ -194,7 +194,7 @@ public class AllocateMapedFileService extends ServiceThread {
         catch (IOException e) {
             log.warn(this.getServiceName() + " service has exception. ", e);
             this.hasException = true;
-            if (null != req) { //Èç¹ûÊÇiO Òì³£ÖØĞÂÔÙ×öÒ»´Î¡£
+            if (null != req) { //å¦‚æœæ˜¯iO å¼‚å¸¸é‡æ–°å†åšä¸€æ¬¡ã€‚
                 requestQueue.offer(req);
                 try {
                     Thread.sleep(1);
@@ -205,7 +205,7 @@ public class AllocateMapedFileService extends ServiceThread {
         }
         finally {
             if (req != null && isSuccess)
-                req.getCountDownLatch().countDown(); //Í¨¹ıÕâ¸öcoutdown . ¸æÖª84ĞĞµÄawait¿ÉÒÔ±»»½ĞÑ»ñÈ¡Òì²½´¦Àí½á¹û¡£
+                req.getCountDownLatch().countDown(); //é€šè¿‡è¿™ä¸ªcoutdown . å‘ŠçŸ¥84è¡Œçš„awaitå¯ä»¥è¢«å”¤é†’è·å–å¼‚æ­¥å¤„ç†ç»“æœã€‚
         }
         return true;
     }

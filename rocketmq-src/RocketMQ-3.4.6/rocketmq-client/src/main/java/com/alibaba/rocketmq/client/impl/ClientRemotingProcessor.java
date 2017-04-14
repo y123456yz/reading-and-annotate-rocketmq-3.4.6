@@ -44,7 +44,7 @@ import java.util.Map;
 
 
 /**
- * ¿Í»§¶Ë´¦Àíremoting commandµÄ´¦ÀíÆ÷¡£
+ * å®¢æˆ·ç«¯å¤„ç†remoting commandçš„å¤„ç†å™¨ã€‚
  * @author shijia.wxr
  */
 public class ClientRemotingProcessor implements NettyRequestProcessor {

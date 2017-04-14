@@ -19,12 +19,12 @@ package com.alibaba.rocketmq.client.consumer;
 /**
  * Async message pulling interface
  *
- * @author shijia.wxr   ÔÚpullMessageÖĞ»ánewÒ»¸öÀà£¬²¢ÊµÏÖ¸Ã½Ó¿Ú
+ * @author shijia.wxr   åœ¨pullMessageä¸­ä¼šnewä¸€ä¸ªç±»ï¼Œå¹¶å®ç°è¯¥æ¥å£
  */
 public interface PullCallback {
-    //pullMessageAsyncÖĞÀ­È¡ÏûÏ¢³É¹¦µÄÊ±ºòÖ´ĞĞ
+    //pullMessageAsyncä¸­æ‹‰å–æ¶ˆæ¯æˆåŠŸçš„æ—¶å€™æ‰§è¡Œ
     void onSuccess(final PullResult pullResult);
 
-    //pullMessageAsyncÖĞÀ­È¡ÏûÏ¢Òì³£µÄÊ±ºòÖ´ĞĞ
+    //pullMessageAsyncä¸­æ‹‰å–æ¶ˆæ¯å¼‚å¸¸çš„æ—¶å€™æ‰§è¡Œ
     void onException(final Throwable e);
 }

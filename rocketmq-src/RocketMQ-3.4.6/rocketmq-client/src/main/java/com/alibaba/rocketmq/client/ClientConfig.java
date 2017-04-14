@@ -25,27 +25,27 @@ import com.alibaba.rocketmq.remoting.common.RemotingUtil;
  * Client Common configuration
  *
  * @author shijia.wxr
- * @author vongosling   Ö÷ÒªÓÃÓÚºÍnameserverÍ¨ĞÅµÄÏà¹Ø²ÎÊıÅäÖÃ
- * ÉúĞ§¼û MQClientInstance.startScheduledTask ÖĞÊ¹ÓÃ
+ * @author vongosling   ä¸»è¦ç”¨äºå’Œnameserveré€šä¿¡çš„ç›¸å…³å‚æ•°é…ç½®
+ * ç”Ÿæ•ˆè§ MQClientInstance.startScheduledTask ä¸­ä½¿ç”¨
  */
 public class ClientConfig {
     private String namesrvAddr = System.getProperty(MixAll.NAMESRV_ADDR_PROPERTY, System.getenv(MixAll.NAMESRV_ADDR_ENV));
 
     private String clientIP = RemotingUtil.getLocalAddress();
-    private String instanceName = System.getProperty("rocketmq.client.name", "DEFAULT"); //changeInstanceNameToPID»áĞŞ¸ÄÎªPid
-    //»ñÈ¡ÏµÍ³´¦ÀíÆ÷¸öÊı
+    private String instanceName = System.getProperty("rocketmq.client.name", "DEFAULT"); //changeInstanceNameToPIDä¼šä¿®æ”¹ä¸ºPid
+    //è·å–ç³»ç»Ÿå¤„ç†å™¨ä¸ªæ•°
     private int clientCallbackExecutorThreads = Runtime.getRuntime().availableProcessors();
-    /** ¶à³¤Ê±¼äÈ¥NS ÂÖÑ¯topicĞÅÏ¢¡£
+    /** å¤šé•¿æ—¶é—´å»NS è½®è¯¢topicä¿¡æ¯ã€‚
      * Pulling topic information interval from the named server
      */
     private int pollNameServerInteval = 1000 * 30;
     /**
-     * ¶à³¤Ê±¼ä·¢ËÍĞÄÌø°ü¸øbroker .
+     * å¤šé•¿æ—¶é—´å‘é€å¿ƒè·³åŒ…ç»™broker .
      * Heartbeat interval in microseconds with message broker
      */
     private int heartbeatBrokerInterval = 1000 * 30;
     /**
-     * Ïû·ÑÕß¶à³¤Ê±¼ä³Ö¾Ã»¯Ò»´ÎÎ»µã¡£
+     * æ¶ˆè´¹è€…å¤šé•¿æ—¶é—´æŒä¹…åŒ–ä¸€æ¬¡ä½ç‚¹ã€‚
      * Offset persistent interval for consumer
      */
     private int persistConsumerOffsetInterval = 1000 * 5;
@@ -54,7 +54,7 @@ public class ClientConfig {
 
 
     /**
-     * Ä¬ÈÏclientip + pid ×öclientid .Èç¹ûÊÇµ¥ÔªÄ£Ê½£¬Ôò¼ÓÉÏ unitname.  Í¨¹ıÕâ¸öÀ´±êÊ¶¿Í»§¶Ë
+     * é»˜è®¤clientip + pid åšclientid .å¦‚æœæ˜¯å•å…ƒæ¨¡å¼ï¼Œåˆ™åŠ ä¸Š unitname.  é€šè¿‡è¿™ä¸ªæ¥æ ‡è¯†å®¢æˆ·ç«¯
      * @return
      */
     public String buildMQClientId() {

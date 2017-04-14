@@ -17,10 +17,10 @@
 
 package com.alibaba.rocketmq.remoting;
 /*
-* RemotingServer »òÕß RemotingClientÖĞ¼Ì³Ğ¸Ã½Ó¿Ú£¬ÔÚNettyRemotingClientÀàÊµÏÖ¸Ã½Ó¿Ú
+* RemotingServer æˆ–è€… RemotingClientä¸­ç»§æ‰¿è¯¥æ¥å£ï¼Œåœ¨NettyRemotingClientç±»å®ç°è¯¥æ¥å£
 * */
 public interface RemotingService {
-     void start(); //MQClientAPIImpl.startÖĞÖ´ĞĞ
+     void start(); //MQClientAPIImpl.startä¸­æ‰§è¡Œ
 
      void shutdown();
 

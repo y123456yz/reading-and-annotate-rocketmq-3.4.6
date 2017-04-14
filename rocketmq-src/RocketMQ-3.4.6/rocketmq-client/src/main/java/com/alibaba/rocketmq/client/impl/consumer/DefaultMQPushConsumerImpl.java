@@ -67,19 +67,19 @@ import java.util.concurrent.ConcurrentHashMap;
 
 
 /**
- * @author shijia.wxr  Ò»¸öÏû·Ñ·Ö×é¶ÔÓ¦Ò»¸öMQConsumerInner£¬´æ´¢ÔÚ MQClientInstance.consumerTable
+ * @author shijia.wxr  ä¸€ä¸ªæ¶ˆè´¹åˆ†ç»„å¯¹åº”ä¸€ä¸ªMQConsumerInnerï¼Œå­˜å‚¨åœ¨ MQClientInstance.consumerTable
  */
 public class DefaultMQPushConsumerImpl implements MQConsumerInner {
     /**
-     * Delay some time when exception occur  À­È¡ÏûÏ¢Òì³££¬ÑÓ³ÙÕâÃ´¾ÃÏû·Ñ
+     * Delay some time when exception occur  æ‹‰å–æ¶ˆæ¯å¼‚å¸¸ï¼Œå»¶è¿Ÿè¿™ä¹ˆä¹…æ¶ˆè´¹
      */
     private static final long PullTimeDelayMillsWhenException = 3000;
     /**
-     * Flow control interval //À­È¡ÏûÏ¢µÄÁ÷¿Ø, ´¦Àí¶ÓÁĞÖĞµÄÏûÏ¢³¬¹ı1000 £¬µÈ50ÃëÔÙÖ´ĞĞ¡£
+     * Flow control interval //æ‹‰å–æ¶ˆæ¯çš„æµæ§, å¤„ç†é˜Ÿåˆ—ä¸­çš„æ¶ˆæ¯è¶…è¿‡1000 ï¼Œç­‰50ç§’å†æ‰§è¡Œã€‚
      */
     private static final long PullTimeDelayMillsWhenFlowControl = 50;
     /**
-     * Delay some time when suspend pull service   pauseÇé¿öÏÂÑÓ³ÙÊ±¼ä
+     * Delay some time when suspend pull service   pauseæƒ…å†µä¸‹å»¶è¿Ÿæ—¶é—´
      */
     private static final long PullTimeDelayMillsWhenSuspend = 1000;
     private static final long BrokerSuspendMaxTimeMillis = 1000 * 15;
@@ -88,18 +88,18 @@ public class DefaultMQPushConsumerImpl implements MQConsumerInner {
     private final DefaultMQPushConsumer defaultMQPushConsumer;
     private final RebalanceImpl rebalanceImpl = new RebalancePushImpl(this);
     private ServiceState serviceState = ServiceState.CREATE_JUST;
-    private MQClientInstance mQClientFactory; //±¾ÀàµÄstart½Ó¿ÚÖĞ¸³Öµ
+    private MQClientInstance mQClientFactory; //æœ¬ç±»çš„startæ¥å£ä¸­èµ‹å€¼
     private PullAPIWrapper pullAPIWrapper;
     private volatile boolean pause = false;
     private boolean consumeOrderly = false;
     /*
-    * ¾ÍÊÇPushConsumer mainº¯ÊıÖĞµÄconsumer.registerMessageListener(new MessageListenerConcurrently()£¬ÕâÀïµÄ
+    * å°±æ˜¯PushConsumer mainå‡½æ•°ä¸­çš„consumer.registerMessageListener(new MessageListenerConcurrently()ï¼Œè¿™é‡Œçš„
     * new MessageListenerConcurrently()
     */
-    private MessageListener messageListenerInner; //¸³Öµ¼û registerMessageListener //MessageListenerConcurrently
-    //Î»µã¸üĞÂ¼û ConsumeMessageConcurrentlyService.processConsumeResult
-    private OffsetStore offsetStore; //±¾îµÄstart½Ó¿ÚÙxÖµ RemoteBrokerOffsetStore
-    private ConsumeMessageService consumeMessageService; //¸³Öµ¼û¸ÃÀàµÄstart½Ó¿Ú  ConsumeMessageConcurrentlyService
+    private MessageListener messageListenerInner; //èµ‹å€¼è§ registerMessageListener //MessageListenerConcurrently
+    //ä½ç‚¹æ›´æ–°è§ ConsumeMessageConcurrentlyService.processConsumeResult
+    private OffsetStore offsetStore; //æœ¬é¡çš„startæ¥å£è³¦å€¼ RemoteBrokerOffsetStore
+    private ConsumeMessageService consumeMessageService; //èµ‹å€¼è§è¯¥ç±»çš„startæ¥å£  ConsumeMessageConcurrentlyService
 
     private final ArrayList<FilterMessageHook> filterMessageHookList = new ArrayList<FilterMessageHook>();
 
@@ -243,24 +243,24 @@ public class DefaultMQPushConsumerImpl implements MQConsumerInner {
     public Set<SubscriptionData> subscriptions() {
         Set<SubscriptionData> subSet = new HashSet<SubscriptionData>();
 
-        //SubscriptionData ¼¯ºÏ
+        //SubscriptionData é›†åˆ
         subSet.addAll(this.rebalanceImpl.getSubscriptionInner().values());
 
         return subSet;
     }
 
-    //µ÷ÓÃÔ´Í·ÔÚ MQClientInstance.start(this.rebalanceService.start();)ÖĞÖ´ĞĞ
-    @Override //MQClientInstance.doRebalanceÖĞÖ´ĞĞ
+    //è°ƒç”¨æºå¤´åœ¨ MQClientInstance.start(this.rebalanceService.start();)ä¸­æ‰§è¡Œ
+    @Override //MQClientInstance.doRebalanceä¸­æ‰§è¡Œ
     public void doRebalance() {
-        if (this.rebalanceImpl != null) {//ÕæÕı×örebalance´¦ÀíÔÚ RebalanceImpl.doRebalance
+        if (this.rebalanceImpl != null) {//çœŸæ­£åšrebalanceå¤„ç†åœ¨ RebalanceImpl.doRebalance
             this.rebalanceImpl.doRebalance();
         }
     }
 
 
     @Override
-    //MQClientInstance.startScheduledTask->persistConsumerOffset->MQClientInstance.startScheduledTask->persistConsumerOffsetÖĞÖ´ĞĞ
-    //µ±¿Í»§¶ËÏû·Ñ³É¹¦ºó£¬ĞèÒª°Ñ¸ÃĞÅÏ¢ÍÆËÍ¸øbroker£¬ÕâÑùbroker²ÅÄÜ¸üĞÂoffsetÖĞÖ´ĞĞ  µ±¿Í»§¶ËÏû·Ñ³É¹¦ºó£¬ĞèÒª°Ñ¸ÃĞÅÏ¢ÍÆËÍ¸øbroker£¬ÕâÑùbroker²ÅÄÜ¸üĞÂoffset
+    //MQClientInstance.startScheduledTask->persistConsumerOffset->MQClientInstance.startScheduledTask->persistConsumerOffsetä¸­æ‰§è¡Œ
+    //å½“å®¢æˆ·ç«¯æ¶ˆè´¹æˆåŠŸåï¼Œéœ€è¦æŠŠè¯¥ä¿¡æ¯æ¨é€ç»™brokerï¼Œè¿™æ ·brokeræ‰èƒ½æ›´æ–°offsetä¸­æ‰§è¡Œ  å½“å®¢æˆ·ç«¯æ¶ˆè´¹æˆåŠŸåï¼Œéœ€è¦æŠŠè¯¥ä¿¡æ¯æ¨é€ç»™brokerï¼Œè¿™æ ·brokeræ‰èƒ½æ›´æ–°offset
     public void persistConsumerOffset() { //DefaultMQPushConsumerImpl.persistConsumerOffset
         try {
             this.makeSureStateOK();
@@ -278,14 +278,14 @@ public class DefaultMQPushConsumerImpl implements MQConsumerInner {
         }
     }
 
-    ////MQClientInstance.updateTopicRouteInfoFromNameServer ÖĞÖ´ĞĞ
+    ////MQClientInstance.updateTopicRouteInfoFromNameServer ä¸­æ‰§è¡Œ
     @Override
     public void updateTopicSubscribeInfo(String topic, Set<MessageQueue> info) {
         Map<String, SubscriptionData> subTable = this.getSubscriptionInner();
         if (subTable != null) {
             if (subTable.containsKey(topic)) {
-                //²»Í¬brokerÉÏÃæµÄ¶ÓÁĞºÅ¶¼ÊÇ´Ó0 - readQueueNums£¬¶ÓÁĞºÅ¿ÉÄÜÖØ¸´£¬µ«ÊÇËûÃÇµÄbrakername²»Ò»Ñù£¬¼ûtopicRouteData2TopicSubscribeInfo
-                //°Ñ¸Ãtopic¼°Æä¶ÔÓ¦µÄ queueĞÅÏ¢Ìí¼Óµ½ RebalanceImpl.topicSubscribeInfoTable
+                //ä¸åŒbrokerä¸Šé¢çš„é˜Ÿåˆ—å·éƒ½æ˜¯ä»0 - readQueueNumsï¼Œé˜Ÿåˆ—å·å¯èƒ½é‡å¤ï¼Œä½†æ˜¯ä»–ä»¬çš„brakernameä¸ä¸€æ ·ï¼Œè§topicRouteData2TopicSubscribeInfo
+                //æŠŠè¯¥topicåŠå…¶å¯¹åº”çš„ queueä¿¡æ¯æ·»åŠ åˆ° RebalanceImpl.topicSubscribeInfoTable
                 this.rebalanceImpl.topicSubscribeInfoTable.put(topic, info);
             }
         }
@@ -321,20 +321,20 @@ public class DefaultMQPushConsumerImpl implements MQConsumerInner {
 
 
     /**
-     * Ïû·ÑÕß·Ö×é´ÓÖ¸¶¨µÄÏû·Ñ¶ÓÁĞ(MessageQueue)À­È¡ÏûÏ¢£¨Ò»¸öPullRequest ¶ÔÓ¦Ò»¸öÏû·ÑÕß·Ö×é¶ÔtopicµÄÒ»¸ö¶ÓÁĞµÄÏû·Ñ¡££©
-     * ÔÚ°´topic ×örebalance²Ù×÷µÄÊ±ºò»á±»´¥·¢Ò»´Î¡£
+     * æ¶ˆè´¹è€…åˆ†ç»„ä»æŒ‡å®šçš„æ¶ˆè´¹é˜Ÿåˆ—(MessageQueue)æ‹‰å–æ¶ˆæ¯ï¼ˆä¸€ä¸ªPullRequest å¯¹åº”ä¸€ä¸ªæ¶ˆè´¹è€…åˆ†ç»„å¯¹topicçš„ä¸€ä¸ªé˜Ÿåˆ—çš„æ¶ˆè´¹ã€‚ï¼‰
+     * åœ¨æŒ‰topic åšrebalanceæ“ä½œçš„æ—¶å€™ä¼šè¢«è§¦å‘ä¸€æ¬¡ã€‚
      *
-     * ËùÒÔ£¬ ÕâÀï×Ü½áÏÂÀ´£¬Ã¿Ò»¸öÏû·ÑÕß·Ö×é¶ÔtopicµÄÄ³Ò»¸ö¶ÓÁĞ½øĞĞÏû·Ñ£¬ÊÇÍ¨¹ırebalance²Ù×÷À´´¥·¢µÄ£¬
-     * ¶ørebalance²Ù×÷ÓÖÊÇÓÉÏû·ÑÕßµÄ¼ÓÈë£¬ÍË³ö£¬¶©ÔÄºÍÈ¡Ïû¶©ÔÄÀ´´¥·¢µÄ¡£
-     * Ò»µ©Ïû·ÑÁË¶ÓÁĞ£¬ ÆäÊµ¾ÍÊÇÀ­Ò»ÅúÏû·ÑÒ»ÅúÔÙÀ­ÏÂÒ»Åú£¬Ñ­»·Íù¸´¡£
+     * æ‰€ä»¥ï¼Œ è¿™é‡Œæ€»ç»“ä¸‹æ¥ï¼Œæ¯ä¸€ä¸ªæ¶ˆè´¹è€…åˆ†ç»„å¯¹topicçš„æŸä¸€ä¸ªé˜Ÿåˆ—è¿›è¡Œæ¶ˆè´¹ï¼Œæ˜¯é€šè¿‡rebalanceæ“ä½œæ¥è§¦å‘çš„ï¼Œ
+     * è€Œrebalanceæ“ä½œåˆæ˜¯ç”±æ¶ˆè´¹è€…çš„åŠ å…¥ï¼Œé€€å‡ºï¼Œè®¢é˜…å’Œå–æ¶ˆè®¢é˜…æ¥è§¦å‘çš„ã€‚
+     * ä¸€æ—¦æ¶ˆè´¹äº†é˜Ÿåˆ—ï¼Œ å…¶å®å°±æ˜¯æ‹‰ä¸€æ‰¹æ¶ˆè´¹ä¸€æ‰¹å†æ‹‰ä¸‹ä¸€æ‰¹ï¼Œå¾ªç¯å¾€å¤ã€‚
      *
      *
      * @param pullRequest
-     */ //PullMessageService.runÏß³Ìµ÷¶È×ßµ½ÕâÀï
+     */ //PullMessageService.runçº¿ç¨‹è°ƒåº¦èµ°åˆ°è¿™é‡Œ
     public void pullMessage(final PullRequest pullRequest) {
         final ProcessQueue processQueue = pullRequest.getProcessQueue();
-        if (processQueue.isDropped()) { //ÔÚÏû·ÑÇ°ÏÈÅĞ¶Ï´¦Àí¶ÓÁĞÊÇ·ñÒÑ¾­±»drop ,ÒòÎªÔÚ¿ÉÄÜÕıºÃ±»rebalance²Ù×÷dropµôÁË¡£
-            //RebalancePushImpl 368ĞĞ
+        if (processQueue.isDropped()) { //åœ¨æ¶ˆè´¹å‰å…ˆåˆ¤æ–­å¤„ç†é˜Ÿåˆ—æ˜¯å¦å·²ç»è¢«drop ,å› ä¸ºåœ¨å¯èƒ½æ­£å¥½è¢«rebalanceæ“ä½œdropæ‰äº†ã€‚
+            //RebalancePushImpl 368è¡Œ
             log.info("the pull request[{}] is droped.", pullRequest.toString());
             return;
         }
@@ -358,26 +358,26 @@ public class DefaultMQPushConsumerImpl implements MQConsumerInner {
         }
 
         long size = processQueue.getMsgCount().get();
-        //À­È¡ÏûÏ¢µÄÁ÷¿Ø, ´¦Àí¶ÓÁĞÖĞµÄÏûÏ¢³¬¹ı1000 £¬µÈ50ÃëÔÙÖ´ĞĞ¡£
+        //æ‹‰å–æ¶ˆæ¯çš„æµæ§, å¤„ç†é˜Ÿåˆ—ä¸­çš„æ¶ˆæ¯è¶…è¿‡1000 ï¼Œç­‰50ç§’å†æ‰§è¡Œã€‚
         if (size > this.defaultMQPushConsumer.getPullThresholdForQueue()) {
             this.executePullRequestLater(pullRequest, PullTimeDelayMillsWhenFlowControl);
-            if ((flowControlTimes1++ % 1000) == 0) {   //Á÷¿ØÃ¿³¬¹ı1000´Î £¬Ğ´Ò»´Î¾¯¸æÈÕÖ¾¡£
+            if ((flowControlTimes1++ % 1000) == 0) {   //æµæ§æ¯è¶…è¿‡1000æ¬¡ ï¼Œå†™ä¸€æ¬¡è­¦å‘Šæ—¥å¿—ã€‚
                 log.warn("the consumer message buffer is full, so do flow control, {} {} {}", size,
                     pullRequest, flowControlTimes1);
             }
             return;
         }
 
-        if (!this.consumeOrderly) { //·ÇË³ĞòÏûÏ¢µÄ×î´óºÍ×îĞ¡Ïû·ÑÎ»µã²îÖµ³¬¹ıÒ»¶¨Á¿£¬Ôò50msºóÔÙ´¦Àí¡£ ¡£
-            /* ±¾µØ»ıÑ¹ÏûÏ¢Êı³¬¹ıÏŞÖÆ */
+        if (!this.consumeOrderly) { //éé¡ºåºæ¶ˆæ¯çš„æœ€å¤§å’Œæœ€å°æ¶ˆè´¹ä½ç‚¹å·®å€¼è¶…è¿‡ä¸€å®šé‡ï¼Œåˆ™50msåå†å¤„ç†ã€‚ ã€‚
+            /* æœ¬åœ°ç§¯å‹æ¶ˆæ¯æ•°è¶…è¿‡é™åˆ¶ */
             if (processQueue.getMaxSpan() > this.defaultMQPushConsumer.getConsumeConcurrentlyMaxSpan()) {
                 this.executePullRequestLater(pullRequest, PullTimeDelayMillsWhenFlowControl);
-                if ((flowControlTimes2++ % 1000) == 0) { //Á÷¿ØÃ¿³¬¹ı1000´Î £¬Ğ´Ò»´Î¾¯¸æÈÕÖ¾¡£
+                if ((flowControlTimes2++ % 1000) == 0) { //æµæ§æ¯è¶…è¿‡1000æ¬¡ ï¼Œå†™ä¸€æ¬¡è­¦å‘Šæ—¥å¿—ã€‚
                     log.warn("the queue's messages, span too long, so do flow control, {} {} {}",
                         processQueue.getMaxSpan(), pullRequest, flowControlTimes2);
                 }
-                //Èç¹û´Ó¸Ã pullRequest ¶ÔÓ¦µÄqueueÖĞÀ­È¡µ½µÄÏûÏ¢Êı³¬¹ıÁËconsumeConcurrentlyMaxSpanãĞÖµÔòÑÓ³Ù PullTimeDelayMillsWhenFlowControl sÔÙ´ÎÀ­È¡£¬
-                //ÕâÀïreturnºó¾Í²»»áÖ´ĞĞÏÂÃæÁ÷³ÌÖĞµÄÀ­È¡²Ù×÷ÁË
+                //å¦‚æœä»è¯¥ pullRequest å¯¹åº”çš„queueä¸­æ‹‰å–åˆ°çš„æ¶ˆæ¯æ•°è¶…è¿‡äº†consumeConcurrentlyMaxSpané˜ˆå€¼åˆ™å»¶è¿Ÿ PullTimeDelayMillsWhenFlowControl så†æ¬¡æ‹‰å–ï¼Œ
+                //è¿™é‡Œreturnåå°±ä¸ä¼šæ‰§è¡Œä¸‹é¢æµç¨‹ä¸­çš„æ‹‰å–æ“ä½œäº†
                 return;
             }
         }
@@ -392,22 +392,22 @@ public class DefaultMQPushConsumerImpl implements MQConsumerInner {
 
         final long beginTimestamp = System.currentTimeMillis();
 
-        //Ô“îÔÚÏÂÃæµÄthis.pullAPIWrapper.pullKernelImpl()Ê¹ÓÃÔ“î
+        //è©²é¡åœ¨ä¸‹é¢çš„this.pullAPIWrapper.pullKernelImpl()ä½¿ç”¨è©²é¡
         PullCallback pullCallback = new PullCallback() {
             @Override
-            /* newÒ»‚€pullCallbackî²¢Œ¦onException½Ó¿ÚºÍonSuccess½Ó¿ÚÖØŒ‘ */
-            public void onSuccess(PullResult pullResult) { //ÕæÕıÖ´ĞĞÊÇÀ­È¡ÏûÏ¢³É¹¦ºóÔÚ pullMessageAsync ÖĞÖ´ĞĞ
+            /* newä¸€å€‹pullCallbacké¡å¹¶å°onExceptionæ¥å£å’ŒonSuccessæ¥å£é‡å¯« */
+            public void onSuccess(PullResult pullResult) { //çœŸæ­£æ‰§è¡Œæ˜¯æ‹‰å–æ¶ˆæ¯æˆåŠŸååœ¨ pullMessageAsync ä¸­æ‰§è¡Œ
                 if (pullResult != null) {
-                    //½âÎö³öµÄmsg´æÈëmsgFoundList
+                    //è§£æå‡ºçš„msgå­˜å…¥msgFoundList
                     pullResult =
                             DefaultMQPushConsumerImpl.this.pullAPIWrapper.processPullResult(
                                 pullRequest.getMessageQueue(), pullResult, subscriptionData);
 
                     switch (pullResult.getPullStatus()) {
-                    case FOUND: //ÓĞÀ­È¡µ½ÏûÏ¢
-                        //ÉÏÒ»´ÎÀ­È¡µÄcqµÄÆğÊ¼Î»µã¡£
+                    case FOUND: //æœ‰æ‹‰å–åˆ°æ¶ˆæ¯
+                        //ä¸Šä¸€æ¬¡æ‹‰å–çš„cqçš„èµ·å§‹ä½ç‚¹ã€‚
                         long prevRequestOffset = pullRequest.getNextOffset();
-                        //ÏÂÒ»´ÎÀ­È¡µÄcqµÄÆğÊ¼Î»µã¡£
+                        //ä¸‹ä¸€æ¬¡æ‹‰å–çš„cqçš„èµ·å§‹ä½ç‚¹ã€‚
                         pullRequest.setNextOffset(pullResult.getNextBeginOffset());
                         long pullRT = System.currentTimeMillis() - beginTimestamp;
                         DefaultMQPushConsumerImpl.this.getConsumerStatsManager().incPullRT(
@@ -420,7 +420,7 @@ public class DefaultMQPushConsumerImpl implements MQConsumerInner {
                         else {
                             firstMsgOffset = pullResult.getMsgFoundList().get(0).getQueueOffset();
 
-                            /* ±¾´Î´ÓbrokerÀ­È¡ÁËsizeµ÷ÏûÏ¢¹ıÀ´£¬¼ÇÂ¼ÏÂÍ³¼ÆĞÅÏ¢ */
+                            /* æœ¬æ¬¡ä»brokeræ‹‰å–äº†sizeè°ƒæ¶ˆæ¯è¿‡æ¥ï¼Œè®°å½•ä¸‹ç»Ÿè®¡ä¿¡æ¯ */
                             DefaultMQPushConsumerImpl.this.getConsumerStatsManager().incPullTPS(
                                 pullRequest.getConsumerGroup(), pullRequest.getMessageQueue().getTopic(),
                                 pullResult.getMsgFoundList().size());
@@ -432,7 +432,7 @@ public class DefaultMQPushConsumerImpl implements MQConsumerInner {
                                 pullRequest.getMessageQueue(), //
                                 dispathToConsume);
 
-                            //¼ä¸ôÖ¸¶¨µÄÊ±¼ä£¬»òÕßÁ¢¼´ÔÙÀ­¡£
+                            //é—´éš”æŒ‡å®šçš„æ—¶é—´ï¼Œæˆ–è€…ç«‹å³å†æ‹‰ã€‚
                             if (DefaultMQPushConsumerImpl.this.defaultMQPushConsumer.getPullInterval() > 0) {
                                 DefaultMQPushConsumerImpl.this.executePullRequestLater(pullRequest,
                                     DefaultMQPushConsumerImpl.this.defaultMQPushConsumer.getPullInterval());
@@ -506,7 +506,7 @@ public class DefaultMQPushConsumerImpl implements MQConsumerInner {
                 if (!pullRequest.getMessageQueue().getTopic().startsWith(MixAll.RETRY_GROUP_TOPIC_PREFIX)) {
                     log.warn("execute the pull request exception", e);
                 }
-                //ÓĞÀ­È¡ÏûÏ¢µÄÒì³££¬ÑÓ³Ù3Ã¿ÃëÖØĞÂÀ­¡£
+                //æœ‰æ‹‰å–æ¶ˆæ¯çš„å¼‚å¸¸ï¼Œå»¶è¿Ÿ3æ¯ç§’é‡æ–°æ‹‰ã€‚
                 DefaultMQPushConsumerImpl.this.executePullRequestLater(pullRequest,
                     PullTimeDelayMillsWhenException);
             }
@@ -514,12 +514,12 @@ public class DefaultMQPushConsumerImpl implements MQConsumerInner {
 
         boolean commitOffsetEnable = false;
         long commitOffsetValue = 0L;
-        if (MessageModel.CLUSTERING == this.defaultMQPushConsumer.getMessageModel()) { //¼¯ÈºÏû·ÑÄ£Ê½£¬
+        if (MessageModel.CLUSTERING == this.defaultMQPushConsumer.getMessageModel()) { //é›†ç¾¤æ¶ˆè´¹æ¨¡å¼ï¼Œ
             //RemoteBrokerOffsetStore.readOffset
             commitOffsetValue =
                     this.offsetStore.readOffset(pullRequest.getMessageQueue(),
-                        ReadOffsetType.READ_FROM_MEMORY); //ÄÚ´æÎ»µãÆäÊµ»¹ÊÇ´ÓbrokerÍ¬²½µÃµ½µÄ¡£
-            if (commitOffsetValue > 0) { //À­È¡¹ıÒ»´ÎÏûÏ¢ÒÔºó£¬¾ÍÆô¶¯×Ô¶¯Ìá½»Ïû·ÑÎ»µãµ½broker.
+                        ReadOffsetType.READ_FROM_MEMORY); //å†…å­˜ä½ç‚¹å…¶å®è¿˜æ˜¯ä»brokeråŒæ­¥å¾—åˆ°çš„ã€‚
+            if (commitOffsetValue > 0) { //æ‹‰å–è¿‡ä¸€æ¬¡æ¶ˆæ¯ä»¥åï¼Œå°±å¯åŠ¨è‡ªåŠ¨æäº¤æ¶ˆè´¹ä½ç‚¹åˆ°broker.
                 commitOffsetEnable = true;
             }
         }
@@ -528,7 +528,7 @@ public class DefaultMQPushConsumerImpl implements MQConsumerInner {
         boolean classFilter = false;
         SubscriptionData sd =
                 this.rebalanceImpl.getSubscriptionInner().get(pullRequest.getMessageQueue().getTopic());
-        if (sd != null) { //  ÔÚÃ»ÓĞclass¹ıÂË²¢ÇÒÔÚÀ­È¡ÒÔºóÌá½»Ò»´Î¶©ÔÄ±í´ïÊ½£¬ Ôò¸ø¶©ÔÄ±í´ïÊ½¸³Öµ¡£
+        if (sd != null) { //  åœ¨æ²¡æœ‰classè¿‡æ»¤å¹¶ä¸”åœ¨æ‹‰å–ä»¥åæäº¤ä¸€æ¬¡è®¢é˜…è¡¨è¾¾å¼ï¼Œ åˆ™ç»™è®¢é˜…è¡¨è¾¾å¼èµ‹å€¼ã€‚
             if (this.defaultMQPushConsumer.isPostSubscriptionWhenPull() && !sd.isClassFilterMode()) {
                 subExpression = sd.getSubString();
             }
@@ -542,7 +542,7 @@ public class DefaultMQPushConsumerImpl implements MQConsumerInner {
             subExpression != null,// subscription
             classFilter // class filter
             );
-        try { //¿ªÊ¼´Óbroker¶ÔÓ¦µÄbrokerAddrÒì²½À­È¡ÏûÏ¢
+        try { //å¼€å§‹ä»brokerå¯¹åº”çš„brokerAddrå¼‚æ­¥æ‹‰å–æ¶ˆæ¯
             this.pullAPIWrapper.pullKernelImpl(//
                 pullRequest.getMessageQueue(), // 1
                 subExpression, // 2
@@ -603,7 +603,7 @@ public class DefaultMQPushConsumerImpl implements MQConsumerInner {
         return this.mQClientFactory.getMQAdminImpl().queryMessage(topic, key, maxNum, begin, end);
     }
 
-    //registerMessageListenerÖĞµ÷ÓÃ
+    //registerMessageListenerä¸­è°ƒç”¨
     public void registerMessageListener(MessageListener messageListener) {
         this.messageListenerInner = messageListener;
     }
@@ -618,27 +618,27 @@ public class DefaultMQPushConsumerImpl implements MQConsumerInner {
     public long searchOffset(MessageQueue mq, long timestamp) throws MQClientException {
         return this.mQClientFactory.getMQAdminImpl().searchOffset(mq, timestamp);
     }
-    //½áºÏSendMessageProcessor.consumerSendMsgBackÔÄ¶Á
+    //ç»“åˆSendMessageProcessor.consumerSendMsgBacké˜…è¯»
     // DefaultMQPushConsumerImpl.sendMessageBack
-    //×¢ÒâÕâÀï»áĞŞ¸Ätopic£¬ĞŞ¸ÄºóµÄtopicÎª RETRY_GROUP_TOPIC_PREFIX + ConsumerGroup
+    //æ³¨æ„è¿™é‡Œä¼šä¿®æ”¹topicï¼Œä¿®æ”¹åçš„topicä¸º RETRY_GROUP_TOPIC_PREFIX + ConsumerGroup
     public void sendMessageBack(MessageExt msg, int delayLevel, final String brokerName)
             throws RemotingException, MQBrokerException, InterruptedException, MQClientException {
         try {
             String brokerAddr =
                     (null != brokerName) ? this.mQClientFactory.findBrokerAddressInPublish(brokerName)
                             : RemotingHelper.parseSocketAddressAddr(msg.getStoreHost());
-            //½áºÏ½áºÏSendMessageProcessor.consumerSendMsgBackÔÄ¶Á
-            //Ïû·ÑÊ§°Ü£¬ÖØĞÂ´ò»ØÏûÏ¢µ½brokerÖĞ   ÕâÀï·¢ËÍµÄ±¨ÎÄµÄcode:CONSUMER_SEND_MSG_BACK£¬¶Ô¶ËÊÕµ½ºó£¬»á´´½¨ÖØÊÔ¶ÓÁĞRETRY_GROUP_TOPIC_PREFIX + consumer
+            //ç»“åˆç»“åˆSendMessageProcessor.consumerSendMsgBacké˜…è¯»
+            //æ¶ˆè´¹å¤±è´¥ï¼Œé‡æ–°æ‰“å›æ¶ˆæ¯åˆ°brokerä¸­   è¿™é‡Œå‘é€çš„æŠ¥æ–‡çš„code:CONSUMER_SEND_MSG_BACKï¼Œå¯¹ç«¯æ”¶åˆ°åï¼Œä¼šåˆ›å»ºé‡è¯•é˜Ÿåˆ—RETRY_GROUP_TOPIC_PREFIX + consumer
             this.mQClientFactory.getMQClientAPIImpl().consumerSendMessageBack(brokerAddr, msg,
                 this.defaultMQPushConsumer.getConsumerGroup(), delayLevel, 5000);
         }
 
-        catch (Exception e) { //Ïû·ÑÊ§°ÜµÄÏûÏ¢´ò»ØÖØÊÔ¶ÓÁĞÊ§°Ü£¬£¬ĞèÒªÖØĞÂ·¢ËÍµ½ÖØÊÔ¶ÓÁĞ
+        catch (Exception e) { //æ¶ˆè´¹å¤±è´¥çš„æ¶ˆæ¯æ‰“å›é‡è¯•é˜Ÿåˆ—å¤±è´¥ï¼Œï¼Œéœ€è¦é‡æ–°å‘é€åˆ°é‡è¯•é˜Ÿåˆ—
             log.error("sendMessageBack Exception, " + this.defaultMQPushConsumer.getConsumerGroup(), e);
 
-            //ÕâÀï·¢ËÍµÄ±¨ÎÄcodeÄ¬ÈÏÎªcode:SEND_MESSAGE£¬Òò´ËĞèÒª´øÉÏÖØÊÔ¶ÓÁĞÃû£¬¶ÔÓÚbrokerÀ´Ëµ¾ÍÏàµ±ÓÚÊÕµ½ÁËÒ»Ìõ·¢ÍùRETRY_GROUP_TOPIC_PREFIX + consumerµÄÏûÏ¢
+            //è¿™é‡Œå‘é€çš„æŠ¥æ–‡codeé»˜è®¤ä¸ºcode:SEND_MESSAGEï¼Œå› æ­¤éœ€è¦å¸¦ä¸Šé‡è¯•é˜Ÿåˆ—åï¼Œå¯¹äºbrokeræ¥è¯´å°±ç›¸å½“äºæ”¶åˆ°äº†ä¸€æ¡å‘å¾€RETRY_GROUP_TOPIC_PREFIX + consumerçš„æ¶ˆæ¯
             Message newMsg =
-                    //ĞŞ¸Ätopic£¬ĞŞ¸ÄºóµÄtopicÎª RETRY_GROUP_TOPIC_PREFIX + consumer  ĞèÒªÖØĞÂ·¢ËÍ
+                    //ä¿®æ”¹topicï¼Œä¿®æ”¹åçš„topicä¸º RETRY_GROUP_TOPIC_PREFIX + consumer  éœ€è¦é‡æ–°å‘é€
                     new Message(MixAll.getRetryTopic(this.defaultMQPushConsumer.getConsumerGroup()),
                         msg.getBody());
 
@@ -713,12 +713,12 @@ public class DefaultMQPushConsumerImpl implements MQConsumerInner {
             }
             else {
                 switch (this.defaultMQPushConsumer.getMessageModel()) {
-                case BROADCASTING: //¹ã²¥Ïû·ÑÄ£Ê½£¬ Î»µãÄ¬ÈÏ´æ´¢ÔÚ±¾µØ¡£
+                case BROADCASTING: //å¹¿æ’­æ¶ˆè´¹æ¨¡å¼ï¼Œ ä½ç‚¹é»˜è®¤å­˜å‚¨åœ¨æœ¬åœ°ã€‚
                     this.offsetStore =
                             new LocalFileOffsetStore(this.mQClientFactory,
                                 this.defaultMQPushConsumer.getConsumerGroup());
                     break;
-                case CLUSTERING: //¼¯ÈºÏû·ÑÄ£Ê½£¬ Î»µãÄ¬ÈÏ´æ´¢ÔÚbroker .Î»µã´ÓbrokerÀ­È¡µ½clientÒÔºó»á»º´æÔÚ±¾µØ¡£
+                case CLUSTERING: //é›†ç¾¤æ¶ˆè´¹æ¨¡å¼ï¼Œ ä½ç‚¹é»˜è®¤å­˜å‚¨åœ¨broker .ä½ç‚¹ä»brokeræ‹‰å–åˆ°clientä»¥åä¼šç¼“å­˜åœ¨æœ¬åœ°ã€‚
                     this.offsetStore =
                             new RemoteBrokerOffsetStore(this.mQClientFactory,
                                 this.defaultMQPushConsumer.getConsumerGroup());
@@ -727,8 +727,8 @@ public class DefaultMQPushConsumerImpl implements MQConsumerInner {
                     break;
                 }
             }
-            this.offsetStore.load(); /* RemoteBrokerOffsetStore->load É¶Ò²›]¸É */
-            /* push consumerÄ£Ê½µÄnewŒ¦ÏóÔÚconsumer.registerMessageListener(new MessageListenerConcurrently() { */
+            this.offsetStore.load(); /* RemoteBrokerOffsetStore->load å•¥ä¹Ÿæ²’å¹² */
+            /* push consumeræ¨¡å¼çš„newå°è±¡åœ¨consumer.registerMessageListener(new MessageListenerConcurrently() { */
             if (this.getMessageListenerInner() instanceof MessageListenerOrderly) {
                 this.consumeOrderly = true;
                 this.consumeMessageService =
@@ -737,13 +737,13 @@ public class DefaultMQPushConsumerImpl implements MQConsumerInner {
             }
             else if (this.getMessageListenerInner() instanceof MessageListenerConcurrently) {
                 this.consumeOrderly = false;
-                /* newÒ»¸öConsumeMessageConcurrentlyServiceÀà */
+                /* newä¸€ä¸ªConsumeMessageConcurrentlyServiceç±» */
                 this.consumeMessageService =
                         new ConsumeMessageConcurrentlyService(this,
                             (MessageListenerConcurrently) this.getMessageListenerInner());
             }
 
-            this.consumeMessageService.start(); //ConsumeMessageConcurrentlyService->startÎª¿Õ£¬²»Ö´ĞĞÈÎºÎ²Ù×÷
+            this.consumeMessageService.start(); //ConsumeMessageConcurrentlyService->startä¸ºç©ºï¼Œä¸æ‰§è¡Œä»»ä½•æ“ä½œ
 
             boolean registerOK =
                     mQClientFactory.registerConsumer(this.defaultMQPushConsumer.getConsumerGroup(), this);
@@ -757,7 +757,7 @@ public class DefaultMQPushConsumerImpl implements MQConsumerInner {
             }
 
             //ProxyServer.doSubscribe->consumer.start->mQClientFactory.start
-            mQClientFactory.start(); /* ÕæÕıµÄ¿Í‘ô¶Ë·ş„Õ¶ËÍ¨ĞÅÔÚÔ“½Ó¿Ú */
+            mQClientFactory.start(); /* çœŸæ­£çš„å®¢æˆ¶ç«¯æœå‹™ç«¯é€šä¿¡åœ¨è©²æ¥å£ */
             log.info("the consumer [{}] start OK.", this.defaultMQPushConsumer.getConsumerGroup());
             this.serviceState = ServiceState.RUNNING;
             break;
@@ -771,11 +771,11 @@ public class DefaultMQPushConsumerImpl implements MQConsumerInner {
             break;
         }
 
-        //´ÓNS»ñÈ¡Ã¿Ò»¸ötopicµÄÂ·ÓÉĞÅÏ¢£¬²¢¸üĞÂpub  ,subĞÅÏ¢¡£
+        //ä»NSè·å–æ¯ä¸€ä¸ªtopicçš„è·¯ç”±ä¿¡æ¯ï¼Œå¹¶æ›´æ–°pub  ,subä¿¡æ¯ã€‚
         this.updateTopicSubscribeInfoWhenSubscriptionChanged();
-        //¸øbroker ·¢ËÍproducer ,consumerµÄĞÄÌøĞÅÏ¢¡£
+        //ç»™broker å‘é€producer ,consumerçš„å¿ƒè·³ä¿¡æ¯ã€‚
         this.mQClientFactory.sendHeartbeatToAllBrokerWithLock();
-        //ÒòÎªÓĞĞÂµÄÏû·ÑÕß¼ÓÈë£¬´¥·¢Ò»´Î¡£
+        //å› ä¸ºæœ‰æ–°çš„æ¶ˆè´¹è€…åŠ å…¥ï¼Œè§¦å‘ä¸€æ¬¡ã€‚
         this.mQClientFactory.rebalanceImmediately();
     }
 
@@ -907,7 +907,7 @@ public class DefaultMQPushConsumerImpl implements MQConsumerInner {
         }
     }
 
-    /* ×¢ÒâcopySubscriptionºÍsubscribeµÄÇø±ğ */
+    /* æ³¨æ„copySubscriptionå’Œsubscribeçš„åŒºåˆ« */
     private void copySubscription() throws MQClientException {
         try {
             Map<String, String> sub = this.defaultMQPushConsumer.getSubscription();
@@ -977,7 +977,7 @@ public class DefaultMQPushConsumerImpl implements MQConsumerInner {
         }
     }
 
-    /* ×¢ÒâcopySubscriptionºÍsubscribeµÄÇø±ğ */
+    /* æ³¨æ„copySubscriptionå’Œsubscribeçš„åŒºåˆ« */
     public void subscribe(String topic, String fullClassName, String filterClassSource)
             throws MQClientException {
         try {

@@ -25,7 +25,7 @@ import com.alibaba.rocketmq.remoting.protocol.RemotingSerializable;
 
 
 /**
- * Í¨¹ı¼Ì³Ğ{@link RemotingSerializable} ÊµÏÖtopicÅäÖÃµÄjson ĞòÁĞ»¯¡£
+ * é€šè¿‡ç»§æ‰¿{@link RemotingSerializable} å®ç°topicé…ç½®çš„json åºåˆ—åŒ–ã€‚
  */
 public class TopicConfigSerializeWrapper extends RemotingSerializable {
     private ConcurrentHashMap<String, TopicConfig> topicConfigTable =

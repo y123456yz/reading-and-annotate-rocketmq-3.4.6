@@ -17,7 +17,7 @@
 package com.alibaba.rocketmq.common.sysflag;
 
 /**
- * @author shijia.wxr  ÊÂÎñµÈÏà¹Ø×´Ì¬
+ * @author shijia.wxr  äº‹åŠ¡ç­‰ç›¸å…³çŠ¶æ€
  */
 public class MessageSysFlag {
     public final static int CompressedFlag = (0x1 << 0);

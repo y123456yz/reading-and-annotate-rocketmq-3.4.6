@@ -30,7 +30,7 @@ public class PullResultExt extends PullResult {
     private final long suggestWhichBrokerId;
     private byte[] messageBinary;
 
-    //MQClientAPIImpl.processPullResponse ÖĞµ÷ÓÃ¸Ã½Ó¿Ú£¬²¢¸³ÖµÏà¹Ø³ÉÔ±±äÁ¿
+    //MQClientAPIImpl.processPullResponse ä¸­è°ƒç”¨è¯¥æ¥å£ï¼Œå¹¶èµ‹å€¼ç›¸å…³æˆå‘˜å˜é‡
     public PullResultExt(PullStatus pullStatus, long nextBeginOffset, long minOffset, long maxOffset,
             List<MessageExt> msgFoundList, final long suggestWhichBrokerId, final byte[] messageBinary) {
         super(pullStatus, nextBeginOffset, minOffset, maxOffset, msgFoundList);

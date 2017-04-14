@@ -36,7 +36,7 @@ public class PullRequestHoldService extends ServiceThread {
     private static final String TOPIC_QUEUEID_SEPARATOR = "@";
 
     /**
-     * ¾Û¼¯ÁËÒ»×é¶Ôtopic@queueidÖ¸¶¨µÄ¶ÓÁĞµÄÀ­ÏûÏ¢ÇëÇó¡£
+     * èšé›†äº†ä¸€ç»„å¯¹topic@queueidæŒ‡å®šçš„é˜Ÿåˆ—çš„æ‹‰æ¶ˆæ¯è¯·æ±‚ã€‚
      */
     private ConcurrentHashMap<String/* topic@queueid */, ManyPullRequest> pullRequestTable =
             new ConcurrentHashMap<String, ManyPullRequest>(1024);
@@ -135,7 +135,7 @@ public class PullRequestHoldService extends ServiceThread {
                     replayList.add(request);
                 }
 
-                if (!replayList.isEmpty()) { //ÓĞĞÂÏûÏ¢Ğ´Èë£¬ µ«ÊÇÏû·Ñ¶ÓÁĞµÄ×î´óÂß¼­Î»µãÈÔÈ»±ÈÇëÇóµÄÎ»µãÒªĞ¡£¬ÔòÖØĞÂ¼ÓÈëµ½Ïû·Ñ¶ÓÁĞµÄpullRequestÁĞ±íÖĞÈ¥ £¬µÈ´ıÏÂÒ»ÂÖ´¦Àí¡£
+                if (!replayList.isEmpty()) { //æœ‰æ–°æ¶ˆæ¯å†™å…¥ï¼Œ ä½†æ˜¯æ¶ˆè´¹é˜Ÿåˆ—çš„æœ€å¤§é€»è¾‘ä½ç‚¹ä»ç„¶æ¯”è¯·æ±‚çš„ä½ç‚¹è¦å°ï¼Œåˆ™é‡æ–°åŠ å…¥åˆ°æ¶ˆè´¹é˜Ÿåˆ—çš„pullRequeståˆ—è¡¨ä¸­å» ï¼Œç­‰å¾…ä¸‹ä¸€è½®å¤„ç†ã€‚
                     mpr.addPullRequest(replayList);
                 }
             }
