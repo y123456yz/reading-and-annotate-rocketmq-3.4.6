@@ -265,7 +265,7 @@ public class TopicConfigManager extends ConfigManager {
                     topicConfig.setTopicSysFlag(topicSysFlag);
 
                     log.info("create new topic {}", topicConfig);
-                    this.topicConfigTable.put(topic, topicConfig);
+                    this.topicConfigTable.put(topic, topicConfig); //存入topicConfigTable
                     createNew = true;
                     this.dataVersion.nextVersion();
                     this.persist(); //把topic订阅信息持久化到 /root/store/config/subscriptionGroup.json

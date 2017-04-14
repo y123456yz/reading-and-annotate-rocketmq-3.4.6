@@ -41,8 +41,9 @@ import com.alibaba.rocketmq.remoting.exception.RemotingException;
 
 /**
  * Remote storage implementation
- *
- * @author shijia.wxr
+ * MQClientInstance.startScheduledTask->persistConsumerOffset->MQClientInstance.startScheduledTask->persistConsumerOffset
+ * 定期向broker汇报位点信息
+ *  @author shijia.wxr
  */
 public class RemoteBrokerOffsetStore implements OffsetStore {
     private final static Logger log = ClientLogger.getLog();
@@ -121,7 +122,7 @@ public class RemoteBrokerOffsetStore implements OffsetStore {
         return -1;
     }
 
-
+    //调用在MQClientInstance.startScheduledTask->persistConsumerOffset->MQClientInstance.startScheduledTask->persistConsumerOffset
     @Override
     public void persistAll(Set<MessageQueue> mqs) {
         if (null == mqs || mqs.isEmpty())

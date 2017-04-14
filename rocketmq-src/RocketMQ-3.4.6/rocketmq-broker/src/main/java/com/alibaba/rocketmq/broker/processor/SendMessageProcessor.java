@@ -86,6 +86,7 @@ public class SendMessageProcessor extends AbstractSendMessageProcessor implement
         }
     }
 
+    //配合ConsumeMessageConcurrentlyService.processConsumeResult阅读
     //SendMessageProcessor.consumerSendMsgBack(服务端broker收) 和 MQClientAPIImpl.consumerSendMessageBack(客户端发) 对应
     private RemotingCommand consumerSendMsgBack(final ChannelHandlerContext ctx, final RemotingCommand request)
             throws RemotingCommandException {
@@ -177,11 +178,11 @@ public class SendMessageProcessor extends AbstractSendMessageProcessor implement
 
         if (msgExt.getReconsumeTimes() >= subscriptionGroupConfig.getRetryMaxTimes() //超过多少次则写入死信队列
                 || delayLevel < 0) { //delayLevel小于0，说明不需要消费了
-            newTopic = MixAll.getDLQTopic(requestHeader.getGroup());
+            newTopic = MixAll.getDLQTopic(requestHeader.getGroup()); //死信队列名称:DLQ_GROUP_TOPIC_PREFIX + consumerGroup;
             queueIdInt = Math.abs(this.random.nextInt() % 99999999) % DLQ_NUMS_PER_GROUP;
 
             //死信队列这里只可写，不可读
-            topicConfig = this.brokerController.getTopicConfigManager().createTopicInSendMessageBackMethod(newTopic, //
+            topicConfig = this.brokerController.getTopicConfigManager().createTopicInSendMessageBackMethod(newTopic,
                 DLQ_NUMS_PER_GROUP,
                 PermName.PERM_WRITE, 0
                 ); //创建重试topic，如果已经存在则直接返回
@@ -217,6 +218,10 @@ public class SendMessageProcessor extends AbstractSendMessageProcessor implement
         //msgExt是通过客户端发送过来的位点offset从commitlog中找到的消息，originMsgId也就是通过位点找到的这条消息的msgid
         String originMsgId = MessageAccessor.getOriginMessageId(msgExt);
         MessageAccessor.setOriginMessageId(msgInner, UtilAll.isBlank(originMsgId) ? msgExt.getMsgId() : originMsgId);
+
+        //DefaultMessageStore.putMessage  从这里可以看出虽然是消费失败的消息，客户端通过 code：CONSUMER_SEND_MSG_BACK发送回broker
+        //虽然这调消息的body和原始消息body内容一样，但是broker还是把当做是一条新的消息，存入队列中，如果多次消费失败，则从客户端打回
+        //到broker后则会重复存入队列多少次，每条都占用空间
 
         //DefaultMessageStore.putMessage
         PutMessageResult putMessageResult = this.brokerController.getMessageStore().putMessage(msgInner);

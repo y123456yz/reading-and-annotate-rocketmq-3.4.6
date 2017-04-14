@@ -31,13 +31,14 @@ import java.util.concurrent.locks.ReentrantLock;
 
 
 /**
- * @author shijia.wxr
+ * @author shijia.wxr  写消息到commitlog时会进行相关统计，见
  */
 public class StoreStatsService extends ServiceThread {
     private static final Logger log = LoggerFactory.getLogger(LoggerName.StoreLoggerName);
     private static final int FrequencyOfSampling = 1000;
     private static final int MaxRecordsOfSampling = 60 * 10;
     private static int PrintTPSInterval = 60 * 1;
+    //写消息到commitlog失败的次数
     private final AtomicLong putMessageFailedTimes = new AtomicLong(0);
     private final Map<String, AtomicLong> putMessageTopicTimesTotal =
             new ConcurrentHashMap<String, AtomicLong>(128);
@@ -46,6 +47,7 @@ public class StoreStatsService extends ServiceThread {
     private final AtomicLong getMessageTimesTotalFound = new AtomicLong(0);
     private final AtomicLong getMessageTransferedMsgCount = new AtomicLong(0);
     private final AtomicLong getMessageTimesTotalMiss = new AtomicLong(0);
+    //写消息到commitlog文件的时间统计，见//DefaultMessageStore.putMessage
     private final AtomicLong[] putMessageDistributeTime = new AtomicLong[7];
     private final LinkedList<CallSnapshot> putTimesList = new LinkedList<CallSnapshot>();
     private final LinkedList<CallSnapshot> getTimesFoundList = new LinkedList<CallSnapshot>();

@@ -522,6 +522,11 @@ public class CommitLog {
 
 
     /**
+     * 所有消息都存在一个单一的CommitLog文件里面，然后有后台线程异步的同步到ConsumeQueue，再由Consumer进行消费
+     * 参考http://blog.csdn.net/chunlongyu/article/details/54576649
+     *
+     *
+     * 写消息到commitlog
      * @param msg
      * @return  commitlog消息格式参考http://blog.csdn.net/chunlongyu/article/details/54576649
      */
@@ -564,8 +569,6 @@ public class CommitLog {
                 msg.setQueueId(queueId);
             }
         }
-
-        //从这里可以看出每接收到一条重试消息都会追加到对应的MapedFile中(同时MapedFile对应的磁盘文件中)， 而不会去管是否是重复的消息
 
         long eclipseTimeInLock = 0;
         //用读锁获取到commitlog的最后 一个mapfile

@@ -224,6 +224,11 @@ public class ConsumeMessageConcurrentlyService implements ConsumeMessageService 
      * 2） 重新投递回去失败， 则把这批重投失败的消息继续交给业务处理，与此同时， 队列的位点会在重投失败的消息中选择一个小的位点。
      * 比如1,2,3,4,5 中2，3重投失败，则位点会变成2， 这里就存在一个重复消费的问题（本身rocketmq不保证消息不重， 但一定不丢。）
      *
+     * 从这里看出，虽然该msg消费失败了，但是只要把该msg打回broker成功，则还是会更新该msg的消费位点向后移动的，当broker收到这条
+     * 打回成功的消息后，会重新写一条消息到broker中，下次客户端就会再次拉取这条打回的消息，之前消费失败的消息由于移动了其offset，因此
+     * 下次不会再次拉取该消息。
+     *
+     * 定期通知broker进行位点更新见//MQClientInstance.startScheduledTask->persistConsumerOffset->MQClientInstance.startScheduledTask->persistConsumerOffset
      *
      * @param status
      * @param context
@@ -300,7 +305,9 @@ public class ConsumeMessageConcurrentlyService implements ConsumeMessageService 
 
         //getMsgs()获取到的msgs链表中存储的是消费失败打回broker成功的msg和消费成功的msg
         long offset = consumeRequest.getProcessQueue().removeMessage(consumeRequest.getMsgs());
-        if (offset >= 0) { //位点更新
+        if (offset >= 0) {
+            //客户端定时通知broker中的topic queue进行位点更新
+            //位点更新，见MQClientInstance.startScheduledTask->persistConsumerOffset->MQClientInstance.startScheduledTask->persistConsumerOffset
             this.defaultMQPushConsumerImpl.getOffsetStore().updateOffset(consumeRequest.getMessageQueue(),
                 offset, true);
         }

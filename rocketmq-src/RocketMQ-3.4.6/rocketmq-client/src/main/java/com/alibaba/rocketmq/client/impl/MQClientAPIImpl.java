@@ -762,7 +762,9 @@ public class MQClientAPIImpl {
 
         requestHeader.setGroup(consumerGroup);
         requestHeader.setOriginTopic(msg.getTopic());
-        requestHeader.setOffset(msg.getCommitLogOffset());
+        //注意，虽然该条msg客户端消费失败了，但是还是把该消息在commitlog中的offset穿过去了，这样broker收到后就可以通过该offset
+        // 从commitlog中找到对应的msg，从其中取出body等信息
+        requestHeader.setOffset(msg.getCommitLogOffset()); //
         requestHeader.setDelayLevel(delayLevel);
         requestHeader.setOriginMsgId(msg.getMsgId());
 

@@ -368,6 +368,10 @@ public class ConsumeQueue {
 
 
     /**
+     * 所有消息都存在一个单一的CommitLog文件里面，然后有后台线程异步的同步到ConsumeQueue，再由Consumer进行消费
+     * 参考http://blog.csdn.net/chunlongyu/article/details/54576649
+     *
+     *
      * 往消费队列(CQ)中写入索引项。
      * @param offset commitlog offset
      * @param size commitlog中消息item的长度。

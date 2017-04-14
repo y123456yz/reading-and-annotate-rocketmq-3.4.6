@@ -20,7 +20,7 @@ import com.alibaba.rocketmq.common.constant.PermName;
 
 
 /**
- * @author shijia.wxr
+ * @author shijia.wxr  创建topic返回的就是该类，见 createTopicInSendMessageBackMMath
  */
 public class TopicConfig {
     public static int DefaultReadQueueNums = 16;

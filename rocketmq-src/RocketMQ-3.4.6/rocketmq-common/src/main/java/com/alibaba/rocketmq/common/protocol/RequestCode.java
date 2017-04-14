@@ -24,7 +24,7 @@ package com.alibaba.rocketmq.common.protocol;
  */
 
  //通信协议注册见 registerProcessor  NettyRemotingClient 和 NettyRemotingServer 中的initChannel执行各种命令回调
-public class RequestCode {
+public class RequestCode { //报文头部header data部分的code:  代表这些标识
     public static final int SEND_MESSAGE = 10; //SEND_MESSAGE_V2 和 SEND_MESSAGE都是发送消息
     public static final int PULL_MESSAGE = 11;
     public static final int QUERY_MESSAGE = 12;
