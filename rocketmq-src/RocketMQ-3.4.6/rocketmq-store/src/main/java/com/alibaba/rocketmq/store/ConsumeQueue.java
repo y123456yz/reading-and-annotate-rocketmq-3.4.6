@@ -54,7 +54,8 @@ import java.util.List;
  * @author shijia.wxr
  *
  * // 异步线程分发 commitlog 文件中的消息到 consumeQueue 或者分发到 indexService 见 ReputMessageService
- *
+ * 为什么有了commitlog还要加个consumeQueue呢？ 因为commitlog只是不停的往里面写入消息，如果没有consumeQueue，你要是想获取某个队列上某个queueid下的第n条消息的话
+ * 你就必须遍历整个commitlog,效率低下
  */
 public class ConsumeQueue {
     //8字节commitlog offset + 4字节commit log item size + 8字节message tag hashcode.
@@ -71,7 +72,7 @@ public class ConsumeQueue {
     private final String storePath;
     private final int mapedFileSize; //通过 MessageStoreConfig.getMapedFileSizeConsumeQueue 计算，默认为30W个 CQStoreUnitSize大小
     /**
-     * 最大commitlog的位点。
+     * 最大位点，在putMessagePostionInfo更新
      */
     private long maxPhysicOffset = -1;
     /**
@@ -382,7 +383,7 @@ public class ConsumeQueue {
      * @param tagsCode 过滤tag的hashcode.
      * @param storeTimestamp 消息存储时间
      * @param logicOffset  CQ的逻辑位点。
-     */
+     */ //把commitlog中的一条消息的offset size  tagscode写入到consumeQueue中
     public void putMessagePostionInfoWrapper(long offset, int size, long tagsCode, long storeTimestamp,
             long logicOffset) {
         final int MaxRetries = 30;
@@ -418,6 +419,7 @@ public class ConsumeQueue {
         }
 
         this.byteBufferIndex.flip();
+        //8字节commitlog offset + 4字节commit log item size + 8字节message tag hashcode.
         this.byteBufferIndex.limit(CQStoreUnitSize);
         this.byteBufferIndex.putLong(offset);
         this.byteBufferIndex.putInt(size);
@@ -453,6 +455,7 @@ public class ConsumeQueue {
             }
 
             this.maxPhysicOffset = offset;
+            //把8字节commitlog offset + 4字节commit log item size + 8字节message tag hashcode.写入mapfile
             return mapedFile.appendMessage(this.byteBufferIndex.array());
         }
 

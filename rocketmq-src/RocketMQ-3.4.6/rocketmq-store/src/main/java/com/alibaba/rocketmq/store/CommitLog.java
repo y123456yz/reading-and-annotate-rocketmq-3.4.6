@@ -59,6 +59,8 @@ import java.util.concurrent.TimeUnit;
  * commitlog文件中每条消息存储格式可以参考:http://blog.csdn.net/xxxxxx91116/article/details/50333161
  *
  * // 异步线程分发 commitlog 文件中的消息到 consumeQueue 或者分发到 indexService 见 ReputMessageService
+ * 为什么有了commitlog还要加个consumeQueue呢？ 因为commitlog只是不停的往里面写入消息，如果没有consumeQueue，你要是想获取某个队列上某个queueid下的第n条消息的话
+ * 你就必须遍历整个commitlog,效率低下
  */
 public class CommitLog {
     private static final Logger log = LoggerFactory.getLogger(LoggerName.StoreLoggerName);
@@ -243,6 +245,9 @@ public class CommitLog {
      * 
      * @return 0 Come the end of the file // >0 Normal messages // -1 Message
      *         checksum failure
+     *
+     *  commitlog文件中每条消息的存储格式见http://blog.csdn.net/chunlongyu/article/details/54576649
+     *  解析byteBuffer 内容，然后根据解析出的内容信息构建 DispatchRequest 类
      */
     public DispatchRequest checkMessageAndReturnSize(java.nio.ByteBuffer byteBuffer, final boolean checkCRC, final boolean readBody) {
         try {

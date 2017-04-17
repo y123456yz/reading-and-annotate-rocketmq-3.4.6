@@ -32,6 +32,37 @@ import java.util.*;
 
 
 /**
+ *  注意sh mqadmin brokerConsumeStats(类BrokerConsumeStatsSubCommad) 和sh mqadmin ConsumeStats(ConsumerStatusSubCommand)的区别
+ * [root@x-x-5 bin]# sh mqadmin brokerConsumeStats -b  10.2.223.165:10911 -n 10.2.223.158:9876 -t 1000
+ #Topic                            #Group                            #Broker Name                      #QID  #Broker Offset        #Consumer Offset      #Diff                 #LastTime
+ %RETRY%umbrella-binlog-consumer-  umbrella-binlog-consumer-group    broker-a                          0     19                    19                    0                     2017-03-29 10:18:49
+ %RETRY%tradeWaitShippingGroupNam  tradeWaitShippingGroupName        broker-a                          0     68                    68                    0                     2017-03-27 20:21:54
+ topic-prod-tradeservice-do        tradeWaitShippingGroupName        broker-a                          0     141                   141                   0                     2017-04-01 10:52:40
+ topic-prod-tradeservice-do        tradeWaitShippingGroupName        broker-a                          1     126                   126                   0                     2017-03-28 17:42:58
+ topic-prod-tradeservice-do        tradeWaitShippingGroupName        broker-a                          2     124                   124                   0                     2017-03-28 17:42:58
+ topic-prod-tradeservice-do        tradeWaitShippingGroupName        broker-a                          3     122                   122                   0                     2017-03-28 17:43:03
+ topic_checkin_remind              CheckinRemind_16_10               broker-a                          0     32                    28                    4                     2017-03-16 21:00:47
+ topic_checkin_remind              CheckinRemind_16_10               broker-a                          1     31                    27                    4                     2017-03-16 21:00:47
+ topic_checkin_remind              CheckinRemind_16_10               broker-a                          2     28                    24                    4                     2017-03-16 21:00:28
+ topic_checkin_remind              CheckinRemind_16_10               broker-a                          3     26                    22                    4                     2017-03-16 21:00:28
+ %RETRY%CheckinRemind_16_10        CheckinRemind_16_10               broker-a                          0     9                     9                     0                     2017-03-16 16:34:22
+ topic-prod-member-checkin         CheckinRemind_16_30               broker-a                          0     20                    20                    0                     2017-03-24 15:55:57
+ topic-prod-member-checkin         CheckinRemind_16_30               broker-a                          1     20                    20                    0                     2017-03-24 15:55:57
+ topic-prod-member-checkin         CheckinRemind_16_30               broker-a                          2     12                    12                    0                     2017-03-23 16:58:29
+ topic-prod-member-checkin         CheckinRemind_16_30               broker-a                          3     12                    12                    0                     2017-03-23 16:58:36
+ topic-prod-member-checkin         CheckinRemind_16_30               broker-a                          4     8                     8                     0                     2017-03-23 17:00:49
+ topic-prod-member-checkin         CheckinRemind_16_30               broker-a                          5     8                     8                     0                     2017-03-23 17:00:49
+ topic-prod-promotion-coupon       risk_event_2                      broker-a                          0     245                   239                   6                     2017-04-17 13:23:12
+ topic-prod-promotion-coupon       risk_event_2                      broker-a                          1     297                   294                   3                     2017-04-17 13:57:31
+ topic-prod-promotion-coupon       risk_event_2                      broker-a                          2     255                   252                   3                     2017-04-17 13:33:29
+ topic-prod-promotion-coupon       risk_event_2                      broker-a                          3     286                   282                   4                     2017-04-17 13:55:54
+ topic-prod-promotion-coupon       risk_event                        broker-a                          0     245                   239                   6                     2017-04-17 13:23:12
+ topic-prod-promotion-coupon       risk_event                        broker-a                          1     297                   293                   4                     2017-04-17 13:05:16
+ topic-prod-promotion-coupon       risk_event                        broker-a                          2     255                   252                   3                     2017-04-17 13:33:29
+ topic-prod-promotion-coupon       risk_event                        broker-a                          3     286                   280                   6                     2017-04-17 13:20:33
+ topic-prod-member-checkin         CheckinRemind_15_30               broker-a                          0     20                    20                    0                     2017-03-24 15:55:57
+ topic-prod-member-checkin         CheckinRemind_15_30               broker-a                          1     20                    20                    0                     2017-03-24 15:55:57
+ *
  * @author shijia.wxr
  */
 public class BrokerConsumeStatsSubCommad implements SubCommand {

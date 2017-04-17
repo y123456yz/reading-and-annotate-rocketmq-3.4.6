@@ -1,0 +1,12 @@
+com\alibaba\rocketmq\namesrv\NamesrvStartup$1.class
+com\alibaba\rocketmq\namesrv\NamesrvStartup.class
+com\alibaba\rocketmq\namesrv\kvconfig\KVConfigSerializeWrapper.class
+com\alibaba\rocketmq\namesrv\routeinfo\RouteInfoManager.class
+com\alibaba\rocketmq\namesrv\routeinfo\BrokerLiveInfo.class
+com\alibaba\rocketmq\namesrv\routeinfo\BrokerHousekeepingService.class
+com\alibaba\rocketmq\namesrv\NamesrvController$1.class
+com\alibaba\rocketmq\namesrv\processor\DefaultRequestProcessor.class
+com\alibaba\rocketmq\namesrv\kvconfig\KVConfigManager.class
+com\alibaba\rocketmq\namesrv\processor\ClusterTestRequestProcessor.class
+com\alibaba\rocketmq\namesrv\NamesrvController$2.class
+com\alibaba\rocketmq\namesrv\NamesrvController.class

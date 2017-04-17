@@ -113,7 +113,6 @@ public abstract class AbstractSendMessageProcessor implements NettyRequestProces
         return requestHeader;
     }
 
-
     protected MessageExtBrokerInner buildInnerMsg(final ChannelHandlerContext ctx,
             final SendMessageRequestHeader requestHeader, final byte[] body, TopicConfig topicConfig) {
         int queueIdInt = requestHeader.getQueueId();

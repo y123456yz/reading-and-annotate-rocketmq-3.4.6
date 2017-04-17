@@ -168,7 +168,7 @@ public class PullMessageProcessor implements NettyRequestProcessor {
         return byteBuffer.array();
     }
 
-
+    //PULL_MESSAGE 走到这里
     private RemotingCommand processRequest(final Channel channel, RemotingCommand request,
             boolean brokerAllowSuspend) throws RemotingCommandException {
         RemotingCommand response = RemotingCommand.createResponseCommand(PullMessageResponseHeader.class);
@@ -241,7 +241,7 @@ public class PullMessageProcessor implements NettyRequestProcessor {
         }
 
         SubscriptionData subscriptionData = null;
-        if (hasSubscriptionFlag) { //消费者 有订阅表达式或者有groovy匹配脚本。
+        if (hasSubscriptionFlag) { //消费者 有订阅表达式
             try {
                 subscriptionData =
                         FilterAPI.buildSubscriptionData(requestHeader.getConsumerGroup(),
@@ -256,7 +256,7 @@ public class PullMessageProcessor implements NettyRequestProcessor {
                 return response;
             }
         }
-        else { //消费者没有 在某一次拉取时提交订阅表达式和groovy匹配脚本。
+        else { //消费者没有 在某一次拉取时提交订阅表达式。
             //则获取消费者分组的配置信息。
             ConsumerGroupInfo consumerGroupInfo =
                     this.brokerController.getConsumerManager().getConsumerGroupInfo(

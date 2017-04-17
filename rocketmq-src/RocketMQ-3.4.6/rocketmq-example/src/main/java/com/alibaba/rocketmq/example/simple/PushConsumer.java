@@ -29,7 +29,7 @@ import java.util.List;
     /*
     *
 1.PullMessageService.run注册 PullRequest 来向broker拉取消息
-上面的PullMessageService.run拉取到消息后，继续以下步骤:
+上面的 PullMessageService.run 拉取到消息后，继续以下步骤:
 1. DefaultMQPushConsumerImpl.pullMessage中注册异步回调接口 pullCallback.onSuccess
 2.pullMessageAsync->pullCallback.onSuccess  netty异步获取消息，走到这里开始执行步骤1的回调run
 3.PullAPIWrapper.processPullResult 取出匹配TAG的消息存入 PullResult.msgFoundList列表
@@ -82,8 +82,6 @@ public class PushConsumer {
         DefaultMQPushConsumer consumer = new DefaultMQPushConsumer("yyzGroup2");
         consumer.setNamesrvAddr("10.2.223.157:9876;10.2.223.158:9876;10.2.223.159:9876");
        // consumer.setNamesrvAddr("10.2.223.228:9876");
-        // groovyScript = "import groovy.json.JsonSlurper \n def fullTradenfo = new JsonSlurper().parseText(msgJsonContent) \n def fullOrderInfo = fullTradeInfo.orders[0] \n return fullOrderInfo.boolFightGroup||fullOrderInfo.boolFightGroupPresell";
-
         //consumer.subscribe("my-topic-2", "*", new GroovyScript(groovyScript));
         consumer.setConsumeFromWhere(ConsumeFromWhere.CONSUME_FROM_LAST_OFFSET);
         //consumer.setMessageModel(MessageModel.CLUSTERING);

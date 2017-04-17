@@ -35,6 +35,7 @@ import java.util.TreeMap;
 
 
 /**
+ * 注意sh mqadmin brokerConsumeStats(类BrokerConsumeStatsSubCommad) 和sh mqadmin ConsumeStats(ConsumerStatusSubCommand)的区别
  * @author shijia.wxr
  */
 public class ConsumerStatusSubCommand implements SubCommand {

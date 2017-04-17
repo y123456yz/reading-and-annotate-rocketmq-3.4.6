@@ -80,7 +80,7 @@ public class SendMessageProcessor extends AbstractSendMessageProcessor implement
             }
             mqtraceContext = buildMsgContext(ctx, requestHeader);
             this.executeSendMessageHookBefore(ctx, request, mqtraceContext);
-            //消息处理
+            //消息处理  把接收的晓得写入commitlog等也是在这里面
             final RemotingCommand response = this.sendMessage(ctx, request, mqtraceContext, requestHeader);
             this.executeSendMessageHookAfter(response, mqtraceContext);
             return response;

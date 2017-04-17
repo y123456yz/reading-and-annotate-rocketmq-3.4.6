@@ -49,6 +49,7 @@ public class DispatchRequest {
     //consumequeue文件存储单元格式:CommitLog Offset + Size +Message Tag HashCode
     private final long commitLogOffset; //consumequeue文件存储单元格式:CommitLog Offset + Size +Message Tag HashCode中的offset
     private final int msgSize;//consumequeue文件存储单元格式:CommitLog Offset + Size +Message Tag HashCode中的size
+    //tagsString2tagsCode  发送消息的时候带的TAG做HASH
     private final long tagsCode;//consumequeue文件存储单元格式:CommitLog Offset + Size +Message Tag HashCode中的Message Tag HashCode
 
     private final long storeTimestamp;
@@ -58,7 +59,7 @@ public class DispatchRequest {
     private final int sysFlag;
     private final long preparedTransactionOffset;
 
-
+    //checkMessageAndReturnSize 中new一个该类
     public DispatchRequest(//
             final String topic,// 1
             final int queueId,// 2

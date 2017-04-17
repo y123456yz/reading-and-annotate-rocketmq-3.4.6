@@ -97,7 +97,7 @@ public class PullMessageService extends ServiceThread {
             try {
                 PullRequest pullRequest = this.pullRequestQueue.take(); //拉取队列pullRequestQueue中指定的消息请求
                 if (pullRequest != null) {
-                    this.pullMessage(pullRequest);
+                    this.pullMessage(pullRequest); //发送请求拉取消息
                 }
             }
             catch (InterruptedException e) {

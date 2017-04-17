@@ -27,7 +27,7 @@ package com.alibaba.rocketmq.common.protocol;
 public class RequestCode { //报文头部header data部分的code:  代表这些标识
      //客户端producer在 MQClientAPIImpl.sendMessage 该类型中发送消息
     public static final int SEND_MESSAGE = 10; //SEND_MESSAGE_V2 和 SEND_MESSAGE都是发送消息
-    public static final int PULL_MESSAGE = 11;
+    public static final int PULL_MESSAGE = 11; //客户端拉取消息 PullMessageProcessor.processRequest 中执行
     public static final int QUERY_MESSAGE = 12;
     public static final int QUERY_BROKER_OFFSET = 13;
     public static final int QUERY_CONSUMER_OFFSET = 14;
