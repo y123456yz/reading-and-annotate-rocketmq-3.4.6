@@ -110,16 +110,19 @@ public class BrokerConsumeStatsSubCommad implements SubCommand {
             boolean isOrder = false;
             long timeoutMillis = 50000;
             long diffLevel = 0;
-            if (commandLine.hasOption('o')) {
+            if (commandLine.hasOption('o')) { //-o 参数指定ture or false,例如sh mqadmin brokerConsumeStats -b  10.2.x.x:10911 -n 10.2.x.x:9876 -t 1000  -o ture
                 isOrder = Boolean.parseBoolean(commandLine.getOptionValue('o').trim());
             }
             if (commandLine.hasOption('t')) {
                 timeoutMillis = Long.parseLong(commandLine.getOptionValue('t').trim());
             }
             if (commandLine.hasOption('l')) {
+                //diffLevel的作用是，只把某个消费者分组消息积压数量小于diffLevel的相关队列信息打印出来
                 diffLevel = Long.parseLong(commandLine.getOptionValue('l').trim());
             }
 
+            //按照消费者分组获取各个消费者分组消费topic中对应queue的消费位点信息
+            //sh mqadmin brokerConsumeStats xx 命令的执行流程在这里面，获取topic下所有消费分组消费的队列的位点消费详情信息
             ConsumeStatsList consumeStatsList = defaultMQAdminExt.fetchConsumeStatsInBroker(brokerAddr, isOrder, timeoutMillis);
             System.out.printf("%-32s  %-32s  %-32s  %-4s  %-20s  %-20s  %-20s  %s\n",//
                     "#Topic",//
@@ -132,15 +135,15 @@ public class BrokerConsumeStatsSubCommad implements SubCommand {
                     "#LastTime");
             for (Map<String, List<ConsumeStats>> map : consumeStatsList.getConsumeStatsList()){
                 for (String group : map.keySet()){
-                    List<ConsumeStats> consumeStatsArray = map.get(group);
-                    for (ConsumeStats consumeStats : consumeStatsArray){
+                    List<ConsumeStats> consumeStatsArray = map.get(group); //消费者分组
+                    for (ConsumeStats consumeStats : consumeStatsArray){ //该消费者分组对应消费的各个topic下的queue的消费位点等信息
                         List<MessageQueue> mqList = new LinkedList<MessageQueue>();
-                        mqList.addAll(consumeStats.getOffsetTable().keySet());
+                        mqList.addAll(consumeStats.getOffsetTable().keySet()); //取出所有的MessageQueue ，存入mqList
                         Collections.sort(mqList);
                         for (MessageQueue mq : mqList) {
                             OffsetWrapper offsetWrapper = consumeStats.getOffsetTable().get(mq);
                             long diff = offsetWrapper.getBrokerOffset() - offsetWrapper.getConsumerOffset();
-                            if (diff < diffLevel){
+                            if (diff < diffLevel){ //diffLevel的作用是，只把某个消费者分组消息积压数量小于diffLevel的相关队列信息打印出来
                                 continue;
                             }
                             String lastTime = "-";

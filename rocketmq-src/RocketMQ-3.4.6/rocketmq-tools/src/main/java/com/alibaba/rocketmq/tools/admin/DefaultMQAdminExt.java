@@ -455,7 +455,8 @@ public class DefaultMQAdminExt extends ClientConfig implements MQAdminExt {
             RemotingTimeoutException, MQClientException, InterruptedException {
         return this.defaultMQAdminExtImpl.getClusterList(topic);
     }
-
+    //客户端DefaultMQAdminExtImpl.fetchConsumeStatsInBroker 对应的服务端接收见 AdminBrokerProcessor.fetchAllConsumeStatsInBroker
+    //sh mqadmin brokerConsumeStats xx 命令的执行流程在这里面，获取topic下所有消费分组消费的队列的位点消费详情信息
     @Override
     public ConsumeStatsList fetchConsumeStatsInBroker(final String brokerAddr, boolean isOrder, long timeoutMillis) throws RemotingConnectException, RemotingSendRequestException,
             RemotingTimeoutException, MQClientException, InterruptedException{

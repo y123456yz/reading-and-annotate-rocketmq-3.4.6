@@ -1733,7 +1733,7 @@ public class MQClientAPIImpl {
         return Collections.EMPTY_SET;
     }
 
-
+    //sh mqadmin brokerConsumeStats xx 命令的执行流程在这里面，获取topic下所有消费分组消费的队列的位点消费详情信息
     public ConsumeStatsList fetchConsumeStatsInBroker(String brokerAddr, boolean isOrder, long timeoutMillis)
             throws MQClientException, RemotingConnectException, RemotingSendRequestException, RemotingTimeoutException,
             InterruptedException {

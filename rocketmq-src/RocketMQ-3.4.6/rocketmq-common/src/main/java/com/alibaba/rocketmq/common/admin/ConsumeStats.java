@@ -28,6 +28,7 @@ import java.util.Map.Entry;
  * @author shijia.wxr
  */
 public class ConsumeStats extends RemotingSerializable {
+    //记录某个队列的
     private HashMap<MessageQueue, OffsetWrapper> offsetTable = new HashMap<MessageQueue, OffsetWrapper>();
     private double consumeTps = 0;
 

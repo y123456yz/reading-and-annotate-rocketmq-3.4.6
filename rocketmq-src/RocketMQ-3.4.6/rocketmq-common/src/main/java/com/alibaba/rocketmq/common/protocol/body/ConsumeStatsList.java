@@ -23,13 +23,14 @@ import java.util.*;
 
 
 /**
- * @author shijia.wxr
+ * @author shijia.wxr  //sh mqadmin brokerConsumeStats xx 命令拉取到到信息存入该类中
  */
 public class ConsumeStatsList extends RemotingSerializable {
     private List<Map<String/*subscriptionGroupName*/, List<ConsumeStats>>> consumeStatsList = new ArrayList<Map<String/*subscriptionGroupName*/, List<ConsumeStats>>>();
     private String brokerAddr;
     private long totalDiff;
 
+    //key  string为消费者分组 value为ConsumeStats列表信息
     public List<Map<String, List<ConsumeStats>>> getConsumeStatsList() {
         return consumeStatsList;
     }

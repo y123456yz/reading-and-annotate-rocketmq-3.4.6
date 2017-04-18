@@ -24,7 +24,7 @@ import com.alibaba.rocketmq.remoting.exception.RemotingCommandException;
 
 public class GetConsumeStatsInBrokerHeader implements CommandCustomHeader {
     @CFNotNull
-    private boolean isOrder;
+    private boolean isOrder; // sh mqadmin brokerConsumeStats -o ture or flase    -o参数指定是ture还是false，  -o ture则只获取有序topic的消费信息
 
     @Override
     public void checkFields() throws RemotingCommandException {

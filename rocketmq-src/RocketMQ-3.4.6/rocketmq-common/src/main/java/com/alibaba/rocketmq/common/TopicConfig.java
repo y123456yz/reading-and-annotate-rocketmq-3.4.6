@@ -34,7 +34,7 @@ public class TopicConfig {
     private int perm = PermName.PERM_READ | PermName.PERM_WRITE;
     private TopicFilterType topicFilterType = TopicFilterType.SINGLE_TAG;
     private int topicSysFlag = 0;
-    private boolean order = false;
+    private boolean order = false; //topic是否是顺序消费的topic，见topics.json配置，创建topic的时候指定是否顺序消费的topic
 
 
     public TopicConfig() {

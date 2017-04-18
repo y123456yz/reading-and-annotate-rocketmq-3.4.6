@@ -1115,6 +1115,8 @@ public class AdminBrokerProcessor implements NettyRequestProcessor {
         return response;
     }
 
+    //客户端DefaultMQAdminExtImpl.fetchConsumeStatsInBroker 对应的服务端接收见 AdminBrokerProcessor.fetchAllConsumeStatsInBroker
+    //sh mqadmin brokerConsumeStats -b  10.2.x.x:10911 -n 10.2.x.x:9876 -t 1000 -o ture or false 命令的broker处理
     private RemotingCommand fetchAllConsumeStatsInBroker(ChannelHandlerContext ctx, RemotingCommand request) throws RemotingCommandException {
         final RemotingCommand response = RemotingCommand.createResponseCommand(null);
         GetConsumeStatsInBrokerHeader requestHeader =
@@ -1134,7 +1136,7 @@ public class AdminBrokerProcessor implements NettyRequestProcessor {
                     log.warn("consumeStats, topic config not exist, {}", topic);
                     continue;
                 }
-                if (isOrder && !topicConfig.isOrder()){
+                if (isOrder && !topicConfig.isOrder()){ //isOrder则只获取顺序队列的统计信息  sh mqadmin brokerConsumeStats  -o ture
                     continue;
                 }
                 {
