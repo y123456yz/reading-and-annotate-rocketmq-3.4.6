@@ -183,6 +183,7 @@ public class PullMessageProcessor implements NettyRequestProcessor {
             log.debug("receive PullMessage request command, " + request);
         }
 
+        //检查broker的读写权限
         if (!PermName.isReadable(this.brokerController.getBrokerConfig().getBrokerPermission())) {
             response.setCode(ResponseCode.NO_PERMISSION);
             response.setRemark("the broker[" + this.brokerController.getBrokerConfig().getBrokerIP1()
@@ -223,12 +224,14 @@ public class PullMessageProcessor implements NettyRequestProcessor {
             return response;
         }
 
+        //topic读写权限检查
         if (!PermName.isReadable(topicConfig.getPerm())) { //例如SendMessageProcessor.consumerSendMsgBack 中默认创建死信队列是可写，但是不可读
             response.setCode(ResponseCode.NO_PERMISSION);
             response.setRemark("the topic[" + requestHeader.getTopic() + "] pulling message is forbidden");
             return response;
         }
 
+        //queueid超出范围
         if (requestHeader.getQueueId() < 0 || requestHeader.getQueueId() >= topicConfig.getReadQueueNums()) {
             String errorInfo =
                     "queueId[" + requestHeader.getQueueId() + "] is illagal,Topic :"
@@ -296,6 +299,7 @@ public class PullMessageProcessor implements NettyRequestProcessor {
         }
 
         final GetMessageResult getMessageResult =
+                //DefaultMessageStore.getMessage    从broker最多拉取getMaxMsgNums条消息
                 this.brokerController.getMessageStore().getMessage(requestHeader.getConsumerGroup(),
                     requestHeader.getTopic(), requestHeader.getQueueId(), requestHeader.getQueueOffset(),
                     requestHeader.getMaxMsgNums(), subscriptionData);

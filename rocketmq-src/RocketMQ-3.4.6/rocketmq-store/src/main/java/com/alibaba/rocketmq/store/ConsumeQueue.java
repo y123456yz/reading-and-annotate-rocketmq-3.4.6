@@ -484,7 +484,7 @@ public class ConsumeQueue {
         long offset = startIndex * CQStoreUnitSize;
         if (offset >= this.getMinLogicOffset()) {
             MapedFile mapedFile = this.mapedFileQueue.findMapedFileByOffset(offset);
-            if (mapedFile != null) {
+            if (mapedFile != null) { //获取对应的ConsumeQueue中对应的存储信息 CommitLog Offset + SizeMessage + Tag Hashcode
                 SelectMapedBufferResult result = mapedFile.selectMapedBuffer((int) (offset % mapedFileSize));
                 return result;
             }

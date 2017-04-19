@@ -79,7 +79,7 @@ length header(4) + length(4) + {"code":15,"extFields":{"topic":"%RETRY%proxy-on-
 public class PushConsumer {
 
     public static void main(String[] args) throws InterruptedException, MQClientException {
-        DefaultMQPushConsumer consumer = new DefaultMQPushConsumer("yyzGroup2");
+        DefaultMQPushConsumer consumer = new DefaultMQPushConsumer("yyzGroup23");
         consumer.setNamesrvAddr("10.2.223.157:9876;10.2.223.158:9876;10.2.223.159:9876");
        // consumer.setNamesrvAddr("10.2.223.228:9876");
         //consumer.subscribe("my-topic-2", "*", new GroovyScript(groovyScript));

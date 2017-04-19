@@ -42,7 +42,7 @@ public class FilterAPI {
         return url;
     }
 
-
+    //获取该topic的订阅信息，也就是TAG信息
     public static SubscriptionData buildSubscriptionData(final String consumerGroup, String topic,
             String subString) throws Exception {
         SubscriptionData subscriptionData = new SubscriptionData();

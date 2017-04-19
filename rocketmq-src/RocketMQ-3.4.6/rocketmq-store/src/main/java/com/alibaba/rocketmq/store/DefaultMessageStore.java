@@ -471,6 +471,7 @@ public class DefaultMessageStore implements MessageStore {
                 }
             }
             else {
+                //获取consumeQueue中对应的 CommitLog Offset + SizeMessage + Tag Hashcode
                 SelectMapedBufferResult bufferConsumeQueue = consumeQueue.getIndexBuffer(offset);
                 if (bufferConsumeQueue != null) { //一次从消费队列中拉取出了多个索引项。
                     try {
@@ -503,6 +504,7 @@ public class DefaultMessageStore implements MessageStore {
 
                             //先对Message tag的hashcode做第一次过滤，
                             if (this.messageFilter.isMessageMatched(subscriptionData, tagsCode)) {
+                                //通过从consumeQueue中获取到的消息位点来从commitlog拉取对应的消息内容
                                 SelectMapedBufferResult selectResult = this.commitLog.getMessage(offsetPy, sizePy);
                                 if (selectResult != null) {
                                     //2016.11.15 增加groovy匹配脚本的二次过滤, 对吞吐量会有一定影响,

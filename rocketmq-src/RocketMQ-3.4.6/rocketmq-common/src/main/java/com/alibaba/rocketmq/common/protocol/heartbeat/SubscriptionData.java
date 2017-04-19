@@ -28,6 +28,8 @@ import java.util.Set;
 
 /**
  * @author shijia.wxr　　 订阅信息和TAG topic信息   存储在 RebalanceImpl.subscriptionInner中  这里面存有关注的tag相关的信息
+ *
+ * 在buildSubscriptionData获取订阅信息
  */
 public class SubscriptionData implements Comparable<SubscriptionData> {
     public final static String SUB_ALL = "*";
