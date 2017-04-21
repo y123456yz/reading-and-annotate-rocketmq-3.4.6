@@ -816,6 +816,7 @@ public class AdminBrokerProcessor implements NettyRequestProcessor {
 
 
     private HashMap<String, String> prepareRuntimeInfo() {
+        //DefaultMessageStore.getRuntimeInfo
         HashMap<String, String> runtimeInfo = this.brokerController.getMessageStore().getRuntimeInfo();
         runtimeInfo.put("brokerVersionDesc", MQVersion.getVersionDesc(MQVersion.CurrentVersion));
         runtimeInfo.put("brokerVersion", String.valueOf(MQVersion.CurrentVersion));

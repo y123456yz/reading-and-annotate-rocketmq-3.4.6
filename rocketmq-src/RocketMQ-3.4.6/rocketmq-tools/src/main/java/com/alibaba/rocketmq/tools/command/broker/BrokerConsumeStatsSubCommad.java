@@ -66,7 +66,7 @@ import java.util.*;
  * @author shijia.wxr
  */
 public class BrokerConsumeStatsSubCommad implements SubCommand {
-
+    /* brokerStatus为整个broker的一些全局统计信息， brokerConsumeStats为broker下面所有消费队列的一些消费统计等信息 */
     @Override
     public String commandName() {
         return "brokerConsumeStats";

@@ -49,6 +49,8 @@ nameserver就会感知到这些重试队列。
 类来拉取重试队列中的消息。 客户端消费失败后，失败的消息又会打回到broker，对broker来说是新的消息(msgid会发生变化)，实际上是之前消费失败的消息，如果反复失败，
 则重试队列上面会有多条相同的msg(msg body一样，msgid是不一样的，对于broker来收每次收到一条msg都任务是一条新的msg)
 
+延迟任务原理
+
 通信协议:length header(4) + length(4) + body内容  见手册9.1节
 length header(4) + length(4) + {"code":15,"extFields":{"topic":"%RETRY%proxy-on-trade","queueId":"0","consumerGroup":"proxy-on-trade","commitOffset":"18"},"flag":2,"language":"JAVA","opaque":124131,"serializeTypeCurrentRPC":"JSON","version":115}
     * */

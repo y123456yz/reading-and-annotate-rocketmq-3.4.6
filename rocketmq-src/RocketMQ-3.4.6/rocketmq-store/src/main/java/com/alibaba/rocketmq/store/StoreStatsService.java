@@ -40,27 +40,34 @@ public class StoreStatsService extends ServiceThread {
     private static int PrintTPSInterval = 60 * 1;
     //写消息到commitlog失败的次数
     private final AtomicLong putMessageFailedTimes = new AtomicLong(0);
+    //storeStatsService.getSinglePutMessageTopicTimesTotal(msg.getTopic()).incrementAndGet(); 写入消息总条数，在 commitlog.putMessage中
+    //每写入一条消息则加1
     private final Map<String, AtomicLong> putMessageTopicTimesTotal =
             new ConcurrentHashMap<String, AtomicLong>(128);
+    //storeStatsService.getSinglePutMessageTopicSizeTotal(topic).addAndGet(result.getWroteBytes()); 写入消息总字节数，在 commitlog.putMessage中
+    //每写入一条消息则加多少字节
     private final Map<String, AtomicLong> putMessageTopicSizeTotal =
             new ConcurrentHashMap<String, AtomicLong>(128);
     private final AtomicLong getMessageTimesTotalFound = new AtomicLong(0);
     private final AtomicLong getMessageTransferedMsgCount = new AtomicLong(0);
     private final AtomicLong getMessageTimesTotalMiss = new AtomicLong(0);
-    //写消息到commitlog文件的时间统计，见//DefaultMessageStore.putMessage
+    //写消息到commitlog文件的时间统计，见//DefaultMessageStore.putMessage   setPutMessageEntireTimeMax
     private final AtomicLong[] putMessageDistributeTime = new AtomicLong[7];
     private final LinkedList<CallSnapshot> putTimesList = new LinkedList<CallSnapshot>();
     private final LinkedList<CallSnapshot> getTimesFoundList = new LinkedList<CallSnapshot>();
     private final LinkedList<CallSnapshot> getTimesMissList = new LinkedList<CallSnapshot>();
     private final LinkedList<CallSnapshot> transferedMsgCountList = new LinkedList<CallSnapshot>();
+    //broker启动的时候的时间戳
     private long messageStoreBootTimestamp = System.currentTimeMillis();
+    //消息写入commitlog文件的最大时延，见setPutMessageEntireTimeMax
     private volatile long putMessageEntireTimeMax = 0;
+    //消费消息的时候从MapFile获取消息的最长时间，见setGetMessageEntireTimeMax
     private volatile long getMessageEntireTimeMax = 0;
     // for putMessageEntireTimeMax
     private ReentrantLock lockPut = new ReentrantLock();
     // for getMessageEntireTimeMax
     private ReentrantLock lockGet = new ReentrantLock();
-    private volatile long dispatchMaxBuffer = 0;
+    private volatile long dispatchMaxBuffer = 0; //暂时没用
     private ReentrantLock lockSampling = new ReentrantLock();
     private long lastPrintTimestamp = System.currentTimeMillis();
 
@@ -76,7 +83,7 @@ public class StoreStatsService extends ServiceThread {
         return putMessageEntireTimeMax;
     }
 
-
+    //写消息到commitlog的时间存入对应的时间段数组
     public void setPutMessageEntireTimeMax(long value) {
         if (value <= 0) {
             this.putMessageDistributeTime[0].incrementAndGet();
@@ -100,7 +107,7 @@ public class StoreStatsService extends ServiceThread {
             this.putMessageDistributeTime[6].incrementAndGet();
         }
 
-        if (value > this.putMessageEntireTimeMax) {
+        if (value > this.putMessageEntireTimeMax) { //获取最大写入时延
             this.lockPut.lock();
             this.putMessageEntireTimeMax =
                     value > this.putMessageEntireTimeMax ? value : this.putMessageEntireTimeMax;
@@ -160,7 +167,7 @@ public class StoreStatsService extends ServiceThread {
         return sb.toString();
     }
 
-
+    //各时间段的占比，和setPutMessageEntireTimeMax对比
     private String getPutMessageDistributeTimeStringInfo(Long total) {
         final StringBuilder sb = new StringBuilder(512);
 
@@ -174,7 +181,7 @@ public class StoreStatsService extends ServiceThread {
         return sb.toString();
     }
 
-
+    //获取broker运行时间
     private String getFormatRuntime() {
         final long MILLISECOND = 1;
         final long SECOND = 1000 * MILLISECOND;
@@ -375,7 +382,7 @@ public class StoreStatsService extends ServiceThread {
         return Double.toString(found + miss);
     }
 
-
+    //每条消息写入commitlog都会把时延记录到putMessageTopicTimesTotal对应的数组
     public long getPutMessageTimesTotal() {
         long rs = 0;
         for (AtomicLong data : putMessageTopicTimesTotal.values()) {
@@ -384,7 +391,7 @@ public class StoreStatsService extends ServiceThread {
         return rs;
     }
 
-
+    //putMessageTopicSizeTotal 求和
     public long getPutMessageSizeTotal() {
         long rs = 0;
         for (AtomicLong data : putMessageTopicSizeTotal.values()) {
@@ -402,16 +409,18 @@ public class StoreStatsService extends ServiceThread {
             totalTimes = 1L;
         }
 
-        result.put("bootTimestamp", String.valueOf(this.messageStoreBootTimestamp));
-        result.put("runtime", this.getFormatRuntime());
-        result.put("putMessageEntireTimeMax", String.valueOf(this.putMessageEntireTimeMax));
-        result.put("putMessageTimesTotal", String.valueOf(totalTimes));
-        result.put("putMessageSizeTotal", String.valueOf(this.getPutMessageSizeTotal()));
+        result.put("bootTimestamp", String.valueOf(this.messageStoreBootTimestamp)); //启动时间
+        result.put("runtime", this.getFormatRuntime());//运行时间
+        result.put("putMessageEntireTimeMax", String.valueOf(this.putMessageEntireTimeMax)); //写入commiglog最大时延
+        result.put("putMessageTimesTotal", String.valueOf(totalTimes)); //写入消息到commitlog耗费的总时间
+        result.put("putMessageSizeTotal", String.valueOf(this.getPutMessageSizeTotal())); //写入总字节数
         result.put("putMessageDistributeTime",
-            String.valueOf(this.getPutMessageDistributeTimeStringInfo(totalTimes)));
+            String.valueOf(this.getPutMessageDistributeTimeStringInfo(totalTimes))); //写消息到commitlog各个时间段的占比
         result.put("putMessageAverageSize",
-            String.valueOf((this.getPutMessageSizeTotal() / totalTimes.doubleValue())));
+            String.valueOf((this.getPutMessageSizeTotal() / totalTimes.doubleValue()))); //写入消息的平均字节数
+
         result.put("dispatchMaxBuffer", String.valueOf(this.dispatchMaxBuffer));
+        //消费消息的时候从MapFile获取消息的最长时间，见setGetMessageEntireTimeMax
         result.put("getMessageEntireTimeMax", String.valueOf(this.getMessageEntireTimeMax));
         result.put("putTps", String.valueOf(this.getPutTps()));
         result.put("getFoundTps", String.valueOf(this.getGetFoundTps()));

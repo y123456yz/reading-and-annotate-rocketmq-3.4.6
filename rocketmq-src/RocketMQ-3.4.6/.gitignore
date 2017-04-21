@@ -6,3 +6,6 @@ target/
 *.iml
 .idea/
 *.versionsBackup
+.class
+.xml
+.target/

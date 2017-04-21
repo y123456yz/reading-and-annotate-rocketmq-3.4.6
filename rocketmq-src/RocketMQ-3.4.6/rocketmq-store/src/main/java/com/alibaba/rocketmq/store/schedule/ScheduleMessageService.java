@@ -56,6 +56,9 @@ import java.util.concurrent.ConcurrentHashMap;
  * @author shijia.wxr
  */
 public class ScheduleMessageService extends ConfigManager {
+    //把配置了延迟level的消息,最开始存到ScheduleMessageService.SCHEDULE_TOPIC(值为SCHEDULE_TOPIC_XXXX)
+    //消息的原始real topic, queueId通过MessageAccessor.putProperty(msg, MessageConst.PROPERTY_REAL_TOPIC, msg.getTopic());和PROPERTY_REAL_QUEUE_ID存起来
+    //ScheduleMessageService.DeliverDelayedMessageTimerTask 内,判断是否可消息,可以就取出消息,将topic和quueeId还原,放到commitLog中
     public static final String SCHEDULE_TOPIC = "SCHEDULE_TOPIC_XXXX"; //延迟消息TOPIC
     private static final Logger log = LoggerFactory.getLogger(LoggerName.StoreLoggerName);
     private static final long FIRST_DELAY_TIME = 1000L;
@@ -229,6 +232,9 @@ public class ScheduleMessageService extends ConfigManager {
         return true;
     }
 
+    //把配置了延迟level的消息,最开始存到ScheduleMessageService.SCHEDULE_TOPIC(值为SCHEDULE_TOPIC_XXXX)
+    //消息的原始real topic, queueId通过MessageAccessor.putProperty(msg, MessageConst.PROPERTY_REAL_TOPIC, msg.getTopic());和PROPERTY_REAL_QUEUE_ID存起来
+    //ScheduleMessageService.DeliverDelayedMessageTimerTask 内,判断是否可消息,可以就取出消息,将topic和quueeId还原,放到commitLog中
     class DeliverDelayedMessageTimerTask extends TimerTask {
         private final int delayLevel;
         private final long offset;

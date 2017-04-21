@@ -383,7 +383,7 @@ public class DefaultMessageStore implements MessageStore {
         if (eclipseTime > 1000) {
             log.warn("putMessage not in lock eclipse time(ms) " + eclipseTime);
         }
-        this.storeStatsService.setPutMessageEntireTimeMax(eclipseTime); //统计时延分布
+        this.storeStatsService.setPutMessageEntireTimeMax(eclipseTime); //写消息到commitlog的时间存入对应的时间段数组
 
         if (null == result || !result.isOk()) { //写入消息失败次数累加。
             this.storeStatsService.getPutMessageFailedTimes().incrementAndGet();
@@ -597,7 +597,7 @@ public class DefaultMessageStore implements MessageStore {
             this.storeStatsService.getGetMessageTimesTotalMiss().incrementAndGet();
         }
         long eclipseTime = this.getSystemClock().now() - beginTime;
-        this.storeStatsService.setGetMessageEntireTimeMax(eclipseTime);
+        this.storeStatsService.setGetMessageEntireTimeMax(eclipseTime); //消费消息的时候从MapFile获取消息的时间
 
         getResult.setStatus(status);
         getResult.setNextBeginOffset(nextBeginOffset); //下一次CQ的逻辑位点。

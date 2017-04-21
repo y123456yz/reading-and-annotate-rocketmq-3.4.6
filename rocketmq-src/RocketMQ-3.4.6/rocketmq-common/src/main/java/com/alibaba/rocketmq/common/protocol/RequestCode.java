@@ -42,6 +42,7 @@ public class RequestCode { //报文头部header data部分的code:  代表这些
     public static final int UPDATE_BROKER_CONFIG = 25;
     public static final int GET_BROKER_CONFIG = 26;
     public static final int TRIGGER_DELETE_FILES = 27;
+    //sh mqadmin brokerStatus 获取broker运行信息
     public static final int GET_BROKER_RUNTIME_INFO = 28;
     public static final int SEARCH_OFFSET_BY_TIMESTAMP = 29;
     public static final int GET_MAX_OFFSET = 30;

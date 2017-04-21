@@ -33,7 +33,7 @@ import java.util.TreeMap;
  * @author shijia.wxr
  */
 public class BrokerStatusSubCommand implements SubCommand {
-
+    /* brokerStatus为整个broker的一些全局统计信息， brokerConsumeStats为broker下面所有消费队列的一些消费统计等信息 */
     @Override
     public String commandName() {
         return "brokerStatus";
@@ -67,6 +67,7 @@ public class BrokerStatusSubCommand implements SubCommand {
 
             String brokerAddr = commandLine.getOptionValue('b').trim();
 
+            //获取broker一些全局统计信息 例如commitlog  全局offset等信息
             KVTable kvTable = defaultMQAdminExt.fetchBrokerRuntimeStats(brokerAddr);
 
             TreeMap<String, String> tmp = new TreeMap<String, String>();

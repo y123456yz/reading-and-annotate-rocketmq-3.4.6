@@ -299,7 +299,7 @@ public class DefaultMQAdminExt extends ClientConfig implements MQAdminExt {
         return this.defaultMQAdminExtImpl.fetchAllTopicList();
     }
 
-
+    //获取broker一些全局统计信息 例如commitlog  全局offset等信息
     @Override
     public KVTable fetchBrokerRuntimeStats(final String brokerAddr) throws RemotingConnectException, RemotingSendRequestException,
             RemotingTimeoutException, InterruptedException, MQBrokerException {
