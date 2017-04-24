@@ -1316,7 +1316,7 @@ public class MQClientAPIImpl {
         throw new MQClientException(response.getCode(), response.getRemark());
     }
 
-
+    //sh mqadmin statsAll -n xxx 一个topic一个topic的获取信息
     public GroupList queryTopicConsumeByWho(final String addr, final String topic, final long timeoutMillis)
             throws RemotingConnectException, RemotingSendRequestException, RemotingTimeoutException, InterruptedException,
             MQBrokerException {
@@ -1700,7 +1700,7 @@ public class MQClientAPIImpl {
         throw new MQClientException(response.getCode(), response.getRemark());
     }
 
-
+    //sh mqadmin statsAll -获取 #InTPS     #OutTPS   #InMsg24Hour  #OutMsg24Hour信息
     public BrokerStatsData ViewBrokerStatsData(String brokerAddr, String statsName, String statsKey, long timeoutMillis)
             throws MQClientException, RemotingConnectException, RemotingSendRequestException, RemotingTimeoutException,
             InterruptedException {

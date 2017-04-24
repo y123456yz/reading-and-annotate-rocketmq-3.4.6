@@ -40,6 +40,7 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class ConsumerManager {
     private static final Logger log = LoggerFactory.getLogger(LoggerName.BrokerLoggerName);
+    //该broker下面所有的消费者分组信息，如果要获取某个topic对应有哪些消费者分组，见queryTopicConsumeByWho
     private final ConcurrentHashMap<String/* Group */, ConsumerGroupInfo> consumerTable =
             new ConcurrentHashMap<String, ConsumerGroupInfo>(1024);
 
@@ -206,7 +207,7 @@ public class ConsumerManager {
         }
     }
 
-
+    //获取topic对应的消费者分组信息
     public HashSet<String> queryTopicConsumeByWho(final String topic) {
         HashSet<String> groups = new HashSet<String>();
         Iterator<Entry<String, ConsumerGroupInfo>> it = this.consumerTable.entrySet().iterator();

@@ -189,6 +189,7 @@ public class UtilAll {
             cal.get(Calendar.SECOND));
     }
 
+    //获取文件夹占用磁盘资源百分百
     public static double getDiskPartitionSpaceUsedPercent(final String path) {
         if (null == path || path.isEmpty())
             return -1;

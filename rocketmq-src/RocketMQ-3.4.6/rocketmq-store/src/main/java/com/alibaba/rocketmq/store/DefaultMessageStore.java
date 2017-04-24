@@ -688,6 +688,7 @@ public class DefaultMessageStore implements MessageStore {
         HashMap<String, String> result = this.storeStatsService.getRuntimeInfo();
         {
             String storePathPhysic = DefaultMessageStore.this.getMessageStoreConfig().getStorePathCommitLog();
+            //获取commitlog文件夹占用磁盘资源百分百
             double physicRatio = UtilAll.getDiskPartitionSpaceUsedPercent(storePathPhysic);
             result.put(RunningStats.commitLogDiskRatio.name(), String.valueOf(physicRatio));
 
@@ -697,15 +698,17 @@ public class DefaultMessageStore implements MessageStore {
 
             String storePathLogics = StorePathConfigHelper.getStorePathConsumeQueue(this.messageStoreConfig.getStorePathRootDir());
             double logicsRatio = UtilAll.getDiskPartitionSpaceUsedPercent(storePathLogics);
+            //consumeQueue文件夹占用磁盘资源百分比
             result.put(RunningStats.consumeQueueDiskRatio.name(), String.valueOf(logicsRatio));
         }
 
-        {
+        {   //获取存在于延时队列offset中还未到时间的消息的offset，以及把到时间到消息移到commitlog和consumeQueue队列后的offset获取出来
             if (this.scheduleMessageService != null) {
                 this.scheduleMessageService.buildRunningStats(result);
             }
         }
 
+        //commilog目录文件的最小offset和最大offset
         result.put(RunningStats.commitLogMinOffset.name(), String.valueOf(DefaultMessageStore.this.getMinPhyOffset()));
         result.put(RunningStats.commitLogMaxOffset.name(), String.valueOf(DefaultMessageStore.this.getMaxPhyOffset()));
 

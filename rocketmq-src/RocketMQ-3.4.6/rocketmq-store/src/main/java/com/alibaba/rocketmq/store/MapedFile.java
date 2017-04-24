@@ -64,6 +64,7 @@ public class MapedFile extends ReferenceResource {
     private static final AtomicInteger TotalMapedFiles = new AtomicInteger(0);
     private final String fileName;
     //文件名即是消息在此文件的中初始偏移量  文件的起始偏移量
+    //commilog目录文件的最小offset
     private final long fileFromOffset; //也就是/data/store/consumequeue/xx/中各个文件的文件名，表示对应在commitlog中的偏移量，可以参考 MapedFileQueue.load
     private final int fileSize;//文件大小
     private final File file; //文件句柄

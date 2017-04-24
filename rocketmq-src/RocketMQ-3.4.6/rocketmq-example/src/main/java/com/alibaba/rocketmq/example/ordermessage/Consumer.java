@@ -27,7 +27,8 @@ import com.alibaba.rocketmq.common.message.MessageExt;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicLong;
 
-
+//同一批你需要做到顺序消费的肯定会投递到同一个queue，同一个queue肯定会投递到同一个消费实例
+//同一批你需要做到顺序消费的肯定会投递到同一个queue，同一个queue肯定会投递到同一个消费实例
 public class Consumer {
 
     public static void main(String[] args) throws MQClientException {

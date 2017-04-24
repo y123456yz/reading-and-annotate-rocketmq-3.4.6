@@ -39,6 +39,7 @@ public class ConsumerOffsetManager extends ConfigManager {
     private static final String TOPIC_GROUP_SEPARATOR = "@";
 
     //记录 消费者分组对topic 的某一个queue的消费位点。 //把从 /root/store/config/consumerOffset.json 解析的内容序列化到这里
+    //所有topic的offset信息都存在于该table中，参考whichGroupByTopic
     private ConcurrentHashMap<String/* topic@group */, ConcurrentHashMap<Integer /*queueid */, Long /*consumeoffset*/>> offsetTable =
             new ConcurrentHashMap<String, ConcurrentHashMap<Integer, Long>>(512);
 

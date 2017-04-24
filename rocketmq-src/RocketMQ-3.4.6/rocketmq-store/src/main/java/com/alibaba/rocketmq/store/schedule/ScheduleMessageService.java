@@ -79,7 +79,7 @@ public class ScheduleMessageService extends ConfigManager {
         this.defaultMessageStore = defaultMessageStore;
     }
 
-
+    //延时队列的offset 以及从延时队列中取出后放入consumeQueue队列的这些消息的最大位点
     public void buildRunningStats(HashMap<String, String> stats) {
         Iterator<Entry<Integer, Long>> it = this.offsetTable.entrySet().iterator();
         while (it.hasNext()) {

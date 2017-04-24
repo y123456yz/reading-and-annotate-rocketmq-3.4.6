@@ -73,7 +73,7 @@ public class AdminBrokerProcessor implements NettyRequestProcessor {
         this.brokerController = brokerController;
     }
 
-    @Override
+    @Override //AdminBrokerProcessor.processRequest
     public RemotingCommand processRequest(ChannelHandlerContext ctx, RemotingCommand request) throws RemotingCommandException {
         switch (request.getCode()) {
         case RequestCode.UPDATE_AND_CREATE_TOPIC:
@@ -122,7 +122,7 @@ public class AdminBrokerProcessor implements NettyRequestProcessor {
             return this.resetOffset(ctx, request);
         case RequestCode.INVOKE_BROKER_TO_GET_CONSUMER_STATUS:
             return this.getConsumerStatus(ctx, request);
-        case RequestCode.QUERY_TOPIC_CONSUME_BY_WHO:
+        case RequestCode.QUERY_TOPIC_CONSUME_BY_WHO: //sh mqadmin statsAll -n xxx   一个topic一个topic的获取信息
             return this.queryTopicConsumeByWho(ctx, request);
         case RequestCode.REGISTER_FILTER_SERVER:
             return this.registerFilterServer(ctx, request);
@@ -142,7 +142,7 @@ public class AdminBrokerProcessor implements NettyRequestProcessor {
             return this.consumeMessageDirectly(ctx, request);
         case RequestCode.CLONE_GROUP_OFFSET:
             return this.cloneGroupOffset(ctx, request);
-        case RequestCode.VIEW_BROKER_STATS_DATA:
+        case RequestCode.VIEW_BROKER_STATS_DATA://sh mqadmin statsAll -获取 #InTPS     #OutTPS   #InMsg24Hour  #OutMsg24Hour信息
             return ViewBrokerStatsData(ctx, request);
         case RequestCode.GET_BROKER_CONSUME_STATS:
             return fetchAllConsumeStatsInBroker(ctx, request);
@@ -153,7 +153,7 @@ public class AdminBrokerProcessor implements NettyRequestProcessor {
         return null;
     }
 
-
+    //sh mqadmin statsAll -获取 #InTPS     #OutTPS   #InMsg24Hour  #OutMsg24Hour信息
     private RemotingCommand ViewBrokerStatsData(ChannelHandlerContext ctx, RemotingCommand request) throws RemotingCommandException {
         final ViewBrokerStatsDataRequestHeader requestHeader =
                 (ViewBrokerStatsDataRequestHeader) request.decodeCommandCustomHeader(ViewBrokerStatsDataRequestHeader.class);
@@ -167,6 +167,7 @@ public class AdminBrokerProcessor implements NettyRequestProcessor {
             return response;
         }
 
+        //#InTPS     #OutTPS   #InMsg24Hour  #OutMsg24Hour
         BrokerStatsData brokerStatsData = new BrokerStatsData();
         {
             BrokerStatsItem it = new BrokerStatsItem();
@@ -840,7 +841,6 @@ public class AdminBrokerProcessor implements NettyRequestProcessor {
         return runtimeInfo;
     }
 
-
     private RemotingCommand getBrokerRuntimeInfo(ChannelHandlerContext ctx, RemotingCommand request) {
         final RemotingCommand response = RemotingCommand.createResponseCommand(null);
 
@@ -960,16 +960,18 @@ public class AdminBrokerProcessor implements NettyRequestProcessor {
             requestHeader.getClientAddr());
     }
 
-
+    //sh mqadmin statsAll -n xxx
     private RemotingCommand queryTopicConsumeByWho(ChannelHandlerContext ctx, RemotingCommand request) throws RemotingCommandException {
         final RemotingCommand response = RemotingCommand.createResponseCommand(null);
         QueryTopicConsumeByWhoRequestHeader requestHeader =
                 (QueryTopicConsumeByWhoRequestHeader) request.decodeCommandCustomHeader(QueryTopicConsumeByWhoRequestHeader.class);
 
+        //获取topic对应的消费者分组信息
         HashSet<String> groups = this.brokerController.getConsumerManager().queryTopicConsumeByWho(requestHeader.getTopic());
+        //获取topic对应的offset信息
         Set<String> groupInOffset = this.brokerController.getConsumerOffsetManager().whichGroupByTopic(requestHeader.getTopic());
         if (groupInOffset != null && !groupInOffset.isEmpty()) {
-            groups.addAll(groupInOffset);
+            groups.addAll(groupInOffset); //把topic对应的消费者分组信息和topic对应的offset信息全部存入groups中
         }
 
         GroupList groupList = new GroupList();

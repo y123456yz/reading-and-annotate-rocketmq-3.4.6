@@ -53,6 +53,7 @@ public class StoreStatsService extends ServiceThread {
     private final AtomicLong getMessageTimesTotalMiss = new AtomicLong(0);
     //写消息到commitlog文件的时间统计，见//DefaultMessageStore.putMessage   setPutMessageEntireTimeMax
     private final AtomicLong[] putMessageDistributeTime = new AtomicLong[7];
+    //采样来计算TPS
     private final LinkedList<CallSnapshot> putTimesList = new LinkedList<CallSnapshot>();
     private final LinkedList<CallSnapshot> getTimesFoundList = new LinkedList<CallSnapshot>();
     private final LinkedList<CallSnapshot> getTimesMissList = new LinkedList<CallSnapshot>();
@@ -68,6 +69,7 @@ public class StoreStatsService extends ServiceThread {
     // for getMessageEntireTimeMax
     private ReentrantLock lockGet = new ReentrantLock();
     private volatile long dispatchMaxBuffer = 0; //暂时没用
+    //StoreStatsService.sampling  采样来计算TPS
     private ReentrantLock lockSampling = new ReentrantLock();
     private long lastPrintTimestamp = System.currentTimeMillis();
 
@@ -212,7 +214,7 @@ public class StoreStatsService extends ServiceThread {
         return sb.toString();
     }
 
-
+    //根据采样来计算某个时间段的TPS
     private String getPutTps(int time) {
         String result = "";
         this.lockSampling.lock();
@@ -422,6 +424,7 @@ public class StoreStatsService extends ServiceThread {
         result.put("dispatchMaxBuffer", String.valueOf(this.dispatchMaxBuffer));
         //消费消息的时候从MapFile获取消息的最长时间，见setGetMessageEntireTimeMax
         result.put("getMessageEntireTimeMax", String.valueOf(this.getMessageEntireTimeMax));
+        //采样获取到的tps信息
         result.put("putTps", String.valueOf(this.getPutTps()));
         result.put("getFoundTps", String.valueOf(this.getGetFoundTps()));
         result.put("getMissTps", String.valueOf(this.getGetMissTps()));
@@ -451,8 +454,8 @@ public class StoreStatsService extends ServiceThread {
         log.info(this.getServiceName() + " service end");
     }
 
-
-    private void sampling() {
+    //采样来计算TPS
+    private void sampling() { //StoreStatsService.sampling
         this.lockSampling.lock();
         try {
             this.putTimesList.add(new CallSnapshot(System.currentTimeMillis(), getPutMessageTimesTotal()));

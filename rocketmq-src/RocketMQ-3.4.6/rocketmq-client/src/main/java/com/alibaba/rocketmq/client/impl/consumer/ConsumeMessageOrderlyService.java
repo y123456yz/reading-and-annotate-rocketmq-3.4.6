@@ -82,7 +82,6 @@ public class ConsumeMessageOrderlyService implements ConsumeMessageService {
                     "ConsumeMessageScheduledThread_"));
     }
 
-
     public void start() {
         if (MessageModel.CLUSTERING.equals(ConsumeMessageOrderlyService.this.defaultMQPushConsumerImpl
             .messageModel())) {
@@ -95,7 +94,6 @@ public class ConsumeMessageOrderlyService implements ConsumeMessageService {
             }, 1000 * 1, ProcessQueue.RebalanceLockInterval, TimeUnit.MILLISECONDS);
         }
     }
-
 
     public void shutdown() {
         this.stopped = true;

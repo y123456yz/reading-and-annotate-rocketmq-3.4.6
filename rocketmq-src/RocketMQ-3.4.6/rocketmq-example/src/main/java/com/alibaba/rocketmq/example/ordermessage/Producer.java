@@ -46,8 +46,9 @@ public class Producer {
 
                 SendResult sendResult = producer.send(msg, new MessageQueueSelector() {
                     @Override
-                    public MessageQueue select(List<MessageQueue> mqs, Message msg, Object arg) {
-                        Integer id = (Integer) arg;
+                    public MessageQueue select(List<MessageQueue> mqs, Message msg, Object arg) { //这里的arg实际上就是orderid
+                        //同一批你需要做到顺序消费的肯定会投递到同一个queue，同一个queue肯定会投递到同一个消费实例
+                        Integer id = (Integer) arg; //做hash保证orderid一样的消息发送到同一个queue
                         int index = id % mqs.size();
                         return mqs.get(index);
                     }

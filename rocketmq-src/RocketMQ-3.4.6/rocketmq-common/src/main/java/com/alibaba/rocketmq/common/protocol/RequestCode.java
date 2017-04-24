@@ -93,7 +93,7 @@ public class RequestCode { //报文头部header data部分的code:  代表这些
     public static final int GET_CONSUMER_STATUS_FROM_CLIENT = 221;
     public static final int INVOKE_BROKER_TO_RESET_OFFSET = 222;
     public static final int INVOKE_BROKER_TO_GET_CONSUMER_STATUS = 223;
-
+     //sh mqadmin statsAll -n xxx  一个topic一个topic的获取信息
     public static final int QUERY_TOPIC_CONSUME_BY_WHO = 300;
 
     public static final int GET_TOPICS_BY_CLUSTER = 224;
@@ -118,7 +118,7 @@ public class RequestCode { //报文头部header data部分的code:  代表这些
     public static final int GET_HAS_UNIT_SUB_TOPIC_LIST = 312;
     public static final int GET_HAS_UNIT_SUB_UNUNIT_TOPIC_LIST = 313;
     public static final int CLONE_GROUP_OFFSET = 314;
-
+     //sh mqadmin statsAll -获取 #InTPS     #OutTPS   #InMsg24Hour  #OutMsg24Hour信息
     public static final int VIEW_BROKER_STATS_DATA = 315;
 
     public static final int CLEAN_UNUSED_TOPIC = 316;

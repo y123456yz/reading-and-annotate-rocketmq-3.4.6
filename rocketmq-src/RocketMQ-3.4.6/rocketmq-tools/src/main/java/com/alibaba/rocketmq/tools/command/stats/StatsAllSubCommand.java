@@ -37,7 +37,7 @@ import com.alibaba.rocketmq.tools.admin.DefaultMQAdminExt;
 import com.alibaba.rocketmq.tools.command.MQAdminStartup;
 import com.alibaba.rocketmq.tools.command.SubCommand;
 
-
+//sh mqadmin statsAll -n xxx
 public class StatsAllSubCommand implements SubCommand {
 
     @Override
@@ -78,13 +78,13 @@ public class StatsAllSubCommand implements SubCommand {
         return 0;
     }
 
-
+    //一个topic一个topic的获取信息，在execute进行汇总
     public static void printTopicDetail(final DefaultMQAdminExt admin, final String topic, final boolean activeTopic)
             throws RemotingException, MQClientException, InterruptedException, MQBrokerException {
         TopicRouteData topicRouteData = admin.examineTopicRouteInfo(topic);
 
+        //获取topic的所有consumer消费者分组信息和所有的offset信息.,见AdminBrokerProcessor.processRequest.queryTopicConsumeByWho
         GroupList groupList = admin.queryTopicConsumeByWho(topic);
-
         double inTPS = 0;
 
         long inMsgCntToday = 0;
@@ -93,6 +93,7 @@ public class StatsAllSubCommand implements SubCommand {
             String masterAddr = bd.getBrokerAddrs().get(MixAll.MASTER_ID);
             if (masterAddr != null) {
                 try {
+                    //sh mqadmin statsAll -获取 #InTPS     #OutTPS   #InMsg24Hour  #OutMsg24Hour信息
                     BrokerStatsData bsd = admin.ViewBrokerStatsData(masterAddr, BrokerStatsManager.TOPIC_PUT_NUMS, topic);
                     inTPS += bsd.getStatsMinute().getTps();
                     inMsgCntToday += compute24HourSum(bsd);

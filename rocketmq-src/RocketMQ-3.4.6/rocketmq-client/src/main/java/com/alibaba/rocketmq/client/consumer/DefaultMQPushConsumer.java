@@ -82,7 +82,7 @@ public class DefaultMQPushConsumer extends ClientConfig implements MQPushConsume
      * 就是PushConsumer main函数中的consumer.registerMessageListener(new MessageListenerConcurrently()，这里的
      * new MessageListenerConcurrently()  消息监听器
      */
-    private MessageListener messageListener; //赋值见registerMessageListener  MessageListenerConcurrently
+    private MessageListener messageListener; //赋值见 registerMessageListener  MessageListenerConcurrently
     /**
      * Offset Storage 消费进度存储
      */
