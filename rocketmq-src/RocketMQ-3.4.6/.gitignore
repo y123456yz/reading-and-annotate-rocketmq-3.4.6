@@ -9,4 +9,6 @@ target/
 .class
 *.xml
 .xml
+*.class
+.calss
 .target/
