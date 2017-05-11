@@ -20,5 +20,9 @@
     <orderEntry type="module" module-name="test" />
     <orderEntry type="module" module-name="test3" />
     <orderEntry type="module" module-name="main3" />
+    <orderEntry type="library" name="Maven: commons-cli:commons-cli:1.2" level="project" />
+    <orderEntry type="library" name="Maven: org.slf4j:slf4j-api:1.7.5" level="project" />
+    <orderEntry type="library" name="Maven: ch.qos.logback:logback-classic:1.0.13" level="project" />
+    <orderEntry type="library" name="Maven: io.netty:netty-all:4.0.29.Final" level="project" />
   </component>
 </module>

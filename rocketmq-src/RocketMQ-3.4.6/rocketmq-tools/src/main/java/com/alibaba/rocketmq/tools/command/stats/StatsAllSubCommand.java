@@ -89,6 +89,7 @@ public class StatsAllSubCommand implements SubCommand {
 
         long inMsgCntToday = 0;
 
+        //整个topic的intps(intps和消费分组无关，只有outpts才和具体的消费者分组有关)
         for (BrokerData bd : topicRouteData.getBrokerDatas()) {
             String masterAddr = bd.getBrokerAddrs().get(MixAll.MASTER_ID);
             if (masterAddr != null) {
@@ -103,6 +104,7 @@ public class StatsAllSubCommand implements SubCommand {
             }
         }
 
+        //topic下每个消费者分组对应的out tps
         if (groupList != null && !groupList.getGroupList().isEmpty()) {
             for (String group : groupList.getGroupList()) {
                 double outTPS = 0;
@@ -170,7 +172,7 @@ public class StatsAllSubCommand implements SubCommand {
                 "#OutMsg24Hour"//
             );
 
-            boolean activeTopic = commandLine.hasOption('a');
+            boolean activeTopic = commandLine.hasOption('a'); //加上-a参数则只获取活跃的消费分组，并打印
 
             for (String topic : topicList.getTopicList()) {
                 if (topic.startsWith(MixAll.RETRY_GROUP_TOPIC_PREFIX) || topic.startsWith(MixAll.DLQ_GROUP_TOPIC_PREFIX)) {

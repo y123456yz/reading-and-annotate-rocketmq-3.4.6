@@ -55,7 +55,6 @@ public class BrokerStatusSubCommand implements SubCommand {
         return options;
     }
 
-
     @Override
     public void execute(CommandLine commandLine, Options options, RPCHook rpcHook) {
         DefaultMQAdminExt defaultMQAdminExt = new DefaultMQAdminExt(rpcHook);

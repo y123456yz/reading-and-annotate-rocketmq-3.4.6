@@ -42,7 +42,7 @@ import java.util.concurrent.atomic.AtomicLong;
 
 
 /**
- * @author shijia.wxr
+ * @author shijia.wxr   nameserver netty网络事件异步处理
  */
 public class DefaultRequestProcessor implements NettyRequestProcessor {
     private static final Logger log = LoggerFactory.getLogger(LoggerName.NamesrvLoggerName);
@@ -65,12 +65,15 @@ public class DefaultRequestProcessor implements NettyRequestProcessor {
         }
 
         switch (request.getCode()) {
+        //sh mqadmin updateKvConfig相关
+        //sh mqadmin updateKvConfig相关
         case RequestCode.PUT_KV_CONFIG:
             return this.putKVConfig(ctx, request);
         case RequestCode.GET_KV_CONFIG:
             return this.getKVConfig(ctx, request);
         case RequestCode.DELETE_KV_CONFIG:
             return this.deleteKVConfig(ctx, request);
+
         /*注册broker到nameserver. */
         case RequestCode.REGISTER_BROKER:
             Version brokerVersion = MQVersion.value2Version(request.getVersion());
@@ -110,7 +113,6 @@ public class DefaultRequestProcessor implements NettyRequestProcessor {
         }
         return null;
     }
-
 
     public RemotingCommand registerBrokerWithFilterServer(ChannelHandlerContext ctx, RemotingCommand request)
             throws RemotingCommandException {

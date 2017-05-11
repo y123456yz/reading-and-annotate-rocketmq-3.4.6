@@ -67,7 +67,7 @@ public class StatsItem {
         return statsSnapshot;
     }
 
-
+    //每分钟的采样结果
     public StatsSnapshot getStatsDataInMinute() {
         return computeStatsData(this.csListMinute);
     }

@@ -45,7 +45,6 @@ public abstract class ServiceThread implements Runnable {
         this.thread.start();
     }
 
-
     public void shutdown() {
         this.shutdown(false);
     }
@@ -61,7 +60,6 @@ public abstract class ServiceThread implements Runnable {
         stlog.info("makestop thread " + this.getServiceName());
     }
 
-
     public void stop(final boolean interrupt) {
         this.stoped = true;
         stlog.info("stop thread " + this.getServiceName() + " interrupt " + interrupt);
@@ -76,7 +74,6 @@ public abstract class ServiceThread implements Runnable {
             this.thread.interrupt();
         }
     }
-
 
     public void shutdown(final boolean interrupt) {
         this.stoped = true;
@@ -137,11 +134,9 @@ public abstract class ServiceThread implements Runnable {
     protected void onWaitEnd() {
     }
 
-
     public boolean isStoped() {
         return stoped;
     }
-
 
     public long getJointime() {
         return JoinTime;

@@ -237,30 +237,6 @@ public class DefaultMQAdminExt extends ClientConfig implements MQAdminExt {
         return defaultMQAdminExtImpl.examineProducerConnectionInfo(producerGroup, topic);
     }
 
-        ⒈ 从第一个元素开始，该元素可以认为已经被排序
-        ⒉ 取出下一个元素，在已经排序的元素序列中从后向前扫描
-        ⒊ 如果该元素（已排序）大于新元素，将该元素移到下一位置
-        ⒋ 重复步骤3，直到找到已排序的元素小于或者等于新元素的位置
-        ⒌ 将新元素插入到下一位置中
-        ⒍ 重复步骤2~5
-
-    void insertion_sort(int *array,int num)
-    {
-        int i,j;
-        int temp;
-        i = 0;
-        j = 0;
-        for(;i < num;i++)
-        {
-            for(j=i;(j > 0)&&(array[j] < array[j-1]);j--)
-            {
-                temp =  array[j-1];
-                array[j-1] = array[j];
-                array[j] = temp;
-            }
-        }
-    }
-
     @Override
     public int wipeWritePermOfBroker(final String namesrvAddr, String brokerName) throws RemotingCommandException,
             RemotingConnectException, RemotingSendRequestException, RemotingTimeoutException, InterruptedException, MQClientException {

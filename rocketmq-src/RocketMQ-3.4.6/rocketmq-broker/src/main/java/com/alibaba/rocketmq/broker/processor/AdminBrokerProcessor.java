@@ -168,17 +168,17 @@ public class AdminBrokerProcessor implements NettyRequestProcessor {
         }
 
         //#InTPS     #OutTPS   #InMsg24Hour  #OutMsg24Hour
-        BrokerStatsData brokerStatsData = new BrokerStatsData();
+        BrokerStatsData brokerStatsData = new BrokerStatsData(); //#InTPS     #OutTPS
         {
             BrokerStatsItem it = new BrokerStatsItem();
-            StatsSnapshot ss = statsItem.getStatsDataInMinute();
+            StatsSnapshot ss = statsItem.getStatsDataInMinute(); //分钟级采样结果统计
             it.setSum(ss.getSum());
             it.setTps(ss.getTps());
             it.setAvgpt(ss.getAvgpt());
             brokerStatsData.setStatsMinute(it);
         }
 
-        {
+        { //#InMsg24Hour
             BrokerStatsItem it = new BrokerStatsItem();
             StatsSnapshot ss = statsItem.getStatsDataInHour();
             it.setSum(ss.getSum());
@@ -187,7 +187,7 @@ public class AdminBrokerProcessor implements NettyRequestProcessor {
             brokerStatsData.setStatsHour(it);
         }
 
-        {
+        { //#OutMsg24Hour
             BrokerStatsItem it = new BrokerStatsItem();
             StatsSnapshot ss = statsItem.getStatsDataInDay();
             it.setSum(ss.getSum());

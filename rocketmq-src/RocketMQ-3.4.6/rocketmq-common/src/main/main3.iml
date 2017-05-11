@@ -10,5 +10,6 @@
     <orderEntry type="library" name="target5" level="project" />
     <orderEntry type="module" module-name="main" />
     <orderEntry type="module" module-name="test2" />
+    <orderEntry type="library" name="Maven: org.slf4j:slf4j-api:1.7.5" level="project" />
   </component>
 </module>

@@ -36,6 +36,7 @@ import java.util.concurrent.atomic.AtomicLong;
  * @author lansheng.zj
  */
 public class MixAll {
+    //ROCKETMQ_HOME环境变量在启动namserver的时候，在bin/mqnamesrv启动文件中设置的环境变量
     public static final String ROCKETMQ_HOME_ENV = "ROCKETMQ_HOME";
     public static final String ROCKETMQ_HOME_PROPERTY = "rocketmq.home.dir";
     public static final String NAMESRV_ADDR_ENV = "NAMESRV_ADDR";

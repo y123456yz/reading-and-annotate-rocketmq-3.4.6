@@ -43,10 +43,12 @@ public class NamesrvController {
     private static final Logger log = LoggerFactory.getLogger(LoggerName.NamesrvLoggerName);
     private final NamesrvConfig namesrvConfig;
     private final NettyServerConfig nettyServerConfig;
-    private RemotingServer remotingServer;
+    private RemotingServer remotingServer; //NettyRemotingServer
     private BrokerHousekeepingService brokerHousekeepingService;
     private ExecutorService remotingExecutor;
 
+
+    //该线程专门做定期处理工作
     private final ScheduledExecutorService scheduledExecutorService = Executors.newSingleThreadScheduledExecutor(new ThreadFactoryImpl(
         "NSScheduledThread"));
     private final KVConfigManager kvConfigManager;
@@ -73,6 +75,7 @@ public class NamesrvController {
         this.registerProcessor();
 
         /* 检查本地 brokerLiveTable 中的broker信息是否过期，过期则从brokerLiveTable中剔除 */
+        //例如一段时间都没有收到broker的上报信息，则直接剔除该broker
         this.scheduledExecutorService.scheduleAtFixedRate(new Runnable() {
 
             @Override
@@ -101,6 +104,7 @@ public class NamesrvController {
     }
 
     //注册读消息回调处理
+    // netty的网络异步事件处理在这里，最终接口见DefaultRequestProcessor
     private void registerProcessor() {
         if (namesrvConfig.isClusterTest()) {
             this.remotingServer.registerDefaultProcessor(new ClusterTestRequestProcessor(this, namesrvConfig.getProductEnvName()),

@@ -138,6 +138,96 @@ root     122841 122839  0  2016 ?        02:27:23 /opt/jdk/jdk1.7.0_71/bin/java 
                 System.exit(0);
             }
 
+            /*
+            * <?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Licensed to the Apache Software Foundation (ASF) under one or more
+  contributor license agreements.  See the NOTICE file distributed with
+  this work for additional information regarding copyright ownership.
+  The ASF licenses this file to You under the Apache License, Version 2.0
+  (the "License"); you may not use this file except in compliance with
+  the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+  -->
+
+<configuration>
+        <appender name="DefaultAppender"
+                class="ch.qos.logback.core.rolling.RollingFileAppender">
+                <file>${user.home}/logs/rocketmqlogs/namesrv_default.log</file>
+                <append>true</append>
+                <rollingPolicy class="ch.qos.logback.core.rolling.FixedWindowRollingPolicy">
+                        <fileNamePattern>${user.home}/logs/rocketmqlogs/otherdays/namesrv_default.%i.log
+                        </fileNamePattern>
+                        <minIndex>1</minIndex>
+                        <maxIndex>5</maxIndex>
+                </rollingPolicy>
+                <triggeringPolicy
+                        class="ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy">
+                        <maxFileSize>100MB</maxFileSize>
+                </triggeringPolicy>
+                <encoder>
+                        <pattern>%d{yyy-MM-dd HH:mm:ss,GMT+8} %p %t - %m%n</pattern>
+                        <charset class="java.nio.charset.Charset">UTF-8</charset>
+                </encoder>
+        </appender>
+
+        <appender name="RocketmqNamesrvAppender"
+                class="ch.qos.logback.core.rolling.RollingFileAppender">
+                <file>${user.home}/logs/rocketmqlogs/namesrv.log</file>
+                <append>true</append>
+                <rollingPolicy class="ch.qos.logback.core.rolling.FixedWindowRollingPolicy">
+                        <fileNamePattern>${user.home}/logs/rocketmqlogs/otherdays/namesrv.%i.log
+                        </fileNamePattern>
+                        <minIndex>1</minIndex>
+                        <maxIndex>5</maxIndex>
+                </rollingPolicy>
+                <triggeringPolicy
+                        class="ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy">
+                        <maxFileSize>100MB</maxFileSize>
+                </triggeringPolicy>
+                <encoder>
+                        <pattern>%d{yyy-MM-dd HH:mm:ss,GMT+8} %p %t - %m%n</pattern>
+                        <charset class="java.nio.charset.Charset">UTF-8</charset>
+                </encoder>
+        </appender>
+
+        <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+                <append>true</append>
+                <encoder>
+                        <pattern>%d{yyy-MM-dd HH\:mm\:ss,SSS} %p %t - %m%n</pattern>
+                        <charset class="java.nio.charset.Charset">UTF-8</charset>
+                </encoder>
+        </appender>
+
+        <logger name="RocketmqNamesrv" additivity="false">
+                <level value="INFO" />
+                <appender-ref ref="RocketmqNamesrvAppender" />
+        </logger>
+
+        <logger name="RocketmqCommon" additivity="false">
+                <level value="INFO" />
+                <appender-ref ref="RocketmqNamesrvAppender" />
+        </logger>
+
+        <logger name="RocketmqRemoting" additivity="false">
+                <level value="INFO" />
+                <appender-ref ref="RocketmqNamesrvAppender" />
+        </logger>
+
+        <root>
+                <level value="INFO" />
+                <appender-ref ref="DefaultAppender" />
+        </root>
+</configuration>
+            * */  //nameserver依赖 RocketmqCommon 和 RocketmqRemoting，各个模块的日志级别如上配置
+            //例如listenPort=9998是通过命令行携带的，则以命令行为准，即使加到配置文件中了，因为这里后执行，所以还是以命令行为准
             MixAll.properties2Object(ServerUtil.commandLine2Properties(commandLine), namesrvConfig);
 
             if (null == namesrvConfig.getRocketmqHome()) {
@@ -150,6 +240,7 @@ root     122841 122839  0  2016 ?        02:27:23 /opt/jdk/jdk1.7.0_71/bin/java 
             JoranConfigurator configurator = new JoranConfigurator();
             configurator.setContext(lc);
             lc.reset();
+            //日志文件配置信息加载
             configurator.doConfigure(namesrvConfig.getRocketmqHome() + "/conf/logback_namesrv.xml");
             final Logger log = LoggerFactory.getLogger(LoggerName.NamesrvLoggerName);
 

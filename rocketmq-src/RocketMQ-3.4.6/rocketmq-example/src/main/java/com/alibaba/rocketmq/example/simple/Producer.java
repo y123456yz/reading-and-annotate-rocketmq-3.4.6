@@ -55,7 +55,7 @@ public class Producer {
         producer.setNamesrvAddr("10.2.223.157:9876;10.2.223.158:9876;10.2.223.159:9876");
        // producer.setNamesrvAddr("10.2.223.228:9876");
         producer.start();
-        for(int i = 0; i < 1; ++i) {
+        for(int i = 0; i < 111111; ++i) {
 //            Thread.currentThread().sleep(50);
 //            for (String item : array) {
             Message msg = new Message("yyztest2",// topic
@@ -70,6 +70,7 @@ public class Producer {
                 e.printStackTrace();
             }
             System.out.println(sendResult);
+            Thread.sleep(300);
         }
         System.out.println(System.getProperty("user.home") );
         producer.shutdown();

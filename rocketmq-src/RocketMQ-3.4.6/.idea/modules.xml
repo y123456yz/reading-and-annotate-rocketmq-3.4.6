@@ -23,7 +23,6 @@
       <module fileurl="file://$PROJECT_DIR$/rocketmq-srvutil/rocketmq-srvutil.iml" filepath="$PROJECT_DIR$/rocketmq-srvutil/rocketmq-srvutil.iml" />
       <module fileurl="file://$PROJECT_DIR$/rocketmq-store/rocketmq-store.iml" filepath="$PROJECT_DIR$/rocketmq-store/rocketmq-store.iml" />
       <module fileurl="file://$PROJECT_DIR$/rocketmq-tools/rocketmq-tools.iml" filepath="$PROJECT_DIR$/rocketmq-tools/rocketmq-tools.iml" />
-      <module fileurl="file://$PROJECT_DIR$/rocketmq-example/target/target.iml" filepath="$PROJECT_DIR$/rocketmq-example/target/target.iml" />
       <module fileurl="file://$PROJECT_DIR$/rocketmq-srvutil/src/test/test.iml" filepath="$PROJECT_DIR$/rocketmq-srvutil/src/test/test.iml" />
       <module fileurl="file://$PROJECT_DIR$/rocketmq-broker/src/test/test1.iml" filepath="$PROJECT_DIR$/rocketmq-broker/src/test/test1.iml" />
       <module fileurl="file://$PROJECT_DIR$/rocketmq-remoting/src/test/test2.iml" filepath="$PROJECT_DIR$/rocketmq-remoting/src/test/test2.iml" />

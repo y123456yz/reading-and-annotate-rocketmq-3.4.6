@@ -7,5 +7,6 @@ target/
 .idea/
 *.versionsBackup
 .class
+*.xml
 .xml
 .target/

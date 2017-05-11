@@ -61,8 +61,11 @@ public class RequestCode { //报文头部header data部分的code:  代表这些
     public static final int UNLOCK_BATCH_MQ = 42;
     public static final int GET_ALL_CONSUMER_OFFSET = 43;
     public static final int GET_ALL_DELAY_OFFSET = 45;
+    //sh mqadmin updateKvConfig
     public static final int PUT_KV_CONFIG = 100;
+     //sh mqadmin updateKvConfig
     public static final int GET_KV_CONFIG = 101;
+     //sh mqadmin deleteKvConfig
     public static final int DELETE_KV_CONFIG = 102;
     public static final int REGISTER_BROKER = 103;
     public static final int UNREGISTER_BROKER = 104;
