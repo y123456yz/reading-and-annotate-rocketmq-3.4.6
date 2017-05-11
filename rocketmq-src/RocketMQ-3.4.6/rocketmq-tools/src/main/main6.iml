@@ -22,5 +22,6 @@
     <orderEntry type="module" module-name="test4" />
     <orderEntry type="module" module-name="main3" />
     <orderEntry type="module" module-name="main8" />
+    <orderEntry type="library" name="Maven: commons-cli:commons-cli:1.2" level="project" />
   </component>
 </module>

@@ -2,75 +2,10 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="aec39394-f4fc-4f73-8d60-24143afb50ce" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/rocketmq-broker/target/classes/com/alibaba/rocketmq/broker/client/ConsumerManager.class" afterPath="$PROJECT_DIR$/rocketmq-broker/target/classes/com/alibaba/rocketmq/broker/client/ConsumerManager.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/rocketmq-broker/target/classes/com/alibaba/rocketmq/broker/offset/ConsumerOffsetManager.class" afterPath="$PROJECT_DIR$/rocketmq-broker/target/classes/com/alibaba/rocketmq/broker/offset/ConsumerOffsetManager.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/rocketmq-broker/target/classes/com/alibaba/rocketmq/broker/processor/AdminBrokerProcessor$1.class" afterPath="$PROJECT_DIR$/rocketmq-broker/target/classes/com/alibaba/rocketmq/broker/processor/AdminBrokerProcessor$1.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/rocketmq-broker/target/classes/com/alibaba/rocketmq/broker/processor/AdminBrokerProcessor.class" afterPath="$PROJECT_DIR$/rocketmq-broker/target/classes/com/alibaba/rocketmq/broker/processor/AdminBrokerProcessor.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/rocketmq-broker/target/classes/com/alibaba/rocketmq/broker/processor/PullMessageProcessor$2.class" afterPath="$PROJECT_DIR$/rocketmq-broker/target/classes/com/alibaba/rocketmq/broker/processor/PullMessageProcessor$2.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/rocketmq-broker/target/classes/com/alibaba/rocketmq/broker/processor/PullMessageProcessor$3.class" afterPath="$PROJECT_DIR$/rocketmq-broker/target/classes/com/alibaba/rocketmq/broker/processor/PullMessageProcessor$3.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/rocketmq-broker/target/classes/com/alibaba/rocketmq/broker/processor/PullMessageProcessor.class" afterPath="$PROJECT_DIR$/rocketmq-broker/target/classes/com/alibaba/rocketmq/broker/processor/PullMessageProcessor.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/rocketmq-client/target/classes/com/alibaba/rocketmq/client/impl/consumer/ConsumeMessageOrderlyService$1.class" afterPath="$PROJECT_DIR$/rocketmq-client/target/classes/com/alibaba/rocketmq/client/impl/consumer/ConsumeMessageOrderlyService$1.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/rocketmq-client/target/classes/com/alibaba/rocketmq/client/impl/consumer/ConsumeMessageOrderlyService$2.class" afterPath="$PROJECT_DIR$/rocketmq-client/target/classes/com/alibaba/rocketmq/client/impl/consumer/ConsumeMessageOrderlyService$2.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/rocketmq-client/target/classes/com/alibaba/rocketmq/client/impl/consumer/ConsumeMessageOrderlyService$3.class" afterPath="$PROJECT_DIR$/rocketmq-client/target/classes/com/alibaba/rocketmq/client/impl/consumer/ConsumeMessageOrderlyService$3.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/rocketmq-client/target/classes/com/alibaba/rocketmq/client/impl/consumer/ConsumeMessageOrderlyService$4.class" afterPath="$PROJECT_DIR$/rocketmq-client/target/classes/com/alibaba/rocketmq/client/impl/consumer/ConsumeMessageOrderlyService$4.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/rocketmq-client/target/classes/com/alibaba/rocketmq/client/impl/consumer/ConsumeMessageOrderlyService$ConsumeRequest.class" afterPath="$PROJECT_DIR$/rocketmq-client/target/classes/com/alibaba/rocketmq/client/impl/consumer/ConsumeMessageOrderlyService$ConsumeRequest.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/rocketmq-client/target/classes/com/alibaba/rocketmq/client/impl/consumer/ConsumeMessageOrderlyService.class" afterPath="$PROJECT_DIR$/rocketmq-client/target/classes/com/alibaba/rocketmq/client/impl/consumer/ConsumeMessageOrderlyService.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/rocketmq-common/target/classes/com/alibaba/rocketmq/common/MixAll.class" afterPath="$PROJECT_DIR$/rocketmq-common/target/classes/com/alibaba/rocketmq/common/MixAll.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/rocketmq-common/target/classes/com/alibaba/rocketmq/common/UtilAll.class" afterPath="$PROJECT_DIR$/rocketmq-common/target/classes/com/alibaba/rocketmq/common/UtilAll.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/rocketmq-common/target/classes/com/alibaba/rocketmq/common/protocol/heartbeat/SubscriptionData.class" afterPath="$PROJECT_DIR$/rocketmq-common/target/classes/com/alibaba/rocketmq/common/protocol/heartbeat/SubscriptionData.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/rocketmq-example/target/classes/com/alibaba/rocketmq/example/ordermessage/Consumer$1.class" afterPath="$PROJECT_DIR$/rocketmq-example/target/classes/com/alibaba/rocketmq/example/ordermessage/Consumer$1.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/rocketmq-example/target/classes/com/alibaba/rocketmq/example/ordermessage/Consumer.class" afterPath="$PROJECT_DIR$/rocketmq-example/target/classes/com/alibaba/rocketmq/example/ordermessage/Consumer.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/rocketmq-example/target/classes/com/alibaba/rocketmq/example/ordermessage/Producer$1.class" afterPath="$PROJECT_DIR$/rocketmq-example/target/classes/com/alibaba/rocketmq/example/ordermessage/Producer$1.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/rocketmq-example/target/classes/com/alibaba/rocketmq/example/ordermessage/Producer.class" afterPath="$PROJECT_DIR$/rocketmq-example/target/classes/com/alibaba/rocketmq/example/ordermessage/Producer.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/rocketmq-example/target/classes/com/alibaba/rocketmq/example/simple/Producer.class" afterPath="$PROJECT_DIR$/rocketmq-example/target/classes/com/alibaba/rocketmq/example/simple/Producer.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/rocketmq-example/target/classes/com/alibaba/rocketmq/example/simple/PushConsumer.class" afterPath="$PROJECT_DIR$/rocketmq-example/target/classes/com/alibaba/rocketmq/example/simple/PushConsumer.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/rocketmq-namesrv/target/classes/com/alibaba/rocketmq/namesrv/NamesrvStartup$1.class" afterPath="$PROJECT_DIR$/rocketmq-namesrv/target/classes/com/alibaba/rocketmq/namesrv/NamesrvStartup$1.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/rocketmq-namesrv/target/classes/com/alibaba/rocketmq/namesrv/NamesrvStartup.class" afterPath="$PROJECT_DIR$/rocketmq-namesrv/target/classes/com/alibaba/rocketmq/namesrv/NamesrvStartup.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/rocketmq-remoting/target/classes/com/alibaba/rocketmq/remoting/common/ServiceThread.class" afterPath="$PROJECT_DIR$/rocketmq-remoting/target/classes/com/alibaba/rocketmq/remoting/common/ServiceThread.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/rocketmq-store/target/classes/com/alibaba/rocketmq/store/DefaultMessageStore$CleanCommitLogService.class" afterPath="$PROJECT_DIR$/rocketmq-store/target/classes/com/alibaba/rocketmq/store/DefaultMessageStore$CleanCommitLogService.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/rocketmq-store/target/classes/com/alibaba/rocketmq/store/DefaultMessageStore$CleanConsumeQueueService.class" afterPath="$PROJECT_DIR$/rocketmq-store/target/classes/com/alibaba/rocketmq/store/DefaultMessageStore$CleanConsumeQueueService.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/rocketmq-store/target/classes/com/alibaba/rocketmq/store/DefaultMessageStore$FlushConsumeQueueService.class" afterPath="$PROJECT_DIR$/rocketmq-store/target/classes/com/alibaba/rocketmq/store/DefaultMessageStore$FlushConsumeQueueService.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/rocketmq-store/target/classes/com/alibaba/rocketmq/store/DefaultMessageStore$ReputMessageService.class" afterPath="$PROJECT_DIR$/rocketmq-store/target/classes/com/alibaba/rocketmq/store/DefaultMessageStore$ReputMessageService.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/rocketmq-store/target/classes/com/alibaba/rocketmq/store/DefaultMessageStore.class" afterPath="$PROJECT_DIR$/rocketmq-store/target/classes/com/alibaba/rocketmq/store/DefaultMessageStore.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/rocketmq-store/target/classes/com/alibaba/rocketmq/store/MapedFile$1.class" afterPath="$PROJECT_DIR$/rocketmq-store/target/classes/com/alibaba/rocketmq/store/MapedFile$1.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/rocketmq-store/target/classes/com/alibaba/rocketmq/store/MapedFile.class" afterPath="$PROJECT_DIR$/rocketmq-store/target/classes/com/alibaba/rocketmq/store/MapedFile.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/rocketmq-store/target/classes/com/alibaba/rocketmq/store/StoreStatsService$CallSnapshot.class" afterPath="$PROJECT_DIR$/rocketmq-store/target/classes/com/alibaba/rocketmq/store/StoreStatsService$CallSnapshot.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/rocketmq-store/target/classes/com/alibaba/rocketmq/store/StoreStatsService.class" afterPath="$PROJECT_DIR$/rocketmq-store/target/classes/com/alibaba/rocketmq/store/StoreStatsService.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/rocketmq-store/target/classes/com/alibaba/rocketmq/store/config/MessageStoreConfig.class" afterPath="$PROJECT_DIR$/rocketmq-store/target/classes/com/alibaba/rocketmq/store/config/MessageStoreConfig.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/rocketmq-store/target/classes/com/alibaba/rocketmq/store/schedule/ScheduleMessageService$1.class" afterPath="$PROJECT_DIR$/rocketmq-store/target/classes/com/alibaba/rocketmq/store/schedule/ScheduleMessageService$1.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/rocketmq-store/target/classes/com/alibaba/rocketmq/store/schedule/ScheduleMessageService$DeliverDelayedMessageTimerTask.class" afterPath="$PROJECT_DIR$/rocketmq-store/target/classes/com/alibaba/rocketmq/store/schedule/ScheduleMessageService$DeliverDelayedMessageTimerTask.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/rocketmq-store/target/classes/com/alibaba/rocketmq/store/schedule/ScheduleMessageService.class" afterPath="$PROJECT_DIR$/rocketmq-store/target/classes/com/alibaba/rocketmq/store/schedule/ScheduleMessageService.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/misc.xml" afterPath="$PROJECT_DIR$/.idea/misc.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/modules.xml" afterPath="$PROJECT_DIR$/.idea/modules.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../../README.md" afterPath="$PROJECT_DIR$/../../README.md" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/rocketmq-broker/src/main/java/com/alibaba/rocketmq/broker/processor/AdminBrokerProcessor.java" afterPath="$PROJECT_DIR$/rocketmq-broker/src/main/java/com/alibaba/rocketmq/broker/processor/AdminBrokerProcessor.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/rocketmq-broker/target/effective-pom/effective-dependencies.xml" afterPath="$PROJECT_DIR$/rocketmq-broker/target/effective-pom/effective-dependencies.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/rocketmq-client/target/effective-pom/effective-dependencies.xml" afterPath="$PROJECT_DIR$/rocketmq-client/target/effective-pom/effective-dependencies.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/rocketmq-common/src/main/java/com/alibaba/rocketmq/common/MixAll.java" afterPath="$PROJECT_DIR$/rocketmq-common/src/main/java/com/alibaba/rocketmq/common/MixAll.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/rocketmq-common/src/main/java/com/alibaba/rocketmq/common/protocol/RequestCode.java" afterPath="$PROJECT_DIR$/rocketmq-common/src/main/java/com/alibaba/rocketmq/common/protocol/RequestCode.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/rocketmq-common/src/main/java/com/alibaba/rocketmq/common/stats/StatsItem.java" afterPath="$PROJECT_DIR$/rocketmq-common/src/main/java/com/alibaba/rocketmq/common/stats/StatsItem.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/rocketmq-common/src/main/main3.iml" afterPath="$PROJECT_DIR$/rocketmq-common/src/main/main3.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/rocketmq-common/target/effective-pom/effective-dependencies.xml" afterPath="$PROJECT_DIR$/rocketmq-common/target/effective-pom/effective-dependencies.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/rocketmq-example/src/main/java/com/alibaba/rocketmq/example/simple/Producer.java" afterPath="$PROJECT_DIR$/rocketmq-example/src/main/java/com/alibaba/rocketmq/example/simple/Producer.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/rocketmq-example/target/effective-pom/effective-dependencies.xml" afterPath="$PROJECT_DIR$/rocketmq-example/target/effective-pom/effective-dependencies.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/rocketmq-filtersrv/target/effective-pom/effective-dependencies.xml" afterPath="$PROJECT_DIR$/rocketmq-filtersrv/target/effective-pom/effective-dependencies.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/rocketmq-namesrv/src/main/java/com/alibaba/rocketmq/namesrv/NamesrvController.java" afterPath="$PROJECT_DIR$/rocketmq-namesrv/src/main/java/com/alibaba/rocketmq/namesrv/NamesrvController.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/rocketmq-namesrv/src/main/java/com/alibaba/rocketmq/namesrv/NamesrvStartup.java" afterPath="$PROJECT_DIR$/rocketmq-namesrv/src/main/java/com/alibaba/rocketmq/namesrv/NamesrvStartup.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/rocketmq-namesrv/src/main/java/com/alibaba/rocketmq/namesrv/kvconfig/KVConfigManager.java" afterPath="$PROJECT_DIR$/rocketmq-namesrv/src/main/java/com/alibaba/rocketmq/namesrv/kvconfig/KVConfigManager.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/rocketmq-namesrv/src/main/java/com/alibaba/rocketmq/namesrv/processor/DefaultRequestProcessor.java" afterPath="$PROJECT_DIR$/rocketmq-namesrv/src/main/java/com/alibaba/rocketmq/namesrv/processor/DefaultRequestProcessor.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/rocketmq-namesrv/src/main/main2.iml" afterPath="$PROJECT_DIR$/rocketmq-namesrv/src/main/main2.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/rocketmq-namesrv/target/effective-pom/effective-dependencies.xml" afterPath="$PROJECT_DIR$/rocketmq-namesrv/target/effective-pom/effective-dependencies.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/rocketmq-remoting/src/main/java/com/alibaba/rocketmq/remoting/common/ServiceThread.java" afterPath="$PROJECT_DIR$/rocketmq-remoting/src/main/java/com/alibaba/rocketmq/remoting/common/ServiceThread.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/rocketmq-remoting/src/main/main.iml" afterPath="$PROJECT_DIR$/rocketmq-remoting/src/main/main.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/rocketmq-remoting/target/effective-pom/effective-dependencies.xml" afterPath="$PROJECT_DIR$/rocketmq-remoting/target/effective-pom/effective-dependencies.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/rocketmq-srvutil/target/effective-pom/effective-dependencies.xml" afterPath="$PROJECT_DIR$/rocketmq-srvutil/target/effective-pom/effective-dependencies.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/rocketmq-store/target/effective-pom/effective-dependencies.xml" afterPath="$PROJECT_DIR$/rocketmq-store/target/effective-pom/effective-dependencies.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/rocketmq-tools/src/main/java/com/alibaba/rocketmq/tools/admin/DefaultMQAdminExt.java" afterPath="$PROJECT_DIR$/rocketmq-tools/src/main/java/com/alibaba/rocketmq/tools/admin/DefaultMQAdminExt.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/rocketmq-tools/src/main/java/com/alibaba/rocketmq/tools/command/broker/BrokerStatusSubCommand.java" afterPath="$PROJECT_DIR$/rocketmq-tools/src/main/java/com/alibaba/rocketmq/tools/command/broker/BrokerStatusSubCommand.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/rocketmq-tools/src/main/java/com/alibaba/rocketmq/tools/command/stats/StatsAllSubCommand.java" afterPath="$PROJECT_DIR$/rocketmq-tools/src/main/java/com/alibaba/rocketmq/tools/command/stats/StatsAllSubCommand.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/rocketmq-tools/target/effective-pom/effective-dependencies.xml" afterPath="$PROJECT_DIR$/rocketmq-tools/target/effective-pom/effective-dependencies.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/rocketmq-tools/target/maven-status/maven-compiler-plugin/compile/default-compile/createdFiles.lst" afterPath="$PROJECT_DIR$/rocketmq-tools/target/maven-status/maven-compiler-plugin/compile/default-compile/createdFiles.lst" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/effective-pom/effective-dependencies.xml" afterPath="$PROJECT_DIR$/target/effective-pom/effective-dependencies.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/rocketmq-common/src/main/java/com/alibaba/rocketmq/common/TopicConfig.java" afterPath="$PROJECT_DIR$/rocketmq-common/src/main/java/com/alibaba/rocketmq/common/TopicConfig.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/rocketmq-tools/src/main/main6.iml" afterPath="$PROJECT_DIR$/rocketmq-tools/src/main/main6.iml" />
     </list>
     <ignored path="$PROJECT_DIR$/out/" />
     <ignored path="$PROJECT_DIR$/rocketmq-namesrv/target/" />
@@ -125,11 +60,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="DefaultRequestProcessor.java" pinned="false" current-in-tab="true">
+      <file leaf-file-name="DefaultRequestProcessor.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/rocketmq-namesrv/src/main/java/com/alibaba/rocketmq/namesrv/processor/DefaultRequestProcessor.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-163">
-              <caret line="66" column="8" lean-forward="true" selection-start-line="66" selection-start-column="8" selection-end-line="66" selection-end-column="8" />
+            <state relative-caret-position="513">
+              <caret line="92" column="51" lean-forward="false" selection-start-line="92" selection-start-column="51" selection-end-line="92" selection-end-column="51" />
               <folding>
                 <element signature="imports" expanded="true" />
                 <element signature="e#2481#2482#0" expanded="true" />
@@ -139,11 +74,40 @@
           </provider>
         </entry>
       </file>
+      <file leaf-file-name="UpdateTopicSubCommand.java" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/rocketmq-tools/src/main/java/com/alibaba/rocketmq/tools/command/topic/UpdateTopicSubCommand.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="361">
+              <caret line="142" column="27" lean-forward="false" selection-start-line="142" selection-start-column="20" selection-end-line="142" selection-end-column="27" />
+              <folding>
+                <element signature="imports" expanded="true" />
+                <element signature="e#1507#1508#0" expanded="true" />
+                <element signature="e#1543#1544#0" expanded="true" />
+                <element signature="e#1593#1594#0" expanded="true" />
+                <element signature="e#1640#1641#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="TopicConfig.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/rocketmq-common/src/main/java/com/alibaba/rocketmq/common/TopicConfig.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="266">
+              <caret line="128" column="20" lean-forward="true" selection-start-line="128" selection-start-column="20" selection-end-line="128" selection-end-column="20" />
+              <folding>
+                <element signature="e#3443#3444#0" expanded="true" />
+                <element signature="e#3495#3496#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
       <file leaf-file-name="MQClientAPIImpl.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/rocketmq-client/src/main/java/com/alibaba/rocketmq/client/impl/MQClientAPIImpl.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="227">
-              <caret line="1181" column="112" lean-forward="true" selection-start-line="1181" selection-start-column="112" selection-end-line="1181" selection-end-column="112" />
+            <state relative-caret-position="229">
+              <caret line="191" column="51" lean-forward="false" selection-start-line="191" selection-start-column="51" selection-end-line="191" selection-end-column="51" />
               <folding />
             </state>
           </provider>
@@ -163,21 +127,8 @@
         <entry file="file://$PROJECT_DIR$/rocketmq-tools/src/main/java/com/alibaba/rocketmq/tools/admin/DefaultMQAdminExt.java">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="215">
-              <caret line="362" column="48" lean-forward="true" selection-start-line="362" selection-start-column="48" selection-end-line="362" selection-end-column="48" />
+              <caret line="362" column="48" lean-forward="false" selection-start-line="362" selection-start-column="48" selection-end-line="362" selection-end-column="48" />
               <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="MQClientInstance.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/rocketmq-client/src/main/java/com/alibaba/rocketmq/client/impl/factory/MQClientInstance.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="227">
-              <caret line="1117" column="27" lean-forward="false" selection-start-line="1117" selection-start-column="27" selection-end-line="1117" selection-end-column="27" />
-              <folding>
-                <element signature="e#44656#44657#0" expanded="true" />
-                <element signature="e#44694#44695#0" expanded="true" />
-              </folding>
             </state>
           </provider>
         </entry>
@@ -186,17 +137,7 @@
         <entry file="file://$PROJECT_DIR$/rocketmq-common/src/main/java/com/alibaba/rocketmq/common/protocol/RequestCode.java">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="241">
-              <caret line="64" column="34" lean-forward="true" selection-start-line="64" selection-start-column="34" selection-end-line="64" selection-end-column="34" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="NettyRemotingServer.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/rocketmq-remoting/src/main/java/com/alibaba/rocketmq/remoting/netty/NettyRemotingServer.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="227">
-              <caret line="57" column="13" lean-forward="false" selection-start-line="57" selection-start-column="13" selection-end-line="57" selection-end-column="13" />
+              <caret line="64" column="34" lean-forward="false" selection-start-line="64" selection-start-column="34" selection-end-line="64" selection-end-column="34" />
               <folding />
             </state>
           </provider>
@@ -219,7 +160,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>Stats In One Minute, SUM:</find>
       <find>InitBTree</find>
       <find>CreateBTree</find>
       <find>accept</find>
@@ -249,10 +189,11 @@
       <find>configTable SIZE</find>
       <find>netty</find>
       <find>NSScheduledThread</find>
+      <find>updateTopic&quot;</find>
     </findStrings>
     <dirStrings>
-      <dir>C:\rocketmq\rocketmq--zhushi\reading-and-annotate-rocketmq-3.4.6\rocketmq-src\RocketMQ-3.4.6</dir>
       <dir>C:\rocketmq\rocketmq--zhushi\reading-and-annotate-rocketmq-3.4.6\rocketmq-src\RocketMQ-3.4.6\rocketmq-namesrv</dir>
+      <dir>C:\rocketmq\rocketmq--zhushi\reading-and-annotate-rocketmq-3.4.6\rocketmq-src\RocketMQ-3.4.6</dir>
     </dirStrings>
   </component>
   <component name="Git.Settings">
@@ -279,7 +220,6 @@
         <option value="$PROJECT_DIR$/rocketmq-common/src/main/java/com/alibaba/rocketmq/common/protocol/body/ConsumeStatsList.java" />
         <option value="$PROJECT_DIR$/rocketmq-common/src/main/java/com/alibaba/rocketmq/common/admin/OffsetWrapper.java" />
         <option value="$PROJECT_DIR$/rocketmq-common/src/main/java/com/alibaba/rocketmq/common/admin/ConsumeStats.java" />
-        <option value="$PROJECT_DIR$/rocketmq-common/src/main/java/com/alibaba/rocketmq/common/TopicConfig.java" />
         <option value="$PROJECT_DIR$/rocketmq-common/src/main/java/com/alibaba/rocketmq/common/protocol/header/GetConsumeStatsInBrokerHeader.java" />
         <option value="$USER_HOME$/Desktop/新建文件夹/sort.java" />
         <option value="$PROJECT_DIR$/rocketmq-common/src/main/java/com/alibaba/rocketmq/common/filter/FilterAPI.java" />
@@ -317,6 +257,7 @@
         <option value="$PROJECT_DIR$/rocketmq-common/src/main/java/com/alibaba/rocketmq/common/protocol/RequestCode.java" />
         <option value="$PROJECT_DIR$/rocketmq-namesrv/src/main/java/com/alibaba/rocketmq/namesrv/NamesrvController.java" />
         <option value="$PROJECT_DIR$/rocketmq-namesrv/src/main/java/com/alibaba/rocketmq/namesrv/processor/DefaultRequestProcessor.java" />
+        <option value="$PROJECT_DIR$/rocketmq-common/src/main/java/com/alibaba/rocketmq/common/TopicConfig.java" />
       </list>
     </option>
   </component>
@@ -1205,12 +1146,12 @@
       <workItem from="1493891936662" duration="630000" />
       <workItem from="1493897442735" duration="8000" />
       <workItem from="1494401073516" duration="5973000" />
-      <workItem from="1494470773783" duration="11140000" />
+      <workItem from="1494470773783" duration="13069000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="119762000" />
+    <option name="totallyTimeSpent" value="121691000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -1248,7 +1189,7 @@
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.23883928" sideWeight="0.48958334" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32107022" sideWeight="0.49791667" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.1977612" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
-      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.20758928" sideWeight="0.4875" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.16183035" sideWeight="0.4875" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Theme Preview" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
@@ -1281,24 +1222,6 @@
     <option name="FILTER_TARGETS" value="false" />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/rocketmq-broker/pom.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/rocketmq-filtersrv/src/main/java/com/alibaba/rocketmq/filtersrv/FilterServerOuterAPI.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="78">
-          <caret line="18" column="7" lean-forward="false" selection-start-line="18" selection-start-column="7" selection-end-line="18" selection-end-column="7" />
-          <folding>
-            <element signature="imports" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/rocketmq-filtersrv/src/main/java/com/alibaba/rocketmq/filtersrv/FiltersrvConfig.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="104">
@@ -1778,7 +1701,7 @@
         <state relative-caret-position="206">
           <caret line="265" column="23" lean-forward="false" selection-start-line="265" selection-start-column="23" selection-end-line="265" selection-end-column="23" />
           <folding>
-            <element signature="imports" expanded="true" />
+            <element signature="imports" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -1858,7 +1781,7 @@
     <entry file="file://$PROJECT_DIR$/rocketmq-tools/src/main/java/com/alibaba/rocketmq/tools/admin/DefaultMQAdminExt.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="215">
-          <caret line="362" column="48" lean-forward="true" selection-start-line="362" selection-start-column="48" selection-end-line="362" selection-end-column="48" />
+          <caret line="362" column="48" lean-forward="false" selection-start-line="362" selection-start-column="48" selection-end-line="362" selection-end-column="48" />
           <folding />
         </state>
       </provider>
@@ -1866,7 +1789,7 @@
     <entry file="file://$PROJECT_DIR$/rocketmq-common/src/main/java/com/alibaba/rocketmq/common/protocol/RequestCode.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="241">
-          <caret line="64" column="34" lean-forward="true" selection-start-line="64" selection-start-column="34" selection-end-line="64" selection-end-column="34" />
+          <caret line="64" column="34" lean-forward="false" selection-start-line="64" selection-start-column="34" selection-end-line="64" selection-end-column="34" />
           <folding />
         </state>
       </provider>
@@ -1875,14 +1798,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="227">
           <caret line="395" column="58" lean-forward="false" selection-start-line="395" selection-start-column="58" selection-end-line="395" selection-end-column="58" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/rocketmq-client/src/main/java/com/alibaba/rocketmq/client/impl/MQClientAPIImpl.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="227">
-          <caret line="1181" column="112" lean-forward="true" selection-start-line="1181" selection-start-column="112" selection-end-line="1181" selection-end-column="112" />
           <folding />
         </state>
       </provider>
@@ -1924,12 +1839,45 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/rocketmq-namesrv/src/main/java/com/alibaba/rocketmq/namesrv/processor/DefaultRequestProcessor.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-163">
-          <caret line="66" column="8" lean-forward="true" selection-start-line="66" selection-start-column="8" selection-end-line="66" selection-end-column="8" />
+        <state relative-caret-position="513">
+          <caret line="92" column="51" lean-forward="false" selection-start-line="92" selection-start-column="51" selection-end-line="92" selection-end-column="51" />
           <folding>
             <element signature="imports" expanded="true" />
             <element signature="e#2481#2482#0" expanded="true" />
             <element signature="e#2539#2540#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/rocketmq-client/src/main/java/com/alibaba/rocketmq/client/impl/MQClientAPIImpl.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="229">
+          <caret line="191" column="51" lean-forward="false" selection-start-line="191" selection-start-column="51" selection-end-line="191" selection-end-column="51" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/rocketmq-common/src/main/java/com/alibaba/rocketmq/common/TopicConfig.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="266">
+          <caret line="128" column="20" lean-forward="true" selection-start-line="128" selection-start-column="20" selection-end-line="128" selection-end-column="20" />
+          <folding>
+            <element signature="e#3443#3444#0" expanded="true" />
+            <element signature="e#3495#3496#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/rocketmq-tools/src/main/java/com/alibaba/rocketmq/tools/command/topic/UpdateTopicSubCommand.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="361">
+          <caret line="142" column="27" lean-forward="false" selection-start-line="142" selection-start-column="20" selection-end-line="142" selection-end-column="27" />
+          <folding>
+            <element signature="imports" expanded="true" />
+            <element signature="e#1507#1508#0" expanded="true" />
+            <element signature="e#1543#1544#0" expanded="true" />
+            <element signature="e#1593#1594#0" expanded="true" />
+            <element signature="e#1640#1641#0" expanded="true" />
           </folding>
         </state>
       </provider>

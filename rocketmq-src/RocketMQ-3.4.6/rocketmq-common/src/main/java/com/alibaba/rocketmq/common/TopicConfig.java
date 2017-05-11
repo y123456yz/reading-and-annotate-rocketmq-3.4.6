@@ -29,6 +29,7 @@ public class TopicConfig {
     private static final String SEPARATOR = " ";
 
     private String topicName;
+    //sh mqadmin updateTopic 创建或者更新队列时候的读写队列数
     private int readQueueNums = DefaultReadQueueNums;
     private int writeQueueNums = DefaultWriteQueueNums;
     private int perm = PermName.PERM_READ | PermName.PERM_WRITE;
