@@ -29,6 +29,9 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class TopicPublishInfo {
     private boolean orderTopic = false;
     private boolean haveTopicRouterInfo = false;
+    //selectOneMessageQueue  messageQueueList 是投递消息的时候对应的topic队列，每次投递的时候乱序选择队列投递，见ROCKET开发手册7.8节
+    //rebalance相关的是针对消费，例如有多个消费者消费同一个topic，该topic有10个队列，则消费者1消费1-5队列，消费者2消费6-10对了，见ROCKETMQ开发手册7-5
+    //fetchPublishMessageQueues->topicRouteData2TopicPublishInfo 中获取topic对应的queue信息，
     private List<MessageQueue> messageQueueList = new ArrayList<MessageQueue>();
     private AtomicInteger sendWhichQueue = new AtomicInteger(0);
 
@@ -77,7 +80,8 @@ public class TopicPublishInfo {
         this.haveTopicRouterInfo = haveTopicRouterInfo;
     }
 
-
+    //selectOneMessageQueue  messageQueueList 是投递消息的时候对应的topic队列，每次投递的时候乱序选择队列投递，见ROCKET开发手册7.8节
+    //rebalance相关的是针对消费，例如有多个消费者消费同一个topic，该topic有10个队列，则消费者1消费1-5队列，消费者2消费6-10对了，见ROCKETMQ开发手册7-5
     public MessageQueue selectOneMessageQueue(final String lastBrokerName) {
         if (lastBrokerName != null) {
             int index = this.sendWhichQueue.getAndIncrement();

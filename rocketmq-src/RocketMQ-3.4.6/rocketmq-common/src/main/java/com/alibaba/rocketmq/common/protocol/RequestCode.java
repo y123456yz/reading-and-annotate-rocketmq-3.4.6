@@ -22,7 +22,7 @@ package com.alibaba.rocketmq.common.protocol;
  数据收发 请求 应答对应的分支在 RemotingCommandType（NettyRemotingAbstract.processMessageReceived）
  //NettyRemotingClient 和 NettyRemotingServer 中的initChannel执行各种命令回调
  */
-
+//RequestCode和ResponseCode对应
  //通信协议注册见 registerProcessor  NettyRemotingClient 和 NettyRemotingServer 中的initChannel执行各种命令回调
 public class RequestCode { //报文头部header data部分的code:  代表这些标识
      //客户端producer在 MQClientAPIImpl.sendMessage 该类型中发送消息
@@ -32,6 +32,7 @@ public class RequestCode { //报文头部header data部分的code:  代表这些
     public static final int QUERY_BROKER_OFFSET = 13;
     public static final int QUERY_CONSUMER_OFFSET = 14;
     public static final int UPDATE_CONSUMER_OFFSET = 15;
+    //sh mqadmin updatetopic创建或者更新topic信息
     public static final int UPDATE_AND_CREATE_TOPIC = 17;
     public static final int GET_ALL_TOPIC_CONFIG = 21;
     /**
@@ -67,7 +68,11 @@ public class RequestCode { //报文头部header data部分的code:  代表这些
     public static final int GET_KV_CONFIG = 101;
      //sh mqadmin deleteKvConfig
     public static final int DELETE_KV_CONFIG = 102;
-    public static final int REGISTER_BROKER = 103;
+    //broker检查到topic信息发生变化，例如客户端新建topic、更新topic、删除topic，都需要通知到所有的nameserver
+     //把broker维护的topic配置推送给namserver, 同时把broker注册到Nameserver 或者BrokerController.start 每隔30s定时时间到，
+    // 都会发送该报文，除了通知为，也是broker与nameserver的保活报文//把broker维护的topic配置推送给namserver, 同时把broker注册到Nameserver 或者BrokerController.start 每隔30s定时时间到，
+    // 都会发送该报文，除了通知为，也是broker与nameserver的保活报文
+     public static final int REGISTER_BROKER = 103;
     public static final int UNREGISTER_BROKER = 104;
     public static final int GET_ROUTEINTO_BY_TOPIC = 105;
     public static final int GET_BROKER_CLUSTER_INFO = 106;
@@ -126,6 +131,7 @@ public class RequestCode { //报文头部header data部分的code:  代表这些
 
     public static final int CLEAN_UNUSED_TOPIC = 316;
 
+    // sh mqadmin brokerConsumeStats -b  XXX -n XXX -t XXX
     public static final int GET_BROKER_CONSUME_STATS = 317;
 
 }

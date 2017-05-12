@@ -75,6 +75,9 @@ public class DefaultRequestProcessor implements NettyRequestProcessor {
             return this.deleteKVConfig(ctx, request);
 
         /*注册broker到nameserver. */
+        //broker感知到又新的topic 获取topic更新 删除，都会通知到所有nameserver
+        // 都会发送该报文，除了通知为，也是broker与nameserver的保活报文//把broker维护的topic配置推送给namserver, 同时把broker注册到Nameserver 或者BrokerController.start 每隔30s定时时间到，
+        // 都会发送该报文，除了通知为，也是broker与nameserver的保活报文
         case RequestCode.REGISTER_BROKER:
             Version brokerVersion = MQVersion.value2Version(request.getVersion());
             if (brokerVersion.ordinal() >= MQVersion.Version.V3_0_11.ordinal()) { //broker版本高于3.0.11， 则和过滤服务器一起注册。

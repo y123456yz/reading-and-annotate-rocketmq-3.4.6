@@ -122,7 +122,7 @@ public class MQAdminImpl {
         }
     }
 
-
+    //fetchPublishMessageQueues->topicRouteData2TopicPublishInfo
     public List<MessageQueue> fetchPublishMessageQueues(String topic) throws MQClientException {
         try {
             TopicRouteData topicRouteData = this.mQClientFactory.getMQClientAPIImpl().getTopicRouteInfoFromNameServer(topic, timeoutMillis);

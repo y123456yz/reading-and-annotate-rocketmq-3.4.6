@@ -19,7 +19,7 @@ package com.alibaba.rocketmq.common.protocol;
 
 import com.alibaba.rocketmq.remoting.protocol.RemotingSysResponseCode;
 
-
+//RequestCode 和 ResponseCode 对应
 public class ResponseCode extends RemotingSysResponseCode {
     public static final int FLUSH_DISK_TIMEOUT = 10;
     public static final int SLAVE_NOT_AVAILABLE = 11;

@@ -16,6 +16,7 @@
  */
 package com.alibaba.rocketmq.broker.processor;
 
+import ch.qos.logback.classic.Logger;
 import com.alibaba.rocketmq.broker.BrokerController;
 import com.alibaba.rocketmq.broker.client.ClientChannelInfo;
 import com.alibaba.rocketmq.broker.client.ConsumerGroupInfo;
@@ -33,6 +34,7 @@ import com.alibaba.rocketmq.common.message.MessageId;
 import com.alibaba.rocketmq.common.message.MessageQueue;
 import com.alibaba.rocketmq.common.protocol.RequestCode;
 import com.alibaba.rocketmq.common.protocol.ResponseCode;
+import com.alibaba.rocketmq.common.protocol.body.BrokerStatsData;
 import com.alibaba.rocketmq.common.protocol.body.*;
 import com.alibaba.rocketmq.common.protocol.header.*;
 import com.alibaba.rocketmq.common.protocol.header.filtersrv.RegisterFilterServerRequestHeader;
@@ -52,7 +54,6 @@ import com.alibaba.rocketmq.store.DefaultMessageStore;
 import com.alibaba.rocketmq.store.SelectMapedBufferResult;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandlerContext;
-import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.UnsupportedEncodingException;
@@ -67,7 +68,7 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class AdminBrokerProcessor implements NettyRequestProcessor {
     private static final Logger log = LoggerFactory.getLogger(LoggerName.BrokerLoggerName);
-    private final BrokerController brokerController;
+    private final BrokerController brokerController; //BrokerController
 
     public AdminBrokerProcessor(final BrokerController brokerController) {
         this.brokerController = brokerController;
@@ -604,7 +605,7 @@ public class AdminBrokerProcessor implements NettyRequestProcessor {
         return response;
     }
 
-
+    //sh mqadmin updatetopic      AdminBrokerProcessor.updateAndCreateTopic
     private RemotingCommand updateAndCreateTopic(ChannelHandlerContext ctx, RemotingCommand request) throws RemotingCommandException {
         final RemotingCommand response = RemotingCommand.createResponseCommand(null);
         final CreateTopicRequestHeader requestHeader =
@@ -626,8 +627,9 @@ public class AdminBrokerProcessor implements NettyRequestProcessor {
         topicConfig.setPerm(requestHeader.getPerm());
         topicConfig.setTopicSysFlag(requestHeader.getTopicSysFlag() == null ? 0 : requestHeader.getTopicSysFlag());
 
+        //写入topicConfigTable，同时持久化到topics.json文件
         this.brokerController.getTopicConfigManager().updateTopicConfig(topicConfig);
-
+        /* BrokerController.registerBrokerAll */
         this.brokerController.registerBrokerAll(false, true);
 
         response.setCode(ResponseCode.SUCCESS);

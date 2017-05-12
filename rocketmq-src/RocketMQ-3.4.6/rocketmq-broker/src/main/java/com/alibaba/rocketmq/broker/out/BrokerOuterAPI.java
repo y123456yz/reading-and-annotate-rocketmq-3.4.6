@@ -197,6 +197,7 @@ public class BrokerOuterAPI {
      * @param oneway 单向调用。
      * @return
      */
+//把broker维护的topic配置推送给namserver, 同时把broker注册到Nameserver 或者BrokerController.start 每隔30s定时时间到，都会发送该报文，除了通知为，也是broker与nameserver的保活报文
     public RegisterBrokerResult registerBrokerAll(//
             final String clusterName,// 1
             final String brokerAddr,// 2

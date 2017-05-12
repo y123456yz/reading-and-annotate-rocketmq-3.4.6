@@ -35,7 +35,28 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
+/**
+ * rocketmq默认为客户端自己进行消息过滤，如果要使用filer server高级过滤，参考example/filter/Consumer.java
+ * filer server高级过滤功能原理（见开发手册 8.2  高级消息过滤   4.4  Message Filter）:
+ 1.  Broker 所在的机器会启劢多个 FilterServer 过滤迕程
+ 2.  Consumer 启劢后，会吐 FilterServer 上传一个过滤的 Java 类
+ 3.  Consumer 从 FilterServer 拉消息，FilterServer 将请求转収给 Broker，FilterServer 从 Broker 收到消息后，挄照
+ Consumer 上传的 Java 过滤程序做过滤，过滤完成后迒回给 Consumer。
 
+ 服务端消息过滤优缺点:
+ 1.  使用 CPU 资源来换叏网卡流量资源
+ 2.  FilterServer 不 Broker 部署在同一台机器，数据通过本地回环通信，丌走网卡
+ 3.  一台 Broker 部署多个 FilterServer，充分利用 CPU 资源，因为单个 Jvm 难以全面利用高配的物理机 Cpu 资源
+ 4.  因为过滤代码使用 Java 诧言来编写，应用几乎可以做任意形式的服务器端消息过滤，例如通过 Message Header
+ 迕行过滤，甚至可以挄照 Message Body 迕行过滤。
+ 5.  使用 Java 诧言迕行作为过滤表达式是一个双刃剑，方便了应用的过滤操作，但是带来了服务器端的安全风险。
+ 需要应用来保证过滤代码安全，例如在过滤程序里尽可能丌做申请大内存，创建线程等操作。避免 Broker 服
+ 务器収生资源泄漏。
+ 使用方式参见 Github 例子
+ https://github.com/alibaba/RocketMQ/blob/develop/rocketmq-example/src/main/java/com/alibaba/rocketmq/example/
+ filter/Consumer.java
+ */
+//服务端消息过滤相关
 public class FilterServerManager {
     private static final Logger log = LoggerFactory.getLogger(LoggerName.BrokerLoggerName);
     public static final long FilterServerMaxIdleTimeMills = 30000;

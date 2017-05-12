@@ -19,7 +19,7 @@ package com.alibaba.rocketmq.store;
 /**
  *
  *
- *  ConsumeQueue创建过程：
+ *  ConsumeQueue 创建过程：
  *  1. 首先会创建CommitLog，在将数据写入CommitLog之后，调用defaultMessageStore->doReput->doDispatch
  *  2. doDispatch 调用 putMessagePostionInfo 将数据写入ConsumeQueue
  *
@@ -34,11 +34,12 @@ package com.alibaba.rocketmq.store;
 // 1.分发消息位置到 ConsumeQueue
 // 2.分发到 IndexService 建立索引
  *
+ *  checkMessageAndReturnSize中构建DispatchRequest
  * @author shijia.wxr
  */
 public class DispatchRequest {
     private final String topic;
-    private final int queueId;
+    private final int queueId; //commitlog中存储的消息格式已经指定好该消息对应的topic，已经存到consumeQueue中对应的topic的那个队列
 
     /*
     *

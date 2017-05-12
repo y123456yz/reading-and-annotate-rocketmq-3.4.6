@@ -34,6 +34,11 @@ public class CreateTopicRequestHeader implements CommandCustomHeader {
     private String topic;
     @CFNotNull
     private String defaultTopic;
+    /*
+    * consumequeue/topic/目录下的数字编号，这些编号由写队列数决定。
+例如创建队列的时候设置读队列数为2，写队列为10，那么消息的索引信息会记录到consumequeue/topic/下面的0-9数字编号文件中，
+但是因为读队列数为2，那么也就只能消费0和1索引队列指定的消息可以被消费者消费，索引2-9队列上的消息就不能消费
+    * */
     @CFNotNull
     private Integer readQueueNums;
     @CFNotNull

@@ -143,7 +143,7 @@ public class DefaultMQAdminExt extends ClientConfig implements MQAdminExt {
         defaultMQAdminExtImpl.shutdown();
     }
 
-
+    //创建或者更新topic
     @Override
     public void createAndUpdateTopicConfig(String addr, TopicConfig config) throws RemotingException, MQBrokerException,
             InterruptedException, MQClientException {

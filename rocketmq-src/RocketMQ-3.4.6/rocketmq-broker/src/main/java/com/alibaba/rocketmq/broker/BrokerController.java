@@ -577,7 +577,6 @@ public class BrokerController {
         }
     }
 
-
     public synchronized void registerBrokerAll(final boolean checkOrderConfig, boolean oneway) {
         TopicConfigSerializeWrapper topicConfigWrapper = this.getTopicConfigManager().buildTopicConfigSerializeWrapper();
 
@@ -589,16 +588,17 @@ public class BrokerController {
         if (!PermName.isWriteable(this.getBrokerConfig().getBrokerPermission())
                 || !PermName.isReadable(this.getBrokerConfig().getBrokerPermission())) {
             ConcurrentHashMap<String, TopicConfig> topicConfigTable = new ConcurrentHashMap<String, TopicConfig>();
+            //遍历该broker下面的所有topic信息
             for (TopicConfig topicConfig : topicConfigWrapper.getTopicConfigTable().values()) {
                 TopicConfig tmp =
                         new TopicConfig(topicConfig.getTopicName(), topicConfig.getReadQueueNums(), topicConfig.getWriteQueueNums(),
-                            this.brokerConfig.getBrokerPermission());
+                            this.brokerConfig.getBrokerPermission()); //把所有的broker下面的topic信息的读写权限修改为何broker一致
                 topicConfigTable.put(topicConfig.getTopicName(), tmp);
             }
-            topicConfigWrapper.setTopicConfigTable(topicConfigTable);
+            topicConfigWrapper.setTopicConfigTable(topicConfigTable); //把修改权限后的topic信息topicConfigTable重新赋值给topicConfigWrapper
         }
 
-//        把broker维护的topic配置推送给namserver, 同时把broker注册到Nameserver
+//把broker维护的topic配置推送给namserver, 同时把broker注册到Nameserver 或者BrokerController.start 每隔30s定时时间到，都会发送该报文，除了通知为，也是broker与nameserver的保活报文
         RegisterBrokerResult registerBrokerResult = this.brokerOuterAPI.registerBrokerAll(//
             this.brokerConfig.getBrokerClusterName(), //
             this.getBrokerAddr(), //
@@ -624,11 +624,9 @@ public class BrokerController {
         }
     }
 
-
     public TopicConfigManager getTopicConfigManager() {
         return topicConfigManager;
     }
-
 
     public void setTopicConfigManager(TopicConfigManager topicConfigManager) {
         this.topicConfigManager = topicConfigManager;

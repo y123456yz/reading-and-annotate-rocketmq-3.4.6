@@ -58,9 +58,12 @@ import java.util.concurrent.TimeUnit;
  * 参考http://blog.csdn.net/chunlongyu/article/details/54576649
  * commitlog文件中每条消息存储格式可以参考:http://blog.csdn.net/xxxxxx91116/article/details/50333161
  *
+ *commitlog中存储的消息格式已经指定好该消息对应的topic，已经存到consumeQueue中对应的topic的那个队列，究竟写入那个consumequeue的那个queueid，这是由客户端投递消息的时候
+ * 组包commitlog格式消息的时候指定的，客户端做的负载均衡，选择不同queueid投递
+ *
  * // 异步线程分发 commitlog 文件中的消息到 consumeQueue 或者分发到 indexService 见 ReputMessageService
  * 为什么有了commitlog还要加个consumeQueue呢？ 因为commitlog只是不停的往里面写入消息，如果没有consumeQueue，你要是想获取某个队列上某个queueid下的第n条消息的话
- * 你就必须遍历整个commitlog,效率低下
+ * 你就必须遍历整个commitlog,效率低下 ，见 分发类DispatchRequest
  */
 public class CommitLog {
     private static final Logger log = LoggerFactory.getLogger(LoggerName.StoreLoggerName);
@@ -270,7 +273,7 @@ public class CommitLog {
             // 3 BODYCRC
             int bodyCRC = byteBuffer.getInt();
 
-            // 4 QUEUEID
+            // 4 QUEUEID    commitlog中存储的消息格式已经指定好该消息对应的topic，已经存到consumeQueue中对应的topic的那个队列
             int queueId = byteBuffer.getInt();
 
             // 5 FLAG

@@ -49,13 +49,19 @@ import java.util.List;
  * http://blog.csdn.net/chunlongyu/article/details/54576649
  *
  *
+ *
  *DefaultMessageStore.loadConsumeQueue broker起来后，从/data/store/consumequeue路径读取对应topic中各个队列的commit log索引信息
  * 遍历${user.home} \store\consumequeue\${topic}\${queueId}下所有文件，根据topic， queueId， 文件来构建ConsueQueue对象
  * @author shijia.wxr
  *
  * // 异步线程分发 commitlog 文件中的消息到 consumeQueue 或者分发到 indexService 见 ReputMessageService
  * 为什么有了commitlog还要加个consumeQueue呢？ 因为commitlog只是不停的往里面写入消息，如果没有consumeQueue，你要是想获取某个队列上某个queueid下的第n条消息的话
- * 你就必须遍历整个commitlog,效率低下
+ * 你就必须遍历整个commitlog,效率低下，见 分发类DispatchRequest
+ *
+ *commitlog中存储的消息格式已经指定好该消息对应的topic，已经存到consumeQueue中对应的topic的那个队列，究竟写入那个consumequeue的那个queueid，这是由客户端投递消息的时候
+ * 组包commitlog格式消息的时候指定的，客户端做的负载均衡，选择不同queueid投递
+ *
+ * consumequeue/consumegroup/下面的queueid信息，是由创建队列的时候的write queue指定的，sh mqadmin updateTopic -w 指定
  */
 public class ConsumeQueue {
     //8字节commitlog offset + 4字节commit log item size + 8字节message tag hashcode.
@@ -382,7 +388,8 @@ public class ConsumeQueue {
      * @param size commitlog中消息item的长度。
      * @param tagsCode 过滤tag的hashcode.
      * @param storeTimestamp 消息存储时间
-     * @param logicOffset  CQ的逻辑位点。
+     * @param logicOffset  commitlog offset对应的 ConsumeQueue 的位点。
+     *   commitlog中存储的消息格式已经指定好该消息对应的topic，已经存到consumeQueue中对应的topic的那个队列
      */ //把commitlog中的一条消息的offset size  tagscode写入到consumeQueue中
     public void putMessagePostionInfoWrapper(long offset, int size, long tagsCode, long storeTimestamp,
             long logicOffset) {
@@ -411,7 +418,7 @@ public class ConsumeQueue {
         this.defaultMessageStore.getRunningFlags().makeLogicsQueueError();
     }
 
-
+    //commitlog中存储的消息格式已经指定好该消息对应的topic，已经存到consumeQueue中对应的topic的那个队列
     private boolean putMessagePostionInfo(final long offset, final int size, final long tagsCode,
             final long cqOffset) {
         if (offset <= this.maxPhysicOffset) {

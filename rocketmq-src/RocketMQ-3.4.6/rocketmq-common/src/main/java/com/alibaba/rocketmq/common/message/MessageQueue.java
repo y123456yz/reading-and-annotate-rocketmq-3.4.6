@@ -22,12 +22,12 @@ import java.io.Serializable;
 /**
  * @author shijia.wxr   该topic所在broker，及其对应的qid        存储在 TopicPublishInfo.messageQueueList中
  * //每一个消息队列，对应一个处理队列。 RebalanceImpl.processQueueTable(MessageQueue----ProcessQueue)
- */
+ */ //MessageQueue存入TopicPublishInfo.messageQueueList队列
 public class MessageQueue implements Comparable<MessageQueue>, Serializable {
     private static final long serialVersionUID = 6191200464116433425L;
     private String topic;
     private String brokerName;
-    private int queueId; //QID
+    private int queueId; //QID  这个是write queue编号，也就是在/data/store/consumequeue/consumegrup/下对应的queueid号
 
 
     public MessageQueue() {

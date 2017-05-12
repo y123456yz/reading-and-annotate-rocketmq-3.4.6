@@ -918,7 +918,7 @@ public class DefaultMessageStore implements MessageStore {
         return null;
     }
 
-
+    //通过 topic 和 queueid获取/data/store/consumequeue里面对应的topic queueid信息，和mapfile对应
     public ConsumeQueue findConsumeQueue(String topic, int queueId) {
         ConcurrentHashMap<Integer, ConsumeQueue> map = consumeQueueTable.get(topic);
         if (null == map) {
@@ -1119,8 +1119,8 @@ public class DefaultMessageStore implements MessageStore {
      * @param size  commitlog中消息的大小。
      * @param tagsCode  tag的hashcode.
      * @param storeTimestamp 日志写入时间，
-     * @param logicOffset 消费队列（CQ）的逻辑位点。
-     */
+     * @param logicOffset 消费队列（CQ）的逻辑位点。  commitlog offset对应的 ConsumeQueue 的位点。
+     */ //先根据topic和queueid查找ConsumeQueue，然后更新
     public void putMessagePostionInfo(String topic, int queueId, long offset, int size, long tagsCode, long storeTimestamp, long logicOffset) {
         ConsumeQueue cq = this.findConsumeQueue(topic, queueId); //根据commitlog中该条消息的topic和queueID找到该条消息对应的ConsumeQueue
         cq.putMessagePostionInfoWrapper(offset, size, tagsCode, storeTimestamp, logicOffset);

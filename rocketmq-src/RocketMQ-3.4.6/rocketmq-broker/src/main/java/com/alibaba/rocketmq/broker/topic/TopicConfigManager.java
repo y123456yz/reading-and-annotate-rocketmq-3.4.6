@@ -52,6 +52,7 @@ public class TopicConfigManager extends ConfigManager {
     private transient BrokerController brokerController;
 
     //把/root/store/config/topics.json 中的字符串序列化存入topicConfigTable，见 TopicConfigManager.decode
+    //新创建的topic在 updateTopicConfig 加入到该table中
     private final ConcurrentHashMap<String, TopicConfig> topicConfigTable = //所有的topic信息全部存在该table表中
             new ConcurrentHashMap<String, TopicConfig>(1024);
     private final DataVersion dataVersion = new DataVersion();
@@ -361,7 +362,8 @@ public class TopicConfigManager extends ConfigManager {
         }
     }
 
-
+    //AdminBrokerProcessor.updateAndCreateTopic->updateTopicConfig
+    //topic信息加入topicConfigTable
     public void updateTopicConfig(final TopicConfig topicConfig) {
         TopicConfig old = this.topicConfigTable.put(topicConfig.getTopicName(), topicConfig);
         if (old != null) {
@@ -373,7 +375,7 @@ public class TopicConfigManager extends ConfigManager {
 
         this.dataVersion.nextVersion();
 
-        this.persist();
+        this.persist(); //把该topic信息持久化到topics.json文件
     }
 
 
