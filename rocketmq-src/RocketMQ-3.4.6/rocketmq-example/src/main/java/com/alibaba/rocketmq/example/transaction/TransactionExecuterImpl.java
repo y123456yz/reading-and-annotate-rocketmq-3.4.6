@@ -22,6 +22,7 @@ import com.alibaba.rocketmq.common.message.Message;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
+// 本地事务的处理逻辑
 public class TransactionExecuterImpl implements LocalTransactionExecuter {
     private AtomicInteger transactionIndex = new AtomicInteger(1);
 

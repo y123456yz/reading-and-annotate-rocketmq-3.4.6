@@ -20,7 +20,7 @@ import com.alibaba.rocketmq.common.message.Message;
 
 
 /**
- * @author shijia.wxr
+ * @author shijia.wxr // 本地事务的处理逻辑
  */
 public interface LocalTransactionExecuter {
     LocalTransactionState executeLocalTransactionBranch(final Message msg, final Object arg);

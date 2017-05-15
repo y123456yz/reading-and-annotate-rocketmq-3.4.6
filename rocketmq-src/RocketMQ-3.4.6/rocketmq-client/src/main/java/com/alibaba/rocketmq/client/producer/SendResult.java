@@ -20,7 +20,7 @@ import com.alibaba.rocketmq.common.message.MessageQueue;
 
 
 /**
- * @author shijia.wxr
+ * @author shijia.wxr  该类在DefaultMQProducerImpl.sendMessageInTransaction中根据broker返回的信息构造赋值
  */
 public class SendResult {
     private SendStatus sendStatus;

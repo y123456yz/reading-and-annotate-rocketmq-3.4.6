@@ -912,7 +912,7 @@ public class DefaultMQProducerImpl implements MQProducerInner {
         }
     }
 
-
+    //tranExecuter为msg发送到broker成功后，本地事务处理类       DefaultMQProducerImpl.sendMessageInTransaction
     public TransactionSendResult sendMessageInTransaction(final Message msg,
             final LocalTransactionExecuter tranExecuter, final Object arg) throws MQClientException {
         if (null == tranExecuter) {

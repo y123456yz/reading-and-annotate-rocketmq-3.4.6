@@ -29,6 +29,10 @@ import java.util.concurrent.atomic.AtomicLong;
 
 //同一批你需要做到顺序消费的肯定会投递到同一个queue，同一个queue肯定会投递到同一个消费实例
 //同一批你需要做到顺序消费的肯定会投递到同一个queue，同一个queue肯定会投递到同一个消费实例
+/*
+* 相同的订单号->有相同的摸-->有相同的queue
+* 参考https://www.zhihu.com/question/30195969
+* */
 public class Consumer {
 
     public static void main(String[] args) throws MQClientException {

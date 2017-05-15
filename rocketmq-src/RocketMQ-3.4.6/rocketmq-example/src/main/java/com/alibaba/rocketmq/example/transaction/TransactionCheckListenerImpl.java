@@ -22,7 +22,7 @@ import com.alibaba.rocketmq.common.message.MessageExt;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
-
+//事务决断处理类
 public class TransactionCheckListenerImpl implements TransactionCheckListener {
     private AtomicInteger transactionIndex = new AtomicInteger(0);
 

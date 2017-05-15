@@ -22,7 +22,7 @@ import com.alibaba.rocketmq.remoting.RPCHook;
 
 
 /**
- * @author shijia.wxr
+ * @author shijia.wxr  事务消息的生产者
  */
 public class TransactionMQProducer extends DefaultMQProducer {
     private TransactionCheckListener transactionCheckListener;
@@ -55,7 +55,7 @@ public class TransactionMQProducer extends DefaultMQProducer {
         this.defaultMQProducerImpl.destroyTransactionEnv();
     }
 
-
+    //tranExecuter为msg发送到broker成功后，本地事务处理类
     @Override
     public TransactionSendResult sendMessageInTransaction(final Message msg,
             final LocalTransactionExecuter tranExecuter, final Object arg) throws MQClientException {
