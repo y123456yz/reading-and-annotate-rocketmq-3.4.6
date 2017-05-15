@@ -1484,7 +1484,7 @@ public class DefaultMessageStore implements MessageStore {
             DefaultMessageStore.this.putMessagePostionInfo(req.getTopic(), req.getQueueId(), req.getCommitLogOffset(), req.getMsgSize(),
                 req.getTagsCode(), req.getStoreTimestamp(), req.getConsumeQueueOffset());
             break;
-        case MessageSysFlag.TransactionPreparedType:
+        case MessageSysFlag.TransactionPreparedType: //如果是事务prepared或者rollback类型的消息，则不用把commitlog消息对应的索引dispatch到consumeQueue
         case MessageSysFlag.TransactionRollbackType:
             break;
         }

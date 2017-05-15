@@ -44,6 +44,8 @@ public class SendMessageRequestHeader implements CommandCustomHeader {
     private Integer defaultTopicQueueNums;
     @CFNotNull
     private Integer queueId;
+
+    //MessageSysFlag信息，参考 MessageSysFlag
     @CFNotNull
     private Integer sysFlag;
     @CFNotNull

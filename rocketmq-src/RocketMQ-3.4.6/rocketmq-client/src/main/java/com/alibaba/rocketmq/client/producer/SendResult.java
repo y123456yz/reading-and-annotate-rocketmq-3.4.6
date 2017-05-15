@@ -20,13 +20,14 @@ import com.alibaba.rocketmq.common.message.MessageQueue;
 
 
 /**
- * @author shijia.wxr  该类在DefaultMQProducerImpl.sendMessageInTransaction中根据broker返回的信息构造赋值
+ * @author shijia.wxr  该类在//MQClientAPIImpl.processSendResponse 中根据broker返回的信息构造赋值
  */
 public class SendResult {
     private SendStatus sendStatus;
     private String msgId;
     private MessageQueue messageQueue;
     private long queueOffset;
+    //MQClientAPIImpl.processSendResponse中赋值
     private String transactionId;
 
 

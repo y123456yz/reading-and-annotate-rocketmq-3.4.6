@@ -939,6 +939,8 @@ public class DefaultMQProducerImpl implements MQProducerInner {
                 if (sendResult.getTransactionId() != null) {
                     msg.putUserProperty("__transactionId__",sendResult.getTransactionId());
                 }
+
+                // 2.如果消息发送成功，处理与消息关联的本地事务单元   TransactionExecuterImpl.executeLocalTransactionBranch
                 localTransactionState = tranExecuter.executeLocalTransactionBranch(msg, arg);
                 if (null == localTransactionState) {
                     localTransactionState = LocalTransactionState.UNKNOW;
@@ -966,6 +968,7 @@ public class DefaultMQProducerImpl implements MQProducerInner {
         }
 
         try {
+            //根据本地投递端投递消息后本地事务处理是否超过，进而来通知broker
             this.endTransaction(sendResult, localTransactionState, localException);
         }
         catch (Exception e) {
@@ -996,10 +999,10 @@ public class DefaultMQProducerImpl implements MQProducerInner {
         requestHeader.setTransactionId(transactionId);
         requestHeader.setCommitLogOffset(id.getOffset());
         switch (localTransactionState) {
-        case COMMIT_MESSAGE:
+        case COMMIT_MESSAGE: //本地事务处理成功，消费者可以消费投递的消息
             requestHeader.setCommitOrRollback(MessageSysFlag.TransactionCommitType);
             break;
-        case ROLLBACK_MESSAGE:
+        case ROLLBACK_MESSAGE: //如果本地事务处理失败，则会通知broker回滚，之前投递到broker的消息不会dispatch到consumeQueue，这样消费端就不会消费到消息
             requestHeader.setCommitOrRollback(MessageSysFlag.TransactionRollbackType);
             break;
         case UNKNOW:
@@ -1033,7 +1036,6 @@ public class DefaultMQProducerImpl implements MQProducerInner {
             MQBrokerException, InterruptedException {
         return this.sendDefaultImpl(msg, CommunicationMode.SYNC, null, timeout);
     }
-
 
     public ConcurrentHashMap<String, TopicPublishInfo> getTopicPublishInfoTable() {
         return topicPublishInfoTable;

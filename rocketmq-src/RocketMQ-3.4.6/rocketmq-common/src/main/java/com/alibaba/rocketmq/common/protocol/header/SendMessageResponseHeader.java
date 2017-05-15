@@ -35,7 +35,8 @@ public class SendMessageResponseHeader implements CommandCustomHeader {
     private Integer queueId;
     @CFNotNull
     private Long queueOffset;
-    private String transactionId;
+
+    private String transactionId; //
 
 
     @Override
