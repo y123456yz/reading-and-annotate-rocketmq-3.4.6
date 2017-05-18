@@ -46,6 +46,16 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 
 /**
+ 磁盘清理
+ 扫描间隔
+ 默认10秒，由broker配置参数cleanResourceInterval决定
+ 空间阈值
+ 物理文件不能无限制的一直存储在磁盘，当磁盘空间达到阈值时，不再接受消息，broker打印出日志，消息发送失败，阈值为固定值85%
+ 清理时机
+ 默认每天凌晨4点，由broker配置参数deleteWhen决定；或者磁盘空间达到阈值
+ 文件保留时长
+ 默认72小时，由broker配置参数fileReservedTime决定
+ *
  * @author shijia.wxr
  */
 public class BrokerStartup {
@@ -212,6 +222,8 @@ public class BrokerStartup {
                 nettyClientConfig, //
                 messageStoreConfig);
 
+            //createBrokerController 函数接口中的controller.initialize()完成 store目录下的各个consumequeue commitlog等文件的加载和配置的加载
+            //BrokerController.start才是真正的各种服务启动
             boolean initResult = controller.initialize(); /* 主要流程在这里面 */
             if (!initResult) {
                 controller.shutdown();

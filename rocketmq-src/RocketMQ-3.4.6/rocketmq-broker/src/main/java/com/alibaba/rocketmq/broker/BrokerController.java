@@ -100,6 +100,8 @@ public class BrokerController {
     private RemotingServer remotingServer;
     private RemotingServer fastRemotingServer;
 
+    //createBrokerController 函数接口中的controller.initialize()完成 store目录下的各个consumequeue commitlog等文件的加载和配置的加载
+    //BrokerController.start才是真正的各种服务启动
     private TopicConfigManager topicConfigManager; //topic配置
     ////消息发送线程池 。 赋值见 BrokerController.initialize
     private ExecutorService sendMessageExecutor;
@@ -161,7 +163,8 @@ public class BrokerController {
         this.setStoreHost(new InetSocketAddress(this.getBrokerConfig().getBrokerIP1(), this.getNettyServerConfig().getListenPort()));
     }
 
-
+    //createBrokerController 函数接口中的controller.initialize()完成 store目录下的各个consumequeue commitlog等文件的加载和配置的加载
+    //BrokerController.start才是真正的各种服务启动
     public boolean initialize() throws CloneNotSupportedException {
         boolean result = true;
 
@@ -527,7 +530,8 @@ public class BrokerController {
         return addr;
     }
 
-
+    //createBrokerController 函数接口中的controller.initialize()完成 store目录下的各个consumequeue commitlog等文件的加载和配置的加载
+    //BrokerController.start才是真正的各种服务启动
     public void start() throws Exception {
         if (this.messageStore != null) {
             this.messageStore.start();

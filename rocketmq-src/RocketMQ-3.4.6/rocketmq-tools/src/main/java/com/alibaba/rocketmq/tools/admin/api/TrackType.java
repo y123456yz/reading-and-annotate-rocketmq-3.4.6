@@ -19,7 +19,7 @@ package com.alibaba.rocketmq.tools.admin.api;
 
 public enum TrackType {
     CONSUMED,
-    CONSUMED_BUT_FILTERED,
+    CONSUMED_BUT_FILTERED, //该消息被rocketmq客户端接收到了，但是因为TAG不配陪而过滤掉了，参考 messageTrackDetail
     PULL,
     NOT_CONSUME_YET,
     NOT_ONLINE,

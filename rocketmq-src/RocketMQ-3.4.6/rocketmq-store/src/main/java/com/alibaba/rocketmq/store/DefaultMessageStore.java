@@ -64,17 +64,26 @@ public class DefaultMessageStore implements MessageStore {
     private static final Logger log = LoggerFactory.getLogger(LoggerName.StoreLoggerName);
     private final MessageFilter messageFilter = new DefaultMessageFilter();
     private final MessageStoreConfig messageStoreConfig;
+    //commitLog = new CommitLog
     private final CommitLog commitLog;
     private final ConcurrentHashMap<String/* topic */, ConcurrentHashMap<Integer/* queueId */, ConsumeQueue>> consumeQueueTable;
+    //this.flushConsumeQueueService = new FlushConsumeQueueService();
     private final FlushConsumeQueueService flushConsumeQueueService;
+    //new CleanCommitLogService();
     private final CleanCommitLogService cleanCommitLogService;
+    //cleanConsumeQueueService = new CleanConsumeQueueService();
     private final CleanConsumeQueueService cleanConsumeQueueService;
+    //indexService = new IndexService(this);
     private final IndexService indexService;
+    //new AllocateMapedFileService
     private final AllocateMapedFileService allocateMapedFileService;
+    //reputMessageService = new ReputMessageService();
     private final ReputMessageService reputMessageService;
+    //haService = new HAService(this);
     private final HAService haService;
-    //如果不为NULL，则说明启用了延迟消息服务。  延迟消息
+    //如果不为NULL，则说明启用了延迟消息服务。  延迟消息  scheduleMessageService = new ScheduleMessageService
     private final ScheduleMessageService scheduleMessageService;
+    //storeStatsService = new StoreStatsService();
     private final StoreStatsService storeStatsService;
     private final RunningFlags runningFlags = new RunningFlags(); //是否可读 可写
     private final SystemClock systemClock = new SystemClock(1);

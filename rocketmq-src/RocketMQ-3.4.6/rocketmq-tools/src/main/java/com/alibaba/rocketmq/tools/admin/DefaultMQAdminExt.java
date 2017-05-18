@@ -430,7 +430,7 @@ public class DefaultMQAdminExt extends ClientConfig implements MQAdminExt {
     @Override
     public List<MessageTrack> messageTrackDetail(MessageExt msg) throws RemotingException, MQClientException, InterruptedException,
             MQBrokerException {
-        return this.defaultMQAdminExtImpl.messageTrackDetail(msg);
+        return this.defaultMQAdminExtImpl.`messageTrackDetail(msg);
     }
 
 
