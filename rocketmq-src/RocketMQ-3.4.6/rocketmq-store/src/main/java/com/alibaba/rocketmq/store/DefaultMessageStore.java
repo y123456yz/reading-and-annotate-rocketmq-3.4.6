@@ -67,11 +67,11 @@ public class DefaultMessageStore implements MessageStore {
     //commitLog = new CommitLog
     private final CommitLog commitLog;
     private final ConcurrentHashMap<String/* topic */, ConcurrentHashMap<Integer/* queueId */, ConsumeQueue>> consumeQueueTable;
-    //this.flushConsumeQueueService = new FlushConsumeQueueService();
+    //this.flushConsumeQueueService = new FlushConsumeQueueService();  把mapfile内容刷盘
     private final FlushConsumeQueueService flushConsumeQueueService;
-    //new CleanCommitLogService();
+    //new CleanCommitLogService();  按过期时间清理掉commitlog ,   cleanFilesPeriodically中启动清理线程
     private final CleanCommitLogService cleanCommitLogService;
-    //cleanConsumeQueueService = new CleanConsumeQueueService();
+    //cleanConsumeQueueService = new CleanConsumeQueueService(); 按过期时间清理掉 ConsumeQueue   cleanFilesPeriodically中启动清理线程
     private final CleanConsumeQueueService cleanConsumeQueueService;
     //indexService = new IndexService(this);
     private final IndexService indexService;
@@ -108,8 +108,11 @@ public class DefaultMessageStore implements MessageStore {
         this.consumeQueueTable = new ConcurrentHashMap<String/* topic */, ConcurrentHashMap<Integer/* queueId */, ConsumeQueue>>(32);
 
         this.flushConsumeQueueService = new FlushConsumeQueueService();
+
+        //磁盘超过水位进行清理
         this.cleanCommitLogService = new CleanCommitLogService();
         this.cleanConsumeQueueService = new CleanConsumeQueueService();
+
         this.storeStatsService = new StoreStatsService();
         this.indexService = new IndexService(this);
         this.haService = new HAService(this);
@@ -1182,6 +1185,7 @@ public class DefaultMessageStore implements MessageStore {
         private final double DiskSpaceCleanForciblyRatio = Double.parseDouble(System.getProperty(
             "rocketmq.broker.diskSpaceCleanForciblyRatio", "0.85"));
         private long lastRedeleteTimestamp = 0;
+        //手工删除日志文件的最大次数
         private volatile int manualDeleteFileSeveralTimes = 0;
         private volatile boolean cleanImmediately = false;
 
@@ -1224,7 +1228,7 @@ public class DefaultMessageStore implements MessageStore {
 
         private void deleteExpiredFiles() {
             int deleteCount = 0;
-            //默认48小时。
+            //默认72小时。
             long fileReservedTime = DefaultMessageStore.this.getMessageStoreConfig().getFileReservedTime();
             //两个Mapfile文件清理的时间间隔，默认100ms. ;
             int deletePhysicFilesInterval = DefaultMessageStore.this.getMessageStoreConfig().getDeleteCommitLogFilesInterval();
@@ -1232,14 +1236,20 @@ public class DefaultMessageStore implements MessageStore {
             int destroyMapedFileIntervalForcibly = DefaultMessageStore.this.getMessageStoreConfig().getDestroyMapedFileIntervalForcibly();
 
             boolean timeup = this.isTimeToDelete(); //到了清理commitlog的时间，默认凌晨4点。
+            //磁盘空间用的太多了，需要清理磁盘了
             boolean spacefull = this.isSpaceToDelete(); //commitlog或者consume queue的目录利用率超过75% ，启动文件清理。
             boolean manualDelete = this.manualDeleteFileSeveralTimes > 0; //手工删除日志文件的最大次数默认20 。
 
+            /*  如果磁盘没用满，则直接依靠每天凌晨4点做一次检查，把过期的文件删除
+             * 如果磁盘水位消耗过高，则可以触发强制清除操作，一次最多清除10个文件，例如tps过高，一个小时就把磁盘消耗过多，则需要强制清除，不过
+             * 前提是配置文件中是能了强制清除策略
+              * */
             if (timeup || spacefull || manualDelete) {
 
                 if (manualDelete)
                     this.manualDeleteFileSeveralTimes--;
 
+                //是否立马需要进行强制清理
                 boolean cleanAtOnce = DefaultMessageStore.this.getMessageStoreConfig().isCleanFileForciblyEnable() && this.cleanImmediately;
 
                 log.info("begin to delete before {} hours file. timeup: {} spacefull: {} manualDeleteFileSeveralTimes: {} cleanAtOnce: {}",//
@@ -1249,7 +1259,7 @@ public class DefaultMessageStore implements MessageStore {
                         manualDeleteFileSeveralTimes,//
                         cleanAtOnce);
 
-                fileReservedTime *= 60 * 60 * 1000;
+                fileReservedTime *= 60 * 60 * 1000; //小时转换为ms
 
                 deleteCount =
                         DefaultMessageStore.this.commitLog.deleteExpiredFile(fileReservedTime, deletePhysicFilesInterval,
@@ -1404,6 +1414,7 @@ public class DefaultMessageStore implements MessageStore {
         }
     }
 
+    //ConsumeQueue磁盘文件刷盘处理
     class FlushConsumeQueueService extends ServiceThread {
         private static final int RetryTimesOver = 3;
         private long lastFlushTimestamp = 0;
@@ -1451,7 +1462,7 @@ public class DefaultMessageStore implements MessageStore {
             DefaultMessageStore.log.info(this.getServiceName() + " service started");
 
             while (!this.isStoped()) {
-                try {
+                try { //每隔flushIntervalConsumeQueue时间段做一次刷盘操作
                     int interval = DefaultMessageStore.this.getMessageStoreConfig().getFlushIntervalConsumeQueue();
                     this.waitForRunning(interval);
                     this.doFlush(1);

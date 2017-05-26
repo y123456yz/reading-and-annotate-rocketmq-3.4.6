@@ -58,10 +58,11 @@ public class MessageStoreConfig {
     private int flushIntervalConsumeQueue = 1000;
     // Resource reclaim interval
     private int cleanResourceInterval = 10000;
-    // CommitLog removal interval
+    // CommitLog removal interval //两个Mapfile文件清理的时间间隔，默认100ms. ;
     private int deleteCommitLogFilesInterval = 100;
     // ConsumeQueue removal interval
     private int deleteConsumeQueueFilesInterval = 100;
+    //当Mapfile还在被线程引用无法删除时， 下一次再进行强制清理的时间间隔， 默认120s
     private int destroyMapedFileIntervalForcibly = 1000 * 120;
     private int redeleteHangedFileInterval = 1000 * 120;
     // When to delete,default is at 4 am

@@ -224,7 +224,7 @@ public class Broker2Client {
                         requestHeader.getTopic(), //
                         requestHeader.getTimestamp());
             log.error(errorInfo);
-            response.setCode(ResponseCode.CONSUMER_NOT_ONLINE);
+            response.setCode(ResponseCode.CONSUMER_NOT_ONLINE); //客户端消费掉消息后，会把消费后的offset打回broker，broker收到后会检查该消息的消费者分组是否在线，如果不在线，则不更新位点
             response.setRemark(errorInfo);
             return response;
         }

@@ -914,16 +914,13 @@ public class MQClientInstance {
         }
     }
 
-
     public MQProducerInner selectProducer(final String group) {
         return this.producerTable.get(group);
     }
 
-
     public MQConsumerInner selectConsumer(final String group) {
         return this.consumerTable.get(group);
     }
-
 
     public FindBrokerResult findBrokerAddressInAdmin(final String brokerName) {
         String brokerAddr = null;

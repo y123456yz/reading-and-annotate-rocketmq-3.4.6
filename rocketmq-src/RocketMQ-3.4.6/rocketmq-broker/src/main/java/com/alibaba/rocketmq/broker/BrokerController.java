@@ -533,7 +533,7 @@ public class BrokerController {
     //createBrokerController 函数接口中的controller.initialize()完成 store目录下的各个consumequeue commitlog等文件的加载和配置的加载
     //BrokerController.start才是真正的各种服务启动
     public void start() throws Exception {
-        if (this.messageStore != null) {
+        if (this.messageStore != null) { //DefaultMessageStore
             this.messageStore.start();
         }
 

@@ -38,12 +38,12 @@ import java.util.concurrent.ConcurrentHashMap;
  * Base class for rebalance algorithm
  *
  * //selectOneMessageQueue  messageQueueList 是投递消息的时候对应的topic队列，每次投递的时候乱序选择队列投递，见ROCKET开发手册7.8节
- //rebalance相关的是针对消费，例如有多个消费者消费同一个topic，该topic有10个队列，则消费者1消费1-5队列，消费者2消费6-10对了，见ROCKETMQ开发手册7-5
+ //rebalance  updateProcessQueueTableInRebalance 相关的是针对消费，例如有多个消费者消费同一个topic，该topic有10个队列，则消费者1消费1-5队列，消费者2消费6-10对了，见ROCKETMQ开发手册7-5  7-9
  *
  * //把 updateProcessQueueTableInRebalance 中新增的队列信息转换为request后加入到 PullMessageService.pullRequestQueue，然后
  //在PullMessageService.run 中通过该 pullRequestQueue 中的PullRequest来拉取消息
  *
- * @author shijia.wxr    抽象类的接口实现在 RebalancePushImpl   RebalancePullImpl  真正使用在DefaultMQPushConsumerImpl
+ * @author shijia.wxr    抽象类的接口实现在 RebalancePushImpl   RebalancePullImpl  真正使用在 DefaultMQPushConsumerImpl
  */
 public abstract class RebalanceImpl {
     protected static final Logger log = ClientLogger.getLog();
@@ -64,7 +64,6 @@ public abstract class RebalanceImpl {
     protected AllocateMessageQueueStrategy allocateMessageQueueStrategy;
     protected MQClientInstance mQClientFactory;
 
-
     public RebalanceImpl(String consumerGroup, MessageModel messageModel,
                          AllocateMessageQueueStrategy allocateMessageQueueStrategy, MQClientInstance mQClientFactory) {
         this.consumerGroup = consumerGroup;
@@ -73,9 +72,7 @@ public abstract class RebalanceImpl {
         this.mQClientFactory = mQClientFactory;
     }
 
-
     public abstract ConsumeType consumeType();
-
 
     public void unlock(final MessageQueue mq, final boolean oneway) {
         FindBrokerResult findBrokerResult =

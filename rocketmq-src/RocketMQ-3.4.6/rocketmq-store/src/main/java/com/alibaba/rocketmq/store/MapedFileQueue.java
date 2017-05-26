@@ -396,6 +396,7 @@ public class MapedFileQueue {
         if (null != mfs) {
             for (int i = 0; i < mfsLength; i++) {
                 MapedFile mapedFile = (MapedFile) mfs[i];
+                //已经expiredTime这么久的时间没有对该map写入新的消息了，说明该文件可以清除了
                 long liveMaxTimestamp = mapedFile.getLastModifiedTimestamp() + expiredTime;
                 if (System.currentTimeMillis() >= liveMaxTimestamp//
                         || cleanImmediately) { //文件超过过期时间或者磁盘空间超过设定阈值（默认75%） ，需要开始启动文件清理。
