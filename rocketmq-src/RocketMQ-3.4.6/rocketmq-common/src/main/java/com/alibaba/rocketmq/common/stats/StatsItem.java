@@ -25,21 +25,25 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicLong;
 
-
+////StatsItemSet.statsItemTable 中为statsName对应的统计信息，采样统计见StatsItemSet.init
 public class StatsItem {
-    private final AtomicLong value = new AtomicLong(0);
-    private final AtomicLong times = new AtomicLong(0);
+    //incBrokerPutNums  incGroupGetSize 等中赋值
+    private final AtomicLong value = new AtomicLong(0); //总值
+    private final AtomicLong times = new AtomicLong(0); //总次数
+
+    //每隔1s获取最近7s钟内，每秒钟的times和value，见 samplingInMinutes，1分钟内的平均值，实际上算的是最近7s钟内的平均值，见samplingInSeconds
     private final LinkedList<CallSnapshot> csListMinute = new LinkedList<CallSnapshot>();
 
+    //每隔1分钟记录一次这1分钟内times和value到csListHour，最多记录最近7分钟内的统计信息，1小时内的平均值，实际上算的是最近7分钟的平均值，见 samplingInMinutes
     private final LinkedList<CallSnapshot> csListHour = new LinkedList<CallSnapshot>();
 
+    //每隔1小时记录一次这1小时内times和value到 csListDay，最多记录最近24小时内的统计信息，1天内的平均值，实际上算的是最近24小时的平均值，见samplingInHour
     private final LinkedList<CallSnapshot> csListDay = new LinkedList<CallSnapshot>();
 
-    private final String statsName;
-    private final String statsKey;
+    private final String statsName; //TOPIC_PUT_NUMS 等
+    private final String statsKey;  //例如TOPIC_PUT_NUMS对应的是topic  如果是GROUP_GET_NUMS，对应的是statsKey = String.format("%s@%s", topic, group);
     private final ScheduledExecutorService scheduledExecutorService;
     private final Logger log;
-
 
     private static StatsSnapshot computeStatsData(final LinkedList<CallSnapshot> csList) {
         StatsSnapshot statsSnapshot = new StatsSnapshot();
@@ -51,10 +55,11 @@ public class StatsItem {
                 CallSnapshot first = csList.getFirst();
                 CallSnapshot last = csList.getLast();
                 sum = last.getValue() - first.getValue();
+                //这里sum乘以1000的原因是，getTimestamp的单位是ms
                 tps = (sum * 1000.0d) / (last.getTimestamp() - first.getTimestamp());
 
                 long timesDiff = last.getTimes() - first.getTimes();
-                if (timesDiff > 0) {
+                if (timesDiff > 0) { //times增加访问内，value平均增加了多少
                     avgpt = (sum * 1.0d) / (timesDiff);
                 }
             }
@@ -72,16 +77,13 @@ public class StatsItem {
         return computeStatsData(this.csListMinute);
     }
 
-
     public StatsSnapshot getStatsDataInHour() {
         return computeStatsData(this.csListHour);
     }
 
-
     public StatsSnapshot getStatsDataInDay() {
         return computeStatsData(this.csListDay);
     }
-
 
     public StatsItem(String statsName, String statsKey, ScheduledExecutorService scheduledExecutorService,
             Logger log) {
@@ -91,8 +93,8 @@ public class StatsItem {
         this.log = log;
     }
 
-
     public void init() {
+        //秒级采样统计
         this.scheduledExecutorService.scheduleAtFixedRate(new Runnable() {
             @Override
             public void run() {
@@ -104,6 +106,7 @@ public class StatsItem {
             }
         }, 0, 10, TimeUnit.SECONDS);
 
+        //分钟级采样统计
         this.scheduledExecutorService.scheduleAtFixedRate(new Runnable() {
             @Override
             public void run() {
@@ -115,6 +118,7 @@ public class StatsItem {
             }
         }, 0, 10, TimeUnit.MINUTES);
 
+        //小时级采样统计
         this.scheduledExecutorService.scheduleAtFixedRate(new Runnable() {
             @Override
             public void run() {
@@ -126,6 +130,7 @@ public class StatsItem {
             }
         }, 0, 1, TimeUnit.HOURS);
 
+        //每分钟打印统计信息  //见stats.log
         this.scheduledExecutorService.scheduleAtFixedRate(new Runnable() {
             @Override
             public void run() {
@@ -138,6 +143,7 @@ public class StatsItem {
         }, Math.abs(UtilAll.computNextMinutesTimeMillis() - System.currentTimeMillis()), //
             1000 * 60, TimeUnit.MILLISECONDS);
 
+        //每小时打印统计信息  //见stats.log
         this.scheduledExecutorService.scheduleAtFixedRate(new Runnable() {
             @Override
             public void run() {
@@ -150,6 +156,7 @@ public class StatsItem {
         }, Math.abs(UtilAll.computNextHourTimeMillis() - System.currentTimeMillis()), //
             1000 * 60 * 60, TimeUnit.MILLISECONDS);
 
+        //每天一次统计打印  //见stats.log
         this.scheduledExecutorService.scheduleAtFixedRate(new Runnable() {
             @Override
             public void run() {
@@ -162,8 +169,8 @@ public class StatsItem {
         }, Math.abs(UtilAll.computNextMorningTimeMillis() - System.currentTimeMillis()) - 2000, //
             1000 * 60 * 60 * 24, TimeUnit.MILLISECONDS);
     }
-
-
+    //见stats.log
+    //每分钟打印统计信息，例如2017-06-06 00:01:00 INFO - [SNDBCK_PUT_NUMS] [topic-prod-logistics-monitor@consumer-group-refund] Stats In One Minute, SUM: 0 TPS: 0.00 AVGPT: 0.00
     public void printAtMinutes() {
         StatsSnapshot ss = computeStatsData(this.csListMinute);
         log.info(String.format("[%s] [%s] Stats In One Minute, SUM: %d TPS: %.2f AVGPT: %.2f", //
@@ -174,7 +181,7 @@ public class StatsItem {
             ss.getAvgpt()));
     }
 
-
+    //每小时打印统计信息
     public void printAtHour() {
         StatsSnapshot ss = computeStatsData(this.csListHour);
         log.info(String.format("[%s] [%s] Stats In One Hour, SUM: %d TPS: %.2f AVGPT: %.2f", //
@@ -185,7 +192,7 @@ public class StatsItem {
             ss.getAvgpt()));
     }
 
-
+    //每隔一天打印统计信息
     public void printAtDay() {
         StatsSnapshot ss = computeStatsData(this.csListDay);
         log.info(String.format("[%s] [%s] Stats In One Day, SUM: %d TPS: %.2f AVGPT: %.2f", //
@@ -196,7 +203,7 @@ public class StatsItem {
             ss.getAvgpt()));
     }
 
-
+    //每隔1s获取最近7s钟内，每秒钟的times和value，见 samplingInMinutes，1分钟内的平均值，实际上算的是最近7s钟内的平均值
     public void samplingInSeconds() {
         synchronized (this.csListMinute) {
             this.csListMinute.add(new CallSnapshot(System.currentTimeMillis(), this.times.get(), this.value
@@ -207,7 +214,7 @@ public class StatsItem {
         }
     }
 
-
+    //每隔1分钟记录一次这1分钟内times和value到csListHour，最多记录最近7分钟内的统计信息，1小时内的平均值，实际上算的是最近7分钟的平均值
     public void samplingInMinutes() {
         synchronized (this.csListHour) {
             this.csListHour.add(new CallSnapshot(System.currentTimeMillis(), this.times.get(), this.value
@@ -218,7 +225,7 @@ public class StatsItem {
         }
     }
 
-
+    //每隔1小时记录一次这1小时内times和value到 csListDay，最多记录最近24小时内的统计信息，1天内的平均值，实际上算的是最近24小时的平均值
     public void samplingInHour() {
         synchronized (this.csListDay) {
             this.csListDay.add(new CallSnapshot(System.currentTimeMillis(), this.times.get(), this.value
@@ -252,7 +259,7 @@ public class StatsItem {
 
 
 class CallSnapshot {
-    private final long timestamp;
+    private final long timestamp; //单位ms，见调用CallSnapshot的地方
     private final long times;
 
     private final long value;

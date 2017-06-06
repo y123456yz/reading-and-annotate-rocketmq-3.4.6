@@ -26,12 +26,14 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
+//BrokerStatsManager.statsTable成员包含该类集合结构，采样统计及定期打印见 StatsItemSet.init
+public class StatsItemSet { //StatsItemSet.statsItemTable 中为statsName对应的统计信息
 
-public class StatsItemSet {
+    //getAndCreateStatsItem中添加hashmap成员，下面的init()会定期打印各种TOPIC_PUT_NUMS等的统计结果
     private final ConcurrentHashMap<String/* key */, StatsItem> statsItemTable =
             new ConcurrentHashMap<String, StatsItem>(128);
 
-    private final String statsName;
+    private final String statsName; //例如需要获取的某个topic的tps的时候，这里为topic名，如果为获取消费者分组的qps，则String statsKey = String.format("%s@%s", topic, group);
     private final ScheduledExecutorService scheduledExecutorService;
     private final Logger log;
 
@@ -40,7 +42,7 @@ public class StatsItemSet {
         this.statsName = statsName;
         this.scheduledExecutorService = scheduledExecutorService;
         this.log = log;
-        this.init();
+        this.init(); //用于定期统计，定期打印统计信息
     }
 
 
@@ -96,7 +98,7 @@ public class StatsItemSet {
         return this.statsItemTable.get(statsKey);
     }
 
-
+    //定时器来采样统计和定期打印
     public void init() {
         this.scheduledExecutorService.scheduleAtFixedRate(new Runnable() {
             @Override

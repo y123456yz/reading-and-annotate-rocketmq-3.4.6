@@ -154,6 +154,7 @@ public class AdminBrokerProcessor implements NettyRequestProcessor {
         return null;
     }
 
+
     //sh mqadmin statsAll -获取 #InTPS     #OutTPS   #InMsg24Hour  #OutMsg24Hour信息
     private RemotingCommand ViewBrokerStatsData(ChannelHandlerContext ctx, RemotingCommand request) throws RemotingCommandException {
         final ViewBrokerStatsDataRequestHeader requestHeader =
@@ -161,6 +162,10 @@ public class AdminBrokerProcessor implements NettyRequestProcessor {
         final RemotingCommand response = RemotingCommand.createResponseCommand(null);
         DefaultMessageStore messageStore = (DefaultMessageStore) this.brokerController.getMessageStore();
 
+        //例如获取某个topic的写入IN-TPS，statsName为 TOPIC_PUT_NUMS， statsKey为对应的topic
+        //获取某个topic下某个消费者分组的消费速度，statsName为 GROUP_GET_NUMS， statsKey为对应的topic
+
+        //SendMessageProcessor.sendMessage中统计各种topic的tps 写入字节数信息
         StatsItem statsItem = messageStore.getBrokerStatsManager().getStatsItem(requestHeader.getStatsName(), requestHeader.getStatsKey());
         if (null == statsItem) {
             response.setCode(ResponseCode.SYSTEM_ERROR);
@@ -179,7 +184,7 @@ public class AdminBrokerProcessor implements NettyRequestProcessor {
             brokerStatsData.setStatsMinute(it);
         }
 
-        { //#InMsg24Hour
+        { //#InMsg24Hour   客户端获取的是getSum
             BrokerStatsItem it = new BrokerStatsItem();
             StatsSnapshot ss = statsItem.getStatsDataInHour();
             it.setSum(ss.getSum());
@@ -188,7 +193,7 @@ public class AdminBrokerProcessor implements NettyRequestProcessor {
             brokerStatsData.setStatsHour(it);
         }
 
-        { //#OutMsg24Hour
+        { //#OutMsg24Hour   客户端获取的是getSum
             BrokerStatsItem it = new BrokerStatsItem();
             StatsSnapshot ss = statsItem.getStatsDataInDay();
             it.setSum(ss.getSum());

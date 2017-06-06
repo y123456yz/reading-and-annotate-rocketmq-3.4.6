@@ -23,6 +23,8 @@ import com.alibaba.rocketmq.remoting.exception.RemotingCommandException;
 
 
 public class ViewBrokerStatsDataRequestHeader implements CommandCustomHeader {
+    //例如获取某个topic的写入IN-TPS，statsName为 TOPIC_PUT_NUMS， statsKey为对应的topic
+    //获取某个topic下某个消费者分组的消费速度，statsName为 GROUP_GET_NUMS， statsKey为对应的topic
     @CFNotNull
     private String statsName;
     @CFNotNull

@@ -18,9 +18,9 @@
 package com.alibaba.rocketmq.common.stats;
 
 public class StatsSnapshot {
-    private long sum;
-    private double tps;
-    private double avgpt;
+    private long sum; //总的value值  见computeStatsData
+    private double tps; //每秒钟的平均值 见computeStatsData
+    private double avgpt; //见computeStatsData
 
     public long getSum() {
         return sum;

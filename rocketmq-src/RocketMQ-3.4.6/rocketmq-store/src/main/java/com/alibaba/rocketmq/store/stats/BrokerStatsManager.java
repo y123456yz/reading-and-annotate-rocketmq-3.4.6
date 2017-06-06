@@ -51,12 +51,12 @@ public class BrokerStatsManager {
     private final ScheduledExecutorService commercialStatsExecutor = Executors.newSingleThreadScheduledExecutor(new ThreadFactoryImpl(
         "CommercialStatsThread"));
 
-    public static final String TOPIC_PUT_NUMS = "TOPIC_PUT_NUMS"; //IN TPS
+    public static final String TOPIC_PUT_NUMS = "TOPIC_PUT_NUMS"; //IN TPS   对应的报文类型为 VIEW_BROKER_STATS_DATA
     public static final String TOPIC_PUT_SIZE = "TOPIC_PUT_SIZE";
-    public static final String GROUP_GET_NUMS = "GROUP_GET_NUMS"; //OUT TPS
+    public static final String GROUP_GET_NUMS = "GROUP_GET_NUMS"; //OUT TPS   对应的报文类型为 VIEW_BROKER_STATS_DATA
     public static final String GROUP_GET_SIZE = "GROUP_GET_SIZE";
     public static final String SNDBCK_PUT_NUMS = "SNDBCK_PUT_NUMS";
-    public static final String BROKER_PUT_NUMS = "BROKER_PUT_NUMS";
+    public static final String BROKER_PUT_NUMS = "BROKER_PUT_NUMS"; //整个broker的IN-TPS  对应的报文类型为 VIEW_BROKER_STATS_DATA
     public static final String BROKER_GET_NUMS = "BROKER_GET_NUMS";
     public static final String GROUP_GET_FROM_DISK_NUMS = "GROUP_GET_FROM_DISK_NUMS";
     public static final String GROUP_GET_FROM_DISK_SIZE = "GROUP_GET_FROM_DISK_SIZE";
@@ -82,7 +82,8 @@ public class BrokerStatsManager {
     // Counting base when sending timer message.
     public static final int TIMER_COUNT_BASE = 100;
 
-    //写消息到commitlog会有相关的统计，例如写了多少次，写了多少字节等，见SendMessageProcessor.sendMessage
+    //写消息到commitlog会有相关的统计，例如写了多少次，写了多少字节等，见 SendMessageProcessor.sendMessage
+    //投递tps:incTopicPutNums   消费qps：incGroupGetNums 写入
     private final HashMap<String, StatsItemSet> statsTable = new HashMap<String, StatsItemSet>();
     private final String clusterName;
 
@@ -170,7 +171,7 @@ public class BrokerStatsManager {
         this.statsTable.get(GROUP_GET_SIZE).addValue(statsKey, incValue, 1);
     }
 
-
+    //整个broker的IN-TPS
     public void incBrokerPutNums() {
         this.statsTable.get(BROKER_PUT_NUMS).getAndCreateStatsItem(this.clusterName).getValue().incrementAndGet();
     }

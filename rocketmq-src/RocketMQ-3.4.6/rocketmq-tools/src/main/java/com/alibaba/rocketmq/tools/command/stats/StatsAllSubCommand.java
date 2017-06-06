@@ -120,6 +120,7 @@ public class StatsAllSubCommand implements SubCommand {
                             outMsgCntToday += compute24HourSum(bsd);
                         }
                         catch (Exception e) {
+
                         }
                     }
                 }

@@ -397,6 +397,7 @@ public class SendMessageProcessor extends AbstractSendMessageProcessor implement
             }
 
             if (sendOK) {
+                //TOPIC_PUT_NUMS 等统计，在 ViewBrokerStatsData 获取这些tps 写入字节数等统计信息
                 this.brokerController.getBrokerStatsManager().incTopicPutNums(msgInner.getTopic());
                 this.brokerController.getBrokerStatsManager().incTopicPutSize(msgInner.getTopic(),
                     putMessageResult.getAppendMessageResult().getWroteBytes());
