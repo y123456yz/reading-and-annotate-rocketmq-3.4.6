@@ -1587,6 +1587,8 @@ public class DefaultMessageStore implements MessageStore {
                             int size = dispatchRequest.getMsgSize();
                             if (dispatchRequest.isSuccess()) {
                                 if (size > 0) {
+                                    //注意只为延迟队列上%DLQ%+TOPIC的消息创建的consumeQueue，该consumeQueue索引还是指向的延迟队列对应的commitlog，
+                                    // 没有再创建一份对应的commitlog，所以延迟队列TOPIC消息Intps统计不到
                                     DefaultMessageStore.this.doDispatch(dispatchRequest); //构建索引项
                                     if (BrokerRole.SLAVE != DefaultMessageStore.this.getMessageStoreConfig().getBrokerRole()
                                             && DefaultMessageStore.this.brokerConfig.isLongPollingEnable()) {

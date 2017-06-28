@@ -859,7 +859,7 @@ public class MQClientAPIImpl {
         return getConsumeStats(addr, consumerGroup, null, timeoutMillis);
     }
 
-
+    //sh mqadmin consumerStatus
     public ConsumeStats getConsumeStats(final String addr, final String consumerGroup, final String topic, final long timeoutMillis)
             throws InterruptedException, RemotingTimeoutException, RemotingSendRequestException, RemotingConnectException,
             MQBrokerException {

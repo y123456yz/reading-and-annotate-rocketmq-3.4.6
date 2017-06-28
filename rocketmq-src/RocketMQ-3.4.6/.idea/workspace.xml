@@ -5,12 +5,12 @@
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/rocketmq-broker/src/main/java/com/alibaba/rocketmq/broker/processor/AdminBrokerProcessor.java" afterPath="$PROJECT_DIR$/rocketmq-broker/src/main/java/com/alibaba/rocketmq/broker/processor/AdminBrokerProcessor.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/rocketmq-broker/src/main/java/com/alibaba/rocketmq/broker/processor/SendMessageProcessor.java" afterPath="$PROJECT_DIR$/rocketmq-broker/src/main/java/com/alibaba/rocketmq/broker/processor/SendMessageProcessor.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/rocketmq-common/src/main/java/com/alibaba/rocketmq/common/protocol/header/ViewBrokerStatsDataRequestHeader.java" afterPath="$PROJECT_DIR$/rocketmq-common/src/main/java/com/alibaba/rocketmq/common/protocol/header/ViewBrokerStatsDataRequestHeader.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/rocketmq-common/src/main/java/com/alibaba/rocketmq/common/stats/StatsItem.java" afterPath="$PROJECT_DIR$/rocketmq-common/src/main/java/com/alibaba/rocketmq/common/stats/StatsItem.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/rocketmq-common/src/main/java/com/alibaba/rocketmq/common/stats/StatsItemSet.java" afterPath="$PROJECT_DIR$/rocketmq-common/src/main/java/com/alibaba/rocketmq/common/stats/StatsItemSet.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/rocketmq-common/src/main/java/com/alibaba/rocketmq/common/stats/StatsSnapshot.java" afterPath="$PROJECT_DIR$/rocketmq-common/src/main/java/com/alibaba/rocketmq/common/stats/StatsSnapshot.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/rocketmq-store/src/main/java/com/alibaba/rocketmq/store/stats/BrokerStatsManager.java" afterPath="$PROJECT_DIR$/rocketmq-store/src/main/java/com/alibaba/rocketmq/store/stats/BrokerStatsManager.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/rocketmq-tools/src/main/java/com/alibaba/rocketmq/tools/command/stats/StatsAllSubCommand.java" afterPath="$PROJECT_DIR$/rocketmq-tools/src/main/java/com/alibaba/rocketmq/tools/command/stats/StatsAllSubCommand.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/rocketmq-broker/src/main/java/com/alibaba/rocketmq/broker/topic/TopicConfigManager.java" afterPath="$PROJECT_DIR$/rocketmq-broker/src/main/java/com/alibaba/rocketmq/broker/topic/TopicConfigManager.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/rocketmq-client/src/main/java/com/alibaba/rocketmq/client/impl/MQClientAPIImpl.java" afterPath="$PROJECT_DIR$/rocketmq-client/src/main/java/com/alibaba/rocketmq/client/impl/MQClientAPIImpl.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/rocketmq-common/src/main/java/com/alibaba/rocketmq/common/protocol/RequestCode.java" afterPath="$PROJECT_DIR$/rocketmq-common/src/main/java/com/alibaba/rocketmq/common/protocol/RequestCode.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/rocketmq-store/src/main/java/com/alibaba/rocketmq/store/DefaultMessageStore.java" afterPath="$PROJECT_DIR$/rocketmq-store/src/main/java/com/alibaba/rocketmq/store/DefaultMessageStore.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/rocketmq-tools/src/main/java/com/alibaba/rocketmq/tools/admin/DefaultMQAdminExt.java" afterPath="$PROJECT_DIR$/rocketmq-tools/src/main/java/com/alibaba/rocketmq/tools/admin/DefaultMQAdminExt.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/rocketmq-tools/src/main/java/com/alibaba/rocketmq/tools/admin/DefaultMQAdminExtImpl.java" afterPath="$PROJECT_DIR$/rocketmq-tools/src/main/java/com/alibaba/rocketmq/tools/admin/DefaultMQAdminExtImpl.java" />
     </list>
     <ignored path="$PROJECT_DIR$/out/" />
     <ignored path="$PROJECT_DIR$/rocketmq-namesrv/target/" />
@@ -37,93 +37,41 @@
   <component name="ExecutionTargetManager" SELECTED_TARGET="default_target" />
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="StatsItem.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/rocketmq-common/src/main/java/com/alibaba/rocketmq/common/stats/StatsItem.java">
+      <file leaf-file-name="MQClientAPIImpl.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/rocketmq-client/src/main/java/com/alibaba/rocketmq/client/impl/MQClientAPIImpl.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="182">
-              <caret line="28" column="13" lean-forward="false" selection-start-line="28" selection-start-column="13" selection-end-line="28" selection-end-column="13" />
-              <folding>
-                <element signature="e#5875#6099#0" expanded="true" />
-                <element signature="e#6098#6099#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="StatsItemSet.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/rocketmq-common/src/main/java/com/alibaba/rocketmq/common/stats/StatsItemSet.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="224">
-              <caret line="62" column="16" lean-forward="false" selection-start-line="62" selection-start-column="16" selection-end-line="62" selection-end-column="16" />
-              <folding>
-                <element signature="imports" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="BrokerStatsManager.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/rocketmq-store/src/main/java/com/alibaba/rocketmq/store/stats/BrokerStatsManager.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="224">
-              <caret line="252" column="16" lean-forward="false" selection-start-line="252" selection-start-column="16" selection-end-line="252" selection-end-column="16" />
-              <folding>
-                <element signature="e#4278#4300#0" expanded="true" />
-                <element signature="e#7585#7586#0" expanded="true" />
-                <element signature="e#7658#7659#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="PullMessageProcessor.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/rocketmq-broker/src/main/java/com/alibaba/rocketmq/broker/processor/PullMessageProcessor.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="6219">
-              <caret line="405" column="67" lean-forward="false" selection-start-line="405" selection-start-column="67" selection-end-line="405" selection-end-column="67" />
+            <state relative-caret-position="239">
+              <caret line="232" column="48" lean-forward="false" selection-start-line="232" selection-start-column="48" selection-end-line="232" selection-end-column="48" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="ConsumerStatsManager.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/rocketmq-client/src/main/java/com/alibaba/rocketmq/client/stat/ConsumerStatsManager.java">
+      <file leaf-file-name="AbstractSendMessageProcessor.java" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/rocketmq-broker/src/main/java/com/alibaba/rocketmq/broker/processor/AbstractSendMessageProcessor.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="101">
-              <caret line="48" column="20" lean-forward="false" selection-start-line="48" selection-start-column="20" selection-end-line="48" selection-end-column="20" />
+            <state relative-caret-position="317">
+              <caret line="100" column="25" lean-forward="false" selection-start-line="100" selection-start-column="25" selection-end-line="100" selection-end-column="25" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="SendMessageProcessor.java" pinned="false" current-in-tab="true">
+      <file leaf-file-name="BrokerController.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/rocketmq-broker/src/main/java/com/alibaba/rocketmq/broker/BrokerController.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="239">
+              <caret line="339" column="58" lean-forward="false" selection-start-line="339" selection-start-column="58" selection-end-line="339" selection-end-column="58" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="SendMessageProcessor.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/rocketmq-broker/src/main/java/com/alibaba/rocketmq/broker/processor/SendMessageProcessor.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-88">
-              <caret line="400" column="71" lean-forward="false" selection-start-line="400" selection-start-column="71" selection-end-line="400" selection-end-column="71" />
-              <folding>
-                <element signature="e#3179#3180#0" expanded="true" />
-                <element signature="e#3218#3219#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="RemotingSysResponseCode.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/rocketmq-remoting/src/main/java/com/alibaba/rocketmq/remoting/protocol/RemotingSysResponseCode.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="156">
-              <caret line="21" column="35" lean-forward="true" selection-start-line="21" selection-start-column="28" selection-end-line="21" selection-end-column="40" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="DefaultMQProducerImpl.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/rocketmq-client/src/main/java/com/alibaba/rocketmq/client/impl/producer/DefaultMQProducerImpl.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="369">
-              <caret line="539" column="42" lean-forward="false" selection-start-line="539" selection-start-column="42" selection-end-line="539" selection-end-column="42" />
+            <state relative-caret-position="192">
+              <caret line="400" column="107" lean-forward="false" selection-start-line="400" selection-start-column="107" selection-end-line="400" selection-end-column="107" />
               <folding />
             </state>
           </provider>
@@ -132,18 +80,64 @@
       <file leaf-file-name="RemotingCommand.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/rocketmq-remoting/src/main/java/com/alibaba/rocketmq/remoting/protocol/RemotingCommand.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="213">
-              <caret line="149" column="76" lean-forward="false" selection-start-line="149" selection-start-column="76" selection-end-line="149" selection-end-column="76" />
+            <state relative-caret-position="239">
+              <caret line="139" column="34" lean-forward="false" selection-start-line="139" selection-start-column="34" selection-end-line="139" selection-end-column="34" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="NettyRemotingAbstract.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/rocketmq-remoting/src/main/java/com/alibaba/rocketmq/remoting/netty/NettyRemotingAbstract.java">
+      <file leaf-file-name="DefaultMessageStore.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/rocketmq-store/src/main/java/com/alibaba/rocketmq/store/DefaultMessageStore.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="447">
-              <caret line="205" column="64" lean-forward="false" selection-start-line="205" selection-start-column="64" selection-end-line="205" selection-end-column="64" />
+            <state relative-caret-position="218">
+              <caret line="1579" column="25" lean-forward="true" selection-start-line="1579" selection-start-column="25" selection-end-line="1579" selection-end-column="25" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="ConsumeStats.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/rocketmq-common/src/main/java/com/alibaba/rocketmq/common/admin/ConsumeStats.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="537">
+              <caret line="63" column="18" lean-forward="false" selection-start-line="63" selection-start-column="18" selection-end-line="63" selection-end-column="18" />
+              <folding>
+                <element signature="e#2092#2093#0" expanded="true" />
+                <element signature="e#2136#2137#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="ScheduleMessageService.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/rocketmq-store/src/main/java/com/alibaba/rocketmq/store/schedule/ScheduleMessageService.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="239">
+              <caret line="101" column="22" lean-forward="false" selection-start-line="101" selection-start-column="22" selection-end-line="101" selection-end-column="22" />
+              <folding>
+                <element signature="e#4519#4520#0" expanded="true" />
+                <element signature="e#4556#4557#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="CommitLog.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/rocketmq-store/src/main/java/com/alibaba/rocketmq/store/CommitLog.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="-2980">
+              <caret line="254" column="27" lean-forward="false" selection-start-line="254" selection-start-column="27" selection-end-line="254" selection-end-column="27" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="RequestCode.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/rocketmq-common/src/main/java/com/alibaba/rocketmq/common/protocol/RequestCode.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="604">
+              <caret line="88" column="39" lean-forward="false" selection-start-line="88" selection-start-column="39" selection-end-line="88" selection-end-column="39" />
               <folding />
             </state>
           </provider>
@@ -153,8 +147,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>netty</find>
-      <find>NSScheduledThread</find>
       <find>registerBrokerAll</find>
       <find>create topic</find>
       <find>brokerConsumeStats&quot;</find>
@@ -178,11 +170,13 @@
       <find>InMsg24Hour</find>
       <find>GROUP_GET_NUMS</find>
       <find>//整个broker的IN-TPS  对应的报文类型为 VIEW_BROKER_STATS_DATA</find>
-      <find>The stats &lt;</find>
       <find>remove topic</find>
       <find>the consumer's subscription not exist,</find>
       <find>Stats In One Day,</find>
       <find>Stats In One Minute</find>
+      <find>consumeStats, topic config not exist</find>
+      <find>topic config not exist</find>
+      <find>The stats &lt;</find>
     </findStrings>
     <dirStrings>
       <dir>C:\rocketmq\rocketmq--zhushi\reading-and-annotate-rocketmq-3.4.6\rocketmq-src\RocketMQ-3.4.6\rocketmq-namesrv</dir>
@@ -201,15 +195,12 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/rocketmq-tools/src/main/java/com/alibaba/rocketmq/tools/command/topic/UpdateTopicSubCommand.java" />
         <option value="$PROJECT_DIR$/rocketmq-tools/src/main/java/com/alibaba/rocketmq/tools/command/topic/UpdateTopicPermSubCommand.java" />
         <option value="$PROJECT_DIR$/rocketmq-filtersrv/src/main/java/com/alibaba/rocketmq/filtersrv/FiltersrvStartup.java" />
         <option value="$PROJECT_DIR$/rocketmq-broker/src/main/java/com/alibaba/rocketmq/broker/filtersrv/FilterServerManager.java" />
         <option value="$PROJECT_DIR$/rocketmq-broker/src/main/java/com/alibaba/rocketmq/broker/out/BrokerOuterAPI.java" />
         <option value="$PROJECT_DIR$/rocketmq-namesrv/src/main/java/com/alibaba/rocketmq/namesrv/processor/DefaultRequestProcessor.java" />
-        <option value="$PROJECT_DIR$/rocketmq-broker/src/main/java/com/alibaba/rocketmq/broker/topic/TopicConfigManager.java" />
         <option value="$PROJECT_DIR$/rocketmq-store/src/main/java/com/alibaba/rocketmq/store/CommitLog.java" />
-        <option value="$PROJECT_DIR$/rocketmq-common/src/main/java/com/alibaba/rocketmq/common/protocol/RequestCode.java" />
         <option value="$PROJECT_DIR$/rocketmq-client/src/main/java/com/alibaba/rocketmq/client/impl/MQAdminImpl.java" />
         <option value="$PROJECT_DIR$/rocketmq-common/src/main/java/com/alibaba/rocketmq/common/message/MessageQueue.java" />
         <option value="$PROJECT_DIR$/rocketmq-store/src/main/java/com/alibaba/rocketmq/store/ConsumeQueue.java" />
@@ -221,7 +212,6 @@
         <option value="$PROJECT_DIR$/rocketmq-example/src/main/java/com/alibaba/rocketmq/example/transaction/TransactionExecuterImpl.java" />
         <option value="$PROJECT_DIR$/rocketmq-client/src/main/java/com/alibaba/rocketmq/client/producer/LocalTransactionExecuter.java" />
         <option value="$PROJECT_DIR$/rocketmq-client/src/main/java/com/alibaba/rocketmq/client/producer/TransactionMQProducer.java" />
-        <option value="$PROJECT_DIR$/rocketmq-client/src/main/java/com/alibaba/rocketmq/client/impl/MQClientAPIImpl.java" />
         <option value="$PROJECT_DIR$/rocketmq-common/src/main/java/com/alibaba/rocketmq/common/protocol/header/SendMessageResponseHeader.java" />
         <option value="$PROJECT_DIR$/rocketmq-client/src/main/java/com/alibaba/rocketmq/client/producer/SendResult.java" />
         <option value="$PROJECT_DIR$/rocketmq-common/src/main/java/com/alibaba/rocketmq/common/message/MessageConst.java" />
@@ -229,14 +219,12 @@
         <option value="$PROJECT_DIR$/rocketmq-common/src/main/java/com/alibaba/rocketmq/common/protocol/header/SendMessageRequestHeader.java" />
         <option value="$PROJECT_DIR$/rocketmq-common/src/main/java/com/alibaba/rocketmq/common/sysflag/MessageSysFlag.java" />
         <option value="$PROJECT_DIR$/rocketmq-client/src/main/java/com/alibaba/rocketmq/client/impl/producer/DefaultMQProducerImpl.java" />
-        <option value="$PROJECT_DIR$/rocketmq-tools/src/main/java/com/alibaba/rocketmq/tools/admin/DefaultMQAdminExt.java" />
         <option value="$PROJECT_DIR$/rocketmq-tools/src/main/java/com/alibaba/rocketmq/tools/admin/api/TrackType.java" />
         <option value="$PROJECT_DIR$/rocketmq-store/src/main/java/com/alibaba/rocketmq/store/DispatchRequest.java" />
         <option value="$PROJECT_DIR$/rocketmq-broker/src/main/java/com/alibaba/rocketmq/broker/BrokerStartup.java" />
         <option value="$PROJECT_DIR$/rocketmq-broker/src/main/java/com/alibaba/rocketmq/broker/BrokerController.java" />
         <option value="$PROJECT_DIR$/rocketmq-store/src/main/java/com/alibaba/rocketmq/store/config/MessageStoreConfig.java" />
         <option value="$PROJECT_DIR$/rocketmq-store/src/main/java/com/alibaba/rocketmq/store/MapedFileQueue.java" />
-        <option value="$PROJECT_DIR$/rocketmq-store/src/main/java/com/alibaba/rocketmq/store/DefaultMessageStore.java" />
         <option value="$PROJECT_DIR$/rocketmq-broker/src/main/java/com/alibaba/rocketmq/broker/client/net/Broker2Client.java" />
         <option value="$PROJECT_DIR$/rocketmq-common/src/main/java/com/alibaba/rocketmq/common/protocol/ResponseCode.java" />
         <option value="$PROJECT_DIR$/rocketmq-client/src/main/java/com/alibaba/rocketmq/client/impl/consumer/RebalancePushImpl.java" />
@@ -247,11 +235,17 @@
         <option value="$PROJECT_DIR$/rocketmq-common/src/main/java/com/alibaba/rocketmq/common/protocol/header/ViewBrokerStatsDataRequestHeader.java" />
         <option value="$PROJECT_DIR$/rocketmq-common/src/main/java/com/alibaba/rocketmq/common/stats/StatsSnapshot.java" />
         <option value="$PROJECT_DIR$/rocketmq-tools/src/main/java/com/alibaba/rocketmq/tools/command/stats/StatsAllSubCommand.java" />
-        <option value="$PROJECT_DIR$/rocketmq-broker/src/main/java/com/alibaba/rocketmq/broker/processor/SendMessageProcessor.java" />
-        <option value="$PROJECT_DIR$/rocketmq-broker/src/main/java/com/alibaba/rocketmq/broker/processor/AdminBrokerProcessor.java" />
         <option value="$PROJECT_DIR$/rocketmq-store/src/main/java/com/alibaba/rocketmq/store/stats/BrokerStatsManager.java" />
         <option value="$PROJECT_DIR$/rocketmq-common/src/main/java/com/alibaba/rocketmq/common/stats/StatsItem.java" />
         <option value="$PROJECT_DIR$/rocketmq-common/src/main/java/com/alibaba/rocketmq/common/stats/StatsItemSet.java" />
+        <option value="$PROJECT_DIR$/rocketmq-tools/src/main/java/com/alibaba/rocketmq/tools/admin/DefaultMQAdminExt.java" />
+        <option value="$PROJECT_DIR$/rocketmq-tools/src/main/java/com/alibaba/rocketmq/tools/admin/DefaultMQAdminExtImpl.java" />
+        <option value="$PROJECT_DIR$/rocketmq-client/src/main/java/com/alibaba/rocketmq/client/impl/MQClientAPIImpl.java" />
+        <option value="$PROJECT_DIR$/rocketmq-common/src/main/java/com/alibaba/rocketmq/common/protocol/RequestCode.java" />
+        <option value="$PROJECT_DIR$/rocketmq-broker/src/main/java/com/alibaba/rocketmq/broker/processor/AdminBrokerProcessor.java" />
+        <option value="$PROJECT_DIR$/rocketmq-broker/src/main/java/com/alibaba/rocketmq/broker/topic/TopicConfigManager.java" />
+        <option value="$PROJECT_DIR$/rocketmq-store/src/main/java/com/alibaba/rocketmq/store/DefaultMessageStore.java" />
+        <option value="$PROJECT_DIR$/rocketmq-broker/src/main/java/com/alibaba/rocketmq/broker/processor/SendMessageProcessor.java" />
       </list>
     </option>
   </component>
@@ -335,9 +329,8 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="PackagesPane" />
-      <pane id="Scratches" />
       <pane id="Scope" />
+      <pane id="Scratches" />
       <pane id="ProjectPane">
         <subPane>
           <PATH>
@@ -1014,8 +1007,43 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="RocketMQ-3.4.6-zhushi" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="RocketMQ-3.4.6" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="rocketmq-broker" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="main" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="java" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="broker" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="processor" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
         </subPane>
       </pane>
+      <pane id="PackagesPane" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -1530,6 +1558,9 @@
   <component name="ShelveChangesManager" show_recycled="false">
     <option name="remove_strategy" value="false" />
   </component>
+  <component name="StructureViewFactory">
+    <option name="ACTIVE_ACTIONS" value=",VISIBILITY_SORTER,ALPHA_COMPARATOR" />
+  </component>
   <component name="SvnConfiguration">
     <configuration />
   </component>
@@ -1573,12 +1604,18 @@
       <workItem from="1495676745926" duration="606000" />
       <workItem from="1495779347449" duration="6366000" />
       <workItem from="1496632333885" duration="14476000" />
-      <workItem from="1496716241190" duration="14130000" />
+      <workItem from="1496716241190" duration="14746000" />
+      <workItem from="1496814864481" duration="3798000" />
+      <workItem from="1496990239734" duration="2698000" />
+      <workItem from="1496999857969" duration="718000" />
+      <workItem from="1497865686521" duration="8000" />
+      <workItem from="1497866133053" duration="33000" />
+      <workItem from="1498636067695" duration="1778000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="213899000" />
+    <option name="totallyTimeSpent" value="223548000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -1591,7 +1628,7 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1936" height="1056" extended-state="0" />
-    <editor active="false" />
+    <editor active="true" />
     <layout>
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32998884" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
@@ -1607,11 +1644,11 @@
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32107022" sideWeight="0.49791667" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Capture Tool" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.13113007" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.12579957" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="LuaJ" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.17745535" sideWeight="0.4875" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.16517857" sideWeight="0.4875" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.14392324" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="UI Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Theme Preview" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
@@ -1649,128 +1686,10 @@
     <option name="FILTER_TARGETS" value="false" />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/rocketmq-broker/src/main/java/com/alibaba/rocketmq/broker/client/net/Broker2Client.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="4420">
-          <caret line="226" column="50" lean-forward="false" selection-start-line="226" selection-start-column="50" selection-end-line="226" selection-end-column="50" />
-          <folding>
-            <element signature="n#!!doc" expanded="false" />
-            <element signature="imports" expanded="false" />
-            <element signature="e#3074#3075#0" expanded="false" />
-            <element signature="e#3130#3131#0" expanded="false" />
-            <element signature="e#3797#4172#0" expanded="false" />
-            <element signature="e#4171#4172#0" expanded="false" />
-            <element signature="e#6372#6392#0" expanded="false" />
-            <element signature="e#11418#11451#0" expanded="false" />
-            <element signature="e#14614#14632#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/rocketmq-common/src/main/java/com/alibaba/rocketmq/common/protocol/ResponseCode.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="832">
-          <caret line="47" column="75" lean-forward="false" selection-start-line="47" selection-start-column="75" selection-end-line="47" selection-end-column="75" />
-          <folding>
-            <element signature="n#!!doc" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/rocketmq-common/src/main/java/com/alibaba/rocketmq/common/sysflag/PullSysFlag.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="290">
-          <caret line="68" column="36" lean-forward="true" selection-start-line="68" selection-start-column="36" selection-end-line="68" selection-end-column="36" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/rocketmq-example/src/main/java/com/alibaba/rocketmq/example/simple/TestProducer.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="26">
-          <caret line="26" column="13" lean-forward="false" selection-start-line="26" selection-start-column="13" selection-end-line="26" selection-end-column="13" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/rocketmq-client/src/main/java/com/alibaba/rocketmq/client/impl/MQAdminImpl.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="218">
-          <caret line="143" column="29" lean-forward="false" selection-start-line="143" selection-start-column="29" selection-end-line="143" selection-end-column="29" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/rocketmq-client/src/main/java/com/alibaba/rocketmq/client/impl/consumer/DefaultMQPullConsumerImpl.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="270">
-          <caret line="134" column="63" lean-forward="false" selection-start-line="134" selection-start-column="63" selection-end-line="134" selection-end-column="63" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/rocketmq-client/src/main/java/com/alibaba/rocketmq/client/consumer/DefaultMQPullConsumer.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="244">
-          <caret line="261" column="59" lean-forward="false" selection-start-line="261" selection-start-column="59" selection-end-line="261" selection-end-column="59" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/rocketmq-example/src/main/java/com/alibaba/rocketmq/example/simple/PullConsumer.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="78">
-          <caret line="28" column="13" lean-forward="false" selection-start-line="28" selection-start-column="13" selection-end-line="28" selection-end-column="13" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/rocketmq-example/src/main/java/com/alibaba/rocketmq/example/simple/PullConsumerTest.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="156">
-          <caret line="24" column="13" lean-forward="false" selection-start-line="24" selection-start-column="13" selection-end-line="24" selection-end-column="13" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/rocketmq-example/src/main/java/com/alibaba/rocketmq/example/simple/PullScheduleService.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="182">
-          <caret line="29" column="13" lean-forward="false" selection-start-line="29" selection-start-column="13" selection-end-line="29" selection-end-column="13" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/rocketmq-client/src/main/java/com/alibaba/rocketmq/client/impl/consumer/RebalancePushImpl.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="286">
-          <caret line="40" column="13" lean-forward="false" selection-start-line="40" selection-start-column="13" selection-end-line="40" selection-end-column="13" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/rocketmq-client/src/main/java/com/alibaba/rocketmq/client/impl/consumer/RebalancePullImpl.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="234">
-          <caret line="32" column="13" lean-forward="false" selection-start-line="32" selection-start-column="13" selection-end-line="32" selection-end-column="13" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/rocketmq-client/src/main/java/com/alibaba/rocketmq/client/impl/consumer/DefaultMQPushConsumerImpl.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="234">
-          <caret line="71" column="13" lean-forward="false" selection-start-line="71" selection-start-column="13" selection-end-line="71" selection-end-column="13" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/rocketmq-example/src/main/java/com/alibaba/rocketmq/example/simple/Producer.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="858">
           <caret line="51" column="13" lean-forward="false" selection-start-line="51" selection-start-column="13" selection-end-line="51" selection-end-column="13" />
-          <folding>
-            <element signature="n#!!doc" expanded="false" />
-            <element signature="imports" expanded="false" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -1778,10 +1697,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="1924">
           <caret line="97" column="75" lean-forward="false" selection-start-line="97" selection-start-column="75" selection-end-line="97" selection-end-column="75" />
-          <folding>
-            <element signature="n#!!doc" expanded="false" />
-            <element signature="imports" expanded="false" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -1796,38 +1711,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="286">
           <caret line="65" column="53" lean-forward="false" selection-start-line="65" selection-start-column="53" selection-end-line="65" selection-end-column="53" />
-          <folding>
-            <element signature="n#!!doc" expanded="false" />
-            <element signature="imports" expanded="false" />
-            <element signature="e#4521#4522#0" expanded="false" />
-            <element signature="e#4599#4600#0" expanded="false" />
-            <element signature="e#36858#36859#0" expanded="false" />
-            <element signature="e#36906#36907#0" expanded="false" />
-            <element signature="e#36949#36950#0" expanded="false" />
-            <element signature="e#36995#36996#0" expanded="false" />
-            <element signature="e#37476#37477#0" expanded="false" />
-            <element signature="e#37528#37529#0" expanded="false" />
-            <element signature="e#44547#44548#0" expanded="false" />
-            <element signature="e#44601#44602#0" expanded="false" />
-            <element signature="e#44653#44654#0" expanded="false" />
-            <element signature="e#44691#44692#0" expanded="false" />
-            <element signature="e#44735#44736#0" expanded="false" />
-            <element signature="e#44769#44770#0" expanded="false" />
-            <element signature="e#44805#44806#0" expanded="false" />
-            <element signature="e#44836#44837#0" expanded="false" />
-            <element signature="e#44875#44876#0" expanded="false" />
-            <element signature="e#44911#44912#0" expanded="false" />
-            <element signature="e#44981#44982#0" expanded="false" />
-            <element signature="e#45028#45029#0" expanded="false" />
-            <element signature="e#45086#45087#0" expanded="false" />
-            <element signature="e#45127#45128#0" expanded="false" />
-            <element signature="e#45183#45184#0" expanded="false" />
-            <element signature="e#45223#45224#0" expanded="false" />
-            <element signature="e#45301#45302#0" expanded="false" />
-            <element signature="e#45339#45340#0" expanded="false" />
-            <element signature="e#47588#47589#0" expanded="false" />
-            <element signature="e#47631#47632#0" expanded="false" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -1849,7 +1732,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="468">
           <caret line="389" column="21" lean-forward="true" selection-start-line="389" selection-start-column="21" selection-end-line="389" selection-end-column="21" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1857,10 +1739,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="215">
           <caret line="109" column="18" lean-forward="false" selection-start-line="109" selection-start-column="18" selection-end-line="109" selection-end-column="18" />
-          <folding>
-            <element signature="e#3069#3070#0" expanded="false" />
-            <element signature="e#3097#3098#0" expanded="false" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -1868,7 +1746,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="371">
           <caret line="154" column="30" lean-forward="false" selection-start-line="154" selection-start-column="30" selection-end-line="154" selection-end-column="30" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1876,7 +1753,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="162">
           <caret line="215" column="22" lean-forward="false" selection-start-line="215" selection-start-column="22" selection-end-line="215" selection-end-column="22" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1884,7 +1760,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="248">
           <caret line="347" column="30" lean-forward="false" selection-start-line="347" selection-start-column="30" selection-end-line="347" selection-end-column="30" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1892,22 +1767,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="312">
           <caret line="30" column="15" lean-forward="false" selection-start-line="30" selection-start-column="15" selection-end-line="30" selection-end-column="15" />
-          <folding>
-            <element signature="e#1121#1122#0" expanded="false" />
-            <element signature="e#1151#1152#0" expanded="false" />
-            <element signature="e#1182#1183#0" expanded="false" />
-            <element signature="e#1208#1209#0" expanded="false" />
-            <element signature="e#1247#1248#0" expanded="false" />
-            <element signature="e#1277#1278#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/rocketmq-common/src/main/java/com/alibaba/rocketmq/common/protocol/RequestCode.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="2964">
-          <caret line="129" column="28" lean-forward="false" selection-start-line="129" selection-start-column="28" selection-end-line="129" selection-end-column="28" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1915,7 +1774,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="1300">
           <caret line="84" column="30" lean-forward="false" selection-start-line="84" selection-start-column="30" selection-end-line="84" selection-end-column="30" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1923,10 +1781,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="1170">
           <caret line="73" column="42" lean-forward="false" selection-start-line="73" selection-start-column="42" selection-end-line="73" selection-end-column="42" />
-          <folding>
-            <element signature="n#!!doc" expanded="false" />
-            <element signature="imports" expanded="false" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -1934,10 +1788,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="252">
           <caret line="40" column="18" lean-forward="false" selection-start-line="40" selection-start-column="18" selection-end-line="40" selection-end-column="18" />
-          <folding>
-            <element signature="e#1491#1492#0" expanded="false" />
-            <element signature="e#1523#1524#0" expanded="false" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -1945,7 +1795,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="196">
           <caret line="313" column="13" lean-forward="false" selection-start-line="313" selection-start-column="13" selection-end-line="313" selection-end-column="13" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1953,20 +1802,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="352">
           <caret line="1054" column="13" lean-forward="false" selection-start-line="1054" selection-start-column="13" selection-end-line="1054" selection-end-column="13" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/rocketmq-broker/src/main/java/com/alibaba/rocketmq/broker/BrokerController.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="237">
-          <caret line="758" column="26" lean-forward="false" selection-start-line="758" selection-start-column="26" selection-end-line="758" selection-end-column="26" />
-          <folding>
-            <element signature="e#20415#20416#0" expanded="false" />
-            <element signature="e#20450#20451#0" expanded="false" />
-            <element signature="e#31187#31188#0" expanded="false" />
-            <element signature="e#31228#31229#0" expanded="false" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -1974,39 +1809,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="211">
           <caret line="229" column="58" lean-forward="false" selection-start-line="229" selection-start-column="58" selection-end-line="229" selection-end-column="58" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/rocketmq-broker/src/main/java/com/alibaba/rocketmq/broker/processor/AdminBrokerProcessor.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="52">
-          <caret line="168" column="76" lean-forward="false" selection-start-line="168" selection-start-column="76" selection-end-line="168" selection-end-column="76" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/rocketmq-client/src/main/java/com/alibaba/rocketmq/client/impl/MQClientAPIImpl.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="26">
-          <caret line="1703" column="27" lean-forward="false" selection-start-line="1703" selection-start-column="27" selection-end-line="1703" selection-end-column="27" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/rocketmq-tools/src/main/java/com/alibaba/rocketmq/tools/admin/DefaultMQAdminExtImpl.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="275">
-          <caret line="880" column="66" lean-forward="true" selection-start-line="880" selection-start-column="66" selection-end-line="880" selection-end-column="66" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/rocketmq-tools/src/main/java/com/alibaba/rocketmq/tools/admin/DefaultMQAdminExt.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="275">
-          <caret line="446" column="57" lean-forward="false" selection-start-line="446" selection-start-column="57" selection-end-line="446" selection-end-column="57" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -2014,7 +1816,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="211">
           <caret line="117" column="78" lean-forward="false" selection-start-line="117" selection-start-column="78" selection-end-line="117" selection-end-column="78" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -2022,7 +1823,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="349">
           <caret line="40" column="50" lean-forward="false" selection-start-line="40" selection-start-column="50" selection-end-line="40" selection-end-column="50" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -2030,31 +1830,13 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="189">
           <caret line="40" column="21" lean-forward="false" selection-start-line="40" selection-start-column="21" selection-end-line="40" selection-end-column="21" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/rocketmq-store/src/main/java/com/alibaba/rocketmq/store/DefaultMessageStore.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="396">
-          <caret line="1810" column="21" lean-forward="false" selection-start-line="1810" selection-start-column="21" selection-end-line="1810" selection-end-column="21" />
-          <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/rocketmq-client/src/main/java/com/alibaba/rocketmq/client/stat/ConsumerStatsManager.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="101">
+        <state relative-caret-position="650">
           <caret line="48" column="20" lean-forward="false" selection-start-line="48" selection-start-column="20" selection-end-line="48" selection-end-column="20" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/rocketmq-broker/src/main/java/com/alibaba/rocketmq/broker/processor/PullMessageProcessor.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="6219">
-          <caret line="405" column="67" lean-forward="false" selection-start-line="405" selection-start-column="67" selection-end-line="405" selection-end-column="67" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -2062,75 +1844,245 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="182">
           <caret line="28" column="13" lean-forward="false" selection-start-line="28" selection-start-column="13" selection-end-line="28" selection-end-column="13" />
-          <folding>
-            <element signature="e#5875#6099#0" expanded="true" />
-            <element signature="e#6098#6099#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/rocketmq-remoting/src/main/java/com/alibaba/rocketmq/remoting/netty/NettyRemotingAbstract.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="447">
+        <state relative-caret-position="4212">
           <caret line="205" column="64" lean-forward="false" selection-start-line="205" selection-start-column="64" selection-end-line="205" selection-end-column="64" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/rocketmq-remoting/src/main/java/com/alibaba/rocketmq/remoting/protocol/RemotingCommand.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="213">
-          <caret line="149" column="76" lean-forward="false" selection-start-line="149" selection-start-column="76" selection-end-line="149" selection-end-column="76" />
-          <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/rocketmq-client/src/main/java/com/alibaba/rocketmq/client/impl/producer/DefaultMQProducerImpl.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="369">
+        <state relative-caret-position="12558">
           <caret line="539" column="42" lean-forward="false" selection-start-line="539" selection-start-column="42" selection-end-line="539" selection-end-column="42" />
-          <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/rocketmq-remoting/src/main/java/com/alibaba/rocketmq/remoting/protocol/RemotingSysResponseCode.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="156">
-          <caret line="21" column="35" lean-forward="true" selection-start-line="21" selection-start-column="28" selection-end-line="21" selection-end-column="40" />
-          <folding />
+          <caret line="21" column="35" lean-forward="false" selection-start-line="21" selection-start-column="28" selection-end-line="21" selection-end-column="40" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/rocketmq-common/src/main/java/com/alibaba/rocketmq/common/stats/StatsItemSet.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="224">
+        <state relative-caret-position="1040">
           <caret line="62" column="16" lean-forward="false" selection-start-line="62" selection-start-column="16" selection-end-line="62" selection-end-column="16" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/rocketmq-remoting/src/main/java/com/alibaba/rocketmq/remoting/RemotingClient.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="234">
+          <caret line="32" column="17" lean-forward="false" selection-start-line="32" selection-start-column="17" selection-end-line="32" selection-end-column="17" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/rocketmq-remoting/src/main/java/com/alibaba/rocketmq/remoting/netty/NettyRemotingClient.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="43">
+          <caret line="351" column="31" lean-forward="true" selection-start-line="351" selection-start-column="20" selection-end-line="351" selection-end-column="49" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/rocketmq-common/src/main/java/com/alibaba/rocketmq/common/UtilAll.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="236">
+          <caret line="398" column="26" lean-forward="false" selection-start-line="398" selection-start-column="26" selection-end-line="398" selection-end-column="26" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/rocketmq-tools/src/main/java/com/alibaba/rocketmq/tools/command/offset/GetConsumerStatusCommand.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="413">
+          <caret line="124" column="24" lean-forward="false" selection-start-line="124" selection-start-column="24" selection-end-line="124" selection-end-column="24" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/rocketmq-tools/src/main/java/com/alibaba/rocketmq/tools/command/offset/ResetOffsetByTimeOldCommand.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1248">
+          <caret line="77" column="34" lean-forward="false" selection-start-line="77" selection-start-column="34" selection-end-line="77" selection-end-column="34" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/rocketmq-tools/src/main/java/com/alibaba/rocketmq/tools/admin/DefaultMQAdminExt.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="3848">
+          <caret line="189" column="46" lean-forward="false" selection-start-line="189" selection-start-column="46" selection-end-line="189" selection-end-column="46" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/rocketmq-tools/src/main/java/com/alibaba/rocketmq/tools/admin/DefaultMQAdminExtImpl.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="3822">
+          <caret line="196" column="76" lean-forward="false" selection-start-line="196" selection-start-column="76" selection-end-line="196" selection-end-column="76" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/rocketmq-broker/src/main/java/com/alibaba/rocketmq/broker/slave/SlaveSynchronize.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1196">
+          <caret line="78" column="66" lean-forward="false" selection-start-line="78" selection-start-column="66" selection-end-line="78" selection-end-column="66" />
+          <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/rocketmq-store/src/main/java/com/alibaba/rocketmq/store/stats/BrokerStatsManager.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="224">
-          <caret line="252" column="16" lean-forward="false" selection-start-line="252" selection-start-column="16" selection-end-line="252" selection-end-column="16" />
+        <state relative-caret-position="832">
+          <caret line="57" column="38" lean-forward="false" selection-start-line="57" selection-start-column="38" selection-end-line="57" selection-end-column="38" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/rocketmq-broker/src/main/java/com/alibaba/rocketmq/broker/processor/PullMessageProcessor.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="2938">
+          <caret line="171" column="42" lean-forward="false" selection-start-line="171" selection-start-column="28" selection-end-line="171" selection-end-column="42" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/rocketmq-broker/src/main/java/com/alibaba/rocketmq/broker/topic/TopicConfigManager.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="2964">
+          <caret line="155" column="29" lean-forward="false" selection-start-line="155" selection-start-column="29" selection-end-line="155" selection-end-column="29" />
           <folding>
-            <element signature="e#4278#4300#0" expanded="true" />
-            <element signature="e#7585#7586#0" expanded="true" />
-            <element signature="e#7658#7659#0" expanded="true" />
+            <element signature="n#!!doc" expanded="false" />
+            <element signature="imports" expanded="false" />
+            <element signature="e#2524#2545#0" expanded="false" />
+            <element signature="e#2676#2684#0" expanded="false" />
+            <element signature="e#6070#6071#0" expanded="false" />
+            <element signature="e#6129#6130#0" expanded="false" />
+            <element signature="e#6172#6173#0" expanded="false" />
+            <element signature="e#6215#6216#0" expanded="false" />
+            <element signature="e#17890#17891#0" expanded="false" />
+            <element signature="e#17926#17927#0" expanded="false" />
+            <element signature="e#19747#19748#0" expanded="false" />
+            <element signature="e#19781#19782#0" expanded="false" />
+            <element signature="e#19857#19858#0" expanded="false" />
+            <element signature="e#19896#19897#0" expanded="false" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/rocketmq-broker/src/main/java/com/alibaba/rocketmq/broker/processor/AdminBrokerProcessor.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="314">
+          <caret line="173" column="9" lean-forward="false" selection-start-line="173" selection-start-column="9" selection-end-line="173" selection-end-column="9" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/rocketmq-store/src/main/java/com/alibaba/rocketmq/store/ConsumeQueue.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="83">
+          <caret line="393" column="16" lean-forward="false" selection-start-line="393" selection-start-column="16" selection-end-line="393" selection-end-column="16" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/rocketmq-store/src/main/java/com/alibaba/rocketmq/store/SelectMapedBufferResult.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="218">
+          <caret line="43" column="22" lean-forward="false" selection-start-line="43" selection-start-column="22" selection-end-line="43" selection-end-column="22" />
+          <folding>
+            <element signature="e#1620#1621#0" expanded="true" />
+            <element signature="e#1653#1654#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/rocketmq-client/src/main/java/com/alibaba/rocketmq/client/impl/MQClientAPIImpl.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="239">
+          <caret line="232" column="48" lean-forward="false" selection-start-line="232" selection-start-column="48" selection-end-line="232" selection-end-column="48" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/rocketmq-common/src/main/java/com/alibaba/rocketmq/common/protocol/RequestCode.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="604">
+          <caret line="88" column="39" lean-forward="false" selection-start-line="88" selection-start-column="39" selection-end-line="88" selection-end-column="39" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/rocketmq-store/src/main/java/com/alibaba/rocketmq/store/CommitLog.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-2980">
+          <caret line="254" column="27" lean-forward="false" selection-start-line="254" selection-start-column="27" selection-end-line="254" selection-end-column="27" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/rocketmq-store/src/main/java/com/alibaba/rocketmq/store/schedule/ScheduleMessageService.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="239">
+          <caret line="101" column="22" lean-forward="false" selection-start-line="101" selection-start-column="22" selection-end-line="101" selection-end-column="22" />
+          <folding>
+            <element signature="e#4519#4520#0" expanded="true" />
+            <element signature="e#4556#4557#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/rocketmq-common/src/main/java/com/alibaba/rocketmq/common/admin/ConsumeStats.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="537">
+          <caret line="63" column="18" lean-forward="false" selection-start-line="63" selection-start-column="18" selection-end-line="63" selection-end-column="18" />
+          <folding>
+            <element signature="e#2092#2093#0" expanded="true" />
+            <element signature="e#2136#2137#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/rocketmq-store/src/main/java/com/alibaba/rocketmq/store/DefaultMessageStore.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="218">
+          <caret line="1579" column="25" lean-forward="true" selection-start-line="1579" selection-start-column="25" selection-end-line="1579" selection-end-column="25" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/rocketmq-remoting/src/main/java/com/alibaba/rocketmq/remoting/protocol/RemotingCommand.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="239">
+          <caret line="139" column="34" lean-forward="false" selection-start-line="139" selection-start-column="34" selection-end-line="139" selection-end-column="34" />
+          <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/rocketmq-broker/src/main/java/com/alibaba/rocketmq/broker/processor/SendMessageProcessor.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-88">
-          <caret line="400" column="71" lean-forward="false" selection-start-line="400" selection-start-column="71" selection-end-line="400" selection-end-column="71" />
-          <folding>
-            <element signature="e#3179#3180#0" expanded="true" />
-            <element signature="e#3218#3219#0" expanded="true" />
-          </folding>
+        <state relative-caret-position="192">
+          <caret line="400" column="107" lean-forward="false" selection-start-line="400" selection-start-column="107" selection-end-line="400" selection-end-column="107" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/rocketmq-broker/src/main/java/com/alibaba/rocketmq/broker/BrokerController.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="239">
+          <caret line="339" column="58" lean-forward="false" selection-start-line="339" selection-start-column="58" selection-end-line="339" selection-end-column="58" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/rocketmq-broker/src/main/java/com/alibaba/rocketmq/broker/processor/AbstractSendMessageProcessor.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="317">
+          <caret line="100" column="25" lean-forward="false" selection-start-line="100" selection-start-column="25" selection-end-line="100" selection-end-column="25" />
+          <folding />
         </state>
       </provider>
     </entry>

@@ -151,7 +151,7 @@ public class TopicConfigManager extends ConfigManager {
         return !reservedWords;
     }
 
-
+   //从topicConfigTable表中查找topic
     public TopicConfig selectTopicConfig(final String topic) {
         return this.topicConfigTable.get(topic);
     }

@@ -113,7 +113,7 @@ public class AdminBrokerProcessor implements NettyRequestProcessor {
             return this.getConsumerConnectionList(ctx, request);
         case RequestCode.GET_PRODUCER_CONNECTION_LIST:
             return this.getProducerConnectionList(ctx, request);
-        case RequestCode.GET_CONSUME_STATS:
+        case RequestCode.GET_CONSUME_STATS: //sh mqadmin consumerStatus
             return this.getConsumeStats(ctx, request);
         case RequestCode.GET_ALL_CONSUMER_OFFSET:
             return this.getAllConsumerOffset(ctx, request);

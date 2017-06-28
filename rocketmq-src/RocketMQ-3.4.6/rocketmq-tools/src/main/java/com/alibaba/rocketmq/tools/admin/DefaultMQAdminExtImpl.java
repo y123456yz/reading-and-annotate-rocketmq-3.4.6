@@ -182,7 +182,7 @@ public class DefaultMQAdminExtImpl implements MQAdminExt, MQAdminExtInner {
         return topicStatsTable;
     }
 
-
+    //sh mqadmin consumerStatus
     @Override
     public ConsumeStats examineConsumeStats(String consumerGroup, String topic) throws RemotingException, MQClientException,
             InterruptedException, MQBrokerException {

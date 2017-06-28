@@ -397,6 +397,9 @@ public class SendMessageProcessor extends AbstractSendMessageProcessor implement
             }
 
             if (sendOK) {
+                //注意:TOPIC如果是延迟消息，则投递的时候是投递到%DLQ%+TOPIC，dispatch只为延迟队列上%DLQ%+TOPIC的消息创建的consumeQueue，
+                // 该consumeQueue索引还是指向的延迟队列对应的commitlog，没有再创建一份对应的commitlog，所以延迟队列TOPIC消息Intps统计不到，见doReput
+
                 //TOPIC_PUT_NUMS 等统计，在 ViewBrokerStatsData 获取这些tps 写入字节数等统计信息
                 this.brokerController.getBrokerStatsManager().incTopicPutNums(msgInner.getTopic());
                 this.brokerController.getBrokerStatsManager().incTopicPutSize(msgInner.getTopic(),
