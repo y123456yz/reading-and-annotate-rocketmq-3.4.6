@@ -401,6 +401,8 @@ public class SendMessageProcessor extends AbstractSendMessageProcessor implement
                 // 该consumeQueue索引还是指向的延迟队列对应的commitlog，没有再创建一份对应的commitlog，所以延迟队列TOPIC消息Intps统计不到，见doReput
 
                 //TOPIC_PUT_NUMS 等统计，在 ViewBrokerStatsData 获取这些tps 写入字节数等统计信息
+
+                //??? 这里有个bug  msgInner.getTopic() 应该为 requestHeader.getTopic()，因为延迟队列会修改topic名
                 this.brokerController.getBrokerStatsManager().incTopicPutNums(msgInner.getTopic());
                 this.brokerController.getBrokerStatsManager().incTopicPutSize(msgInner.getTopic(),
                     putMessageResult.getAppendMessageResult().getWroteBytes());
